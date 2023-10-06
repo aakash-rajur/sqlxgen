@@ -1,0 +1,108 @@
+package models
+
+import (
+	"fmt"
+	"strings"
+)
+
+type Actor struct {
+	Id   *int64  `db:"id" json:"id"`
+	Name *string `db:"name" json:"name"`
+}
+
+func (actor Actor) String() string {
+	content := strings.Join(
+		[]string{
+			fmt.Sprintf("Id: %v", *actor.Id),
+			fmt.Sprintf("Name: %v", *actor.Name),
+		},
+		", ",
+	)
+
+	return fmt.Sprintf("Actor{%s}", content)
+}
+
+func (_ Actor) TableName() string {
+	return "app.actors"
+}
+
+func (_ Actor) PrimaryKey() []string {
+	return []string{
+		"id",
+	}
+}
+
+func (_ Actor) InsertQuery() string {
+	return actorInsertSql
+}
+
+func (_ Actor) UpdateQuery() string {
+	return actorUpdateSql
+}
+
+func (_ Actor) FindQuery() string {
+	return actorFindSql
+}
+
+func (_ Actor) FindAllQuery() string {
+	return actorFindAllSql
+}
+
+func (_ Actor) DeleteQuery() string {
+	return actorDeleteSql
+}
+
+// language=mysql
+var actorInsertSql = `
+INSERT INTO app.actors(
+  name
+)
+VALUES (
+  :name
+)
+RETURNING
+  id,
+  name;
+`
+
+// language=mysql
+var actorUpdateSql = `
+UPDATE app.actors
+SET
+  id = :id,
+  name = :name
+WHERE TRUE
+  AND id = :id
+RETURNING
+  id,
+  name;
+`
+
+// language=mysql
+var actorFindSql = `
+SELECT
+  id,
+  name
+FROM app.actors
+WHERE TRUE
+  AND (:id IS NULL or id = :id)
+LIMIT 1;
+`
+
+// language=mysql
+var actorFindAllSql = `
+SELECT
+  id,
+  name
+FROM app.actors
+WHERE TRUE
+  AND (:id IS NULL or id = :id);
+`
+
+// language=mysql
+var actorDeleteSql = `
+DELETE FROM app.actors
+WHERE TRUE
+  AND id = :id;
+`
+

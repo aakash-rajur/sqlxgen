@@ -1,0 +1,54 @@
+{
+  "schema_name": "public",
+  "table_name": "hyper_parameters",
+  "columns": [
+    {
+      "column_name": "type",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "hyper_parameters_pkey",
+      "pk_ordinal_position": 1,
+      "json_type": ""
+    },
+    {
+      "column_name": "value",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "hyper_parameters_pkey",
+      "pk_ordinal_position": 2,
+      "json_type": ""
+    },
+    {
+      "column_name": "friendly_name",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "friendly_name_search",
+      "type": "tsvector",
+      "type_id": "3614",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": true,
+      "generated": true,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    }
+  ]
+}

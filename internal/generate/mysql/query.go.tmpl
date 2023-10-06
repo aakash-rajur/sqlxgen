@@ -1,0 +1,62 @@
+package {{.PackageName}}
+
+import (
+  _ "embed"
+  "fmt"
+  "strings"
+  {{- range .Imports }}
+  "{{ . }}"
+  {{- end }}
+)
+
+{{ with .Query }}
+{{- $camelName := .CamelName }}
+type {{ .PascalName }}Args struct {
+  {{- range .Params }}
+  {{ .Name }} {{ .Type.GoType }} `db:"{{ .Column.ColumnName }}" json:"{{ .Column.ColumnName }}"`
+  {{- end }}
+}
+
+func (args {{ .PascalName }}Args) String() string {
+  content := strings.Join(
+    []string{
+    {{- range .Params }}
+      fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}args.{{ .Name }}),
+    {{- end }}
+    },
+    ", ",
+  )
+
+  return fmt.Sprintf("{{ .PascalName }}Args{%s}", content)
+}
+
+func (args {{ .PascalName }}Args) Query(db {{ .StorePackageName }}.Database) ([]{{ .PascalName }}Result, error) {
+  return {{ .StorePackageName }}.Query[{{ .PascalName }}Result](db, args)
+}
+
+func (args {{ .PascalName }}Args) Sql() string {
+  return {{ .CamelName }}Sql
+}
+
+type {{ .PascalName }}Result struct {
+  {{- range .Fields }}
+  {{ .Name }} {{ .Type.GoType }} `db:"{{ .Column.ColumnName }}" json:"{{ .Column.ColumnName }}"`
+  {{- end }}
+}
+
+func (result {{ .PascalName }}Result) String() string {
+  content := strings.Join(
+    []string{
+    {{- range .Fields }}
+      fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}result.{{ .Name }}),
+    {{- end }}
+    },
+    ", ",
+  )
+
+  return fmt.Sprintf("{{ .PascalName }}Result{%s}", content)
+}
+
+//go:embed {{ .Filename }}
+var {{ .CamelName }}Sql string
+{{ end }}

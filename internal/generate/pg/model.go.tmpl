@@ -1,0 +1,143 @@
+package {{.PackageName}}
+
+import (
+  "fmt"
+  "strings"
+  {{- range .Imports }}
+  "{{ . }}"
+  {{- end }}
+)
+
+{{- $insertFields := .InsertFields }}
+{{- $updateFields := .UpdateFields }}
+{{- $selectFields := .SelectFields }}
+{{ with .Model }}
+{{- $fields := .Fields }}
+{{- $pkFields := .PkFields }}
+{{- $camelName := .CamelName }}
+type {{ .PascalName }} struct {
+  {{- range .Fields }}
+    {{ .Name }} {{ .Type.GoType }} `db:"{{ .Column.ColumnName }}" json:"{{ .Column.ColumnName }}"`
+  {{- end }}
+}
+
+func ({{ $camelName }} {{ .PascalName }}) String() string {
+  content := strings.Join(
+    []string{
+      {{- range .Fields }}
+        fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $camelName }}.{{ .Name }}),
+      {{- end }}
+      },
+      ", ",
+    )
+
+  return fmt.Sprintf("{{ .PascalName }}{%s}", content)
+}
+
+func (_ {{ .PascalName }}) TableName() string {
+  return "{{ .Table.SchemaName }}.{{ .Table.TableName }}"
+}
+
+func (_ {{ .PascalName }}) PrimaryKey() []string {
+return []string{
+    {{- range .PkFields }}
+    "{{ .Column.ColumnName }}",
+    {{- end }}
+  }
+}
+
+func (_ {{ .PascalName }}) InsertQuery() string {
+  return {{ .CamelName }}InsertSql
+}
+
+func (_ {{ .PascalName }}) UpdateQuery() string {
+  return {{ .CamelName }}UpdateSql
+}
+
+func (_ {{ .PascalName }}) FindQuery() string {
+  return {{ .CamelName }}FindSql
+}
+
+func (_ {{ .PascalName }}) FindAllQuery() string {
+  return {{ .CamelName }}FindAllSql
+}
+
+func (_ {{ .PascalName }}) DeleteQuery() string {
+  return {{ .CamelName }}DeleteSql
+}
+
+// language=postgresql
+var {{ .CamelName }}InsertSql = `
+INSERT INTO {{ .Table.SchemaName }}.{{ .Table.TableName }}(
+{{- range $i, $f := $insertFields }}
+  {{- if not $f.Column.Generated }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $insertFields) }},{{ end }}
+  {{- end }}
+{{- end }}
+)
+VALUES (
+{{- range $i, $f := $insertFields }}
+  {{- if not .Column.Generated }}
+  :{{ .Column.ColumnName }}{{ if not (isLast $i $insertFields) }},{{ end }}
+  {{- end }}
+{{- end }}
+)
+RETURNING
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
+{{- end }};
+`
+
+// language=postgresql
+var {{ .CamelName }}UpdateSql = `
+UPDATE {{ .Table.SchemaName }}.{{ .Table.TableName }}
+SET
+{{- range $i, $f := $updateFields }}
+  {{ $f.Column.ColumnName }} = :{{ $f.Column.ColumnName }}{{ if not (isLast $i $updateFields) }},{{ end }}
+{{- end }}
+WHERE TRUE
+{{- range .PkFields }}
+  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- end }}
+RETURNING
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
+{{- end }};
+`
+
+// language=postgresql
+var {{ .CamelName }}FindSql = `
+SELECT
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
+{{- end }}
+FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+WHERE TRUE
+{{- range .PkFields }}
+  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+{{- end }}
+LIMIT 1;
+`
+
+// language=postgresql
+var {{ .CamelName }}FindAllSql = `
+SELECT
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
+{{- end }}
+FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+WHERE TRUE
+{{- range .PkFields }}
+  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+{{- end }};
+`
+
+// language=postgresql
+var {{ .CamelName }}DeleteSql = `
+DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+WHERE TRUE
+{{- range .PkFields }}
+  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- end }};
+`
+{{- end }}

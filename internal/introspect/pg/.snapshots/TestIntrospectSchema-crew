@@ -1,0 +1,42 @@
+{
+  "schema_name": "public",
+  "table_name": "crew",
+  "columns": [
+    {
+      "column_name": "id",
+      "type": "int4",
+      "type_id": "23",
+      "is_array": false,
+      "is_sequence": true,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "crew_pkey",
+      "pk_ordinal_position": 1,
+      "json_type": ""
+    },
+    {
+      "column_name": "name",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "name_search",
+      "type": "tsvector",
+      "type_id": "3614",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": true,
+      "generated": true,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    }
+  ]
+}

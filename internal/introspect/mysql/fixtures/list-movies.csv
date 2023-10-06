@@ -1,0 +1,6 @@
+totalRecordsCount,bigint,0,0,0,0,0
+id,bigint,0,0,0,0,0
+title,text,0,0,0,0,0
+releaseDate,date,0,0,0,0,0
+status,text,0,0,0,0,0
+popularity,float,0,0,0,0,0

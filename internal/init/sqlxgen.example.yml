@@ -1,0 +1,74 @@
+version: 1
+
+log:
+  # debug, info, warn, error
+  level: info
+  # json, text
+  format: text
+
+configs:
+  - name: example-pg1
+    # postgres, mysql
+    engine: postgres
+    # expand env vars
+    database:
+      url: "${POSTGRESQL_URL}"
+      host: "${POSTGRESQL_HOST}"
+      port: "${POSTGRESQL_PORT}"
+      user: "postgres"
+      password: "postgres"
+      db: "postgres"
+      sslmode: "${POSTGRESQL_SSLMODE}"
+    source:
+      models:
+        schemas:
+          - public
+        # array of go regex pattern, empty means all, e.g. ["^.+$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^public\\.migrations*"]
+        exclude:
+          - "^public.migrations$"
+      queries:
+        paths:
+          - internal/api
+        # array of go regex pattern, empty means all e.g. ["^[a-zA-Z0-9_]*.sql$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^migrations*.sql$"]
+        exclude: []
+    gen:
+      store:
+        path: internal/store
+      models:
+        path: internal/api/models
+  - name: example-mysql1
+    engine: mysql
+    # expand env vars
+    database:
+      url: "${MYSQL_URL}"
+      host: "${MYSQL_HOST}"
+      port: "${MYSQL_PORT}"
+      user: "${MYSQL_USER}"
+      password: "${MYSQL_PASSWORD}"
+      db: "public"
+      sslmode: "${MYSQL_SSLMODE}"
+    source:
+      models:
+        schemas:
+          - public
+        # array of go regex pattern, empty means all, e.g. ["^.+$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^public\\.migrations*"]
+        exclude:
+          - "^public.migrations$"
+      queries:
+        paths:
+          - internal/api
+        # array of go regex pattern, empty means all e.g. ["^[a-zA-Z0-9_]*.sql$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^migrations*.sql$"]
+        exclude: []
+    gen:
+      store:
+        path: internal/store
+      models:
+        path: internal/api/models

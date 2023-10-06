@@ -1,0 +1,167 @@
+package api
+
+var content = `{
+  "packageName": "api", 
+  "imports": [
+ "internal/store"
+],
+	"query": {
+ "store_package_dir": "internal/store",
+ "store_package_name": "internal/store",
+ "filename": "list-actors.sql",
+ "pascal_name": "ListActors",
+ "camel_name": "listActors",
+ "fields": [
+  {
+   "name": "TotalRecordsCount",
+   "type": {
+    "DbType": "int8",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "totalRecordsCount",
+    "type": "int8",
+    "type_id": "20",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Id",
+   "type": {
+    "DbType": "int8",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "id",
+    "type": "int8",
+    "type_id": "20",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Name",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "name",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  }
+ ],
+ "params": [
+  {
+   "name": "Search",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "search",
+    "type": "text",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "Sort",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "sort",
+    "type": "text",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "Limit",
+   "type": {
+    "DbType": "int",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "limit",
+    "type": "int",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "Offset",
+   "type": {
+    "DbType": "int",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "offset",
+    "type": "int",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  }
+ ]
+},
+}`
+

@@ -1,0 +1,6 @@
+totalRecordsCount,int8,20,false,false,true,false
+id,int4,23,false,false,true,false
+title,text,25,false,false,true,false
+releaseDate,date,1082,false,false,true,false
+status,text,25,false,false,true,false
+popularity,float8,701,false,false,true,false

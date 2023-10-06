@@ -1,0 +1,40 @@
+{
+  "Writer": null,
+  "name": "default",
+  "engine": "postgresql",
+  "database": {
+    "host": "localhost",
+    "port": "5432",
+    "db": "postgres",
+    "user": "postgres",
+    "password": "postgres",
+    "sslmode": "disable",
+    "url": "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+  },
+  "source": {
+    "models": {
+      "schemas": [
+        "public"
+      ],
+      "include": [
+        "^.+$"
+      ],
+      "exclude": []
+    },
+    "queries": {
+      "paths": [],
+      "include": [
+        "^.+$"
+      ],
+      "exclude": []
+    }
+  },
+  "gen": {
+    "store": {
+      "path": "gen/store"
+    },
+    "models": {
+      "path": "gen/pg"
+    }
+  }
+}

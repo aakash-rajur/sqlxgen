@@ -1,0 +1,38 @@
+{
+  "Writer": null,
+  "name": "mysql",
+  "engine": "mysql",
+  "database": {
+    "host": "localhost",
+    "port": "3306",
+    "db": "public",
+    "user": "root",
+    "password": "",
+    "sslmode": "disable",
+    "url": "root:@localhost:3306/public"
+  },
+  "source": {
+    "models": {
+      "schemas": [
+        "public"
+      ],
+      "include": [],
+      "exclude": []
+    },
+    "queries": {
+      "paths": [
+        "gen/mysql"
+      ],
+      "include": [],
+      "exclude": []
+    }
+  },
+  "gen": {
+    "store": {
+      "path": "gen/mysql/store"
+    },
+    "models": {
+      "path": "gen/mysql/models"
+    }
+  }
+}

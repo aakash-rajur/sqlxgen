@@ -1,0 +1,3 @@
+id,bigint,0,0,0,1,0
+name,text,0,0,0,1,0
+movies,json,0,0,0,0,0

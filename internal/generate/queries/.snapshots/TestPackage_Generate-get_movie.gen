@@ -1,0 +1,504 @@
+package api
+
+var content = `{
+  "packageName": "api", 
+  "imports": [
+ "time",
+ "internal/store"
+],
+	"query": {
+ "store_package_dir": "internal/store",
+ "store_package_name": "internal/store",
+ "filename": "get-movie.sql",
+ "pascal_name": "GetMovie",
+ "camel_name": "getMovie",
+ "fields": [
+  {
+   "name": "Id",
+   "type": {
+    "DbType": "int4",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "id",
+    "type": "int4",
+    "type_id": "23",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Title",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "title",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "OriginalTitle",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "originalTitle",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "OriginalLanguage",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "originalLanguage",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Overview",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "overview",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Runtime",
+   "type": {
+    "DbType": "int4",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "runtime",
+    "type": "int4",
+    "type_id": "23",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "ReleaseDate",
+   "type": {
+    "DbType": "date",
+    "GoType": "*time.Time",
+    "Import": "time",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "releaseDate",
+    "type": "date",
+    "type_id": "1082",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Tagline",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "tagline",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Status",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "status",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Homepage",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "homepage",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Popularity",
+   "type": {
+    "DbType": "float8",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "popularity",
+    "type": "float8",
+    "type_id": "701",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "VoteAverage",
+   "type": {
+    "DbType": "float8",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "voteAverage",
+    "type": "float8",
+    "type_id": "701",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "VoteCount",
+   "type": {
+    "DbType": "int4",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "voteCount",
+    "type": "int4",
+    "type_id": "23",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Budget",
+   "type": {
+    "DbType": "int8",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "budget",
+    "type": "int8",
+    "type_id": "20",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Revenue",
+   "type": {
+    "DbType": "int8",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "revenue",
+    "type": "int8",
+    "type_id": "20",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Keywords",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "keywords",
+    "type": "text",
+    "type_id": "1009",
+    "is_array": true,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Genres",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "genres",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  },
+  {
+   "name": "Countries",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "countries",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  },
+  {
+   "name": "Languages",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "languages",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  },
+  {
+   "name": "Companies",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "companies",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  },
+  {
+   "name": "Actors",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "actors",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  },
+  {
+   "name": "Crews",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "crews",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  }
+ ],
+ "params": [
+  {
+   "name": "Id",
+   "type": {
+    "DbType": "bigint",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "id",
+    "type": "bigint",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  }
+ ]
+},
+}`
+

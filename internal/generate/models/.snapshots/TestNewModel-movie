@@ -1,0 +1,202 @@
+(models.model) {
+  WriterCreator: (writer.Creator) <nil>,
+  ModelTemplate: (string) "",
+  FileName: (string) (len=5) "movie",
+  PascalName: (string) (len=5) "Movie",
+  CamelName: (string) (len=5) "movie",
+  Fields: ([]types.Field) (len=18) {
+    (types.Field) {
+      Name: (string) (len=2) "Id",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int4",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: id, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: movies_pkey, PkOrdinalPosition: 1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=5) "Title",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: title, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=13) "OriginalTitle",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: original_title, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=16) "OriginalLanguage",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: original_language, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=8) "Overview",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: overview, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=7) "Runtime",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int4",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: runtime, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=11) "ReleaseDate",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "date",
+        GoType: (string) (len=10) "*time.Time",
+        Import: (string) (len=4) "time",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: release_date, Type: date, TypeId: 1082, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=7) "Tagline",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: tagline, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=6) "Status",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: status, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=8) "Homepage",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: homepage, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=10) "Popularity",
+      Type: (types.GoType) {
+        DbType: (string) (len=6) "float8",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: popularity, Type: float8, TypeId: 701, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=11) "VoteAverage",
+      Type: (types.GoType) {
+        DbType: (string) (len=6) "float8",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: vote_average, Type: float8, TypeId: 701, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=9) "VoteCount",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int4",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: vote_count, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=6) "Budget",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int8",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: budget, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=7) "Revenue",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int8",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: revenue, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=8) "Keywords",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: keywords, Type: text, TypeId: 1009, IsArray: true, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=11) "TitleSearch",
+      Type: (types.GoType) {
+        DbType: (string) (len=8) "tsvector",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: title_search, Type: tsvector, TypeId: 3614, IsArray: false, Nullable: true, Generated: true, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=14) "KeywordsSearch",
+      Type: (types.GoType) {
+        DbType: (string) (len=8) "tsvector",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: keywords_search, Type: tsvector, TypeId: 3614, IsArray: false, Nullable: true, Generated: true, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    }
+  },
+  PkFields: ([]types.Field) (len=1) {
+    (types.Field) {
+      Name: (string) (len=2) "Id",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int4",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: id, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: movies_pkey, PkOrdinalPosition: 1, JsonType: }
+    }
+  },
+  Table: (introspect.Table) Table{SchemaName: public, TableName: movies, Columns: [Column{ColumnName: id, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: movies_pkey, PkOrdinalPosition: 1, JsonType: }, Column{ColumnName: title, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: original_title, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: original_language, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: overview, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: runtime, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: release_date, Type: date, TypeId: 1082, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: tagline, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: status, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: homepage, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: popularity, Type: float8, TypeId: 701, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: vote_average, Type: float8, TypeId: 701, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: vote_count, Type: int4, TypeId: 23, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: budget, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: revenue, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: keywords, Type: text, TypeId: 1009, IsArray: true, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: title_search, Type: tsvector, TypeId: 3614, IsArray: false, Nullable: true, Generated: true, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: keywords_search, Type: tsvector, TypeId: 3614, IsArray: false, Nullable: true, Generated: true, PkName: NONE, PkOrdinalPosition: -1, JsonType: }]}
+}

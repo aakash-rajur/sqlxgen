@@ -1,0 +1,121 @@
+version: 3
+
+dotenv:
+  - ".env"
+
+env:
+  # pg-tmdb environment variables
+  POSTGRESQL_VERSION: 16
+  POSTGRESQL_IMAGE: bitnami/postgresql
+  TMDB_PG_PORT: 54320
+  TMDB_PG_DATABASE: app
+  TMDB_PG_USER: app
+  TMDB_PG_PASSWORD: app
+  TMDB_PG_CONTAINER_NAME: tmdb-pg
+  # mysql-tmdb environment variables
+  MYSQL_VERSION: 8.0
+  MYSQL_IMAGE: bitnami/mysql
+  MYSQL_PORT: 33060
+  TMDB_MYSQL_HOST: localhost
+  TMDB_MYSQL_PORT: 33070
+  TMDB_MYSQL_ROOT_PASSWORD: root
+  TMDB_MYSQL_DATABASE: app
+  TMDB_MYSQL_USER: app
+  TMDB_MYSQL_PASSWORD: app
+  TMDB_MYSQL_CONTAINER_NAME: tmdb-mysql
+
+silent: true
+
+tasks:
+  default:
+    cmds:
+      - task --list
+  install:
+    desc: "Install dependencies"
+    cmds:
+      - go mod tidy
+  test:
+    desc: "Run unit and integration tests"
+    cmds:
+      - go test -v ./internal/... ./integration/...
+  test.unit:
+    desc: "Run unit tests"
+    cmds:
+      - go test -v ./internal/...
+  test.integration:
+    desc: "Run integration tests"
+    cmds:
+      - go test -v ./integration/...
+  tmdb.pg:
+    desc: "Postgres database for TMDB"
+    status:
+      - ${CONTAINER_RUNTIME} inspect {{.TMDB_PG_CONTAINER_NAME}} \
+        --format='{{.State.Status}}' \
+        | grep running > /dev/null
+    cmds:
+      - |
+        ${CONTAINER_RUNTIME} run -d --name {{.TMDB_PG_CONTAINER_NAME}} \
+          -v {{.USER_WORKING_DIR}}/fixtures/pg/seed.sh:/docker-entrypoint-initdb.d/seed.sh \
+          -v {{.USER_WORKING_DIR}}/fixtures/pg/01.features.sql:/tmp/01.features.sql \
+          -v {{.USER_WORKING_DIR}}/fixtures/pg/02.schema.sql:/tmp/02.schema.sql \
+          -v {{.USER_WORKING_DIR}}/fixtures/pg/03.data.sql:/tmp/03.data.sql \
+          -p {{.TMDB_PG_PORT}}:5432 \
+          -e POSTGRESQL_POSTGRES_PASSWORD=postgres \
+          -e POSTGRESQL_USERNAME={{.TMDB_PG_USER}} \
+          -e POSTGRESQL_PASSWORD={{.TMDB_PG_PASSWORD}} \
+          -e POSTGRESQL_DATABASE={{.TMDB_PG_DATABASE}} \
+          {{.POSTGRESQL_IMAGE}}:{{.POSTGRESQL_VERSION}};
+  tmdb.pg.stop:
+    desc: "Stop Postgres database for TMDB"
+    cmds:
+      - ${CONTAINER_RUNTIME} rm -f {{.TMDB_PG_CONTAINER_NAME}}
+  tmdb.pg.logs:
+    desc: "Show logs for Postgres database for TMDB"
+    cmds:
+      - ${CONTAINER_RUNTIME} logs -f {{.TMDB_PG_CONTAINER_NAME}}
+  tmdb.pg.connect:
+    desc: "Connect to Postgres database for TMDB"
+    cmds:
+      - |
+        ${CONTAINER_RUNTIME} exec \
+          -e PGPASSWORD={{.POSTGRESQL_PASSWORD}} \
+          -it {{.TMDB_PG_CONTAINER_NAME}} \
+          psql -U {{.TMDB_PG_USER}} -d {{.TMDB_PG_PASSWORD}}
+  tmdb.mysql:
+    desc: "Mysql database for TMDB"
+    status:
+      - ${CONTAINER_RUNTIME} inspect tmdb-mysql \
+        --format='{{.State.Status}}' \
+        | grep running > /dev/null
+    cmds:
+      - |
+        ${CONTAINER_RUNTIME} run -d --name tmdb-mysql \
+          -v {{.USER_WORKING_DIR}}/fixtures/mysql/backup.sql:/docker-entrypoint-initdb.d/backup.sql \
+          -p {{.TMDB_MYSQL_PORT}}:3306 \
+          -e MYSQL_ROOT_USER=root \
+          -e MYSQL_ROOT_PASSWORD={{.TMDB_MYSQL_ROOT_PASSWORD}} \
+          -e MYSQL_USER={{.TMDB_MYSQL_USER}} \
+          -e MYSQL_PASSWORD={{.TMDB_MYSQL_PASSWORD}} \
+          -e MYSQL_DATABASE={{.TMDB_MYSQL_DATABASE}} \
+          -e MYSQL_AUTHENTICATION_PLUGIN=mysql_native_password \
+          {{.MYSQL_IMAGE}}:{{.MYSQL_VERSION}};
+  tmdb.mysql.stop:
+    desc: "Stop Mysql database for TMDB"
+    cmds:
+      - ${CONTAINER_RUNTIME} rm -f {{.TMDB_PG_CONTAINER_NAME}}
+  tmdb.mysql.logs:
+    desc: "Show logs for Mysql database for TMDB"
+    cmds:
+      - ${CONTAINER_RUNTIME} logs -f {{.TMDB_PG_CONTAINER_NAME}}
+  tmdb.mysql.connect:
+    desc: "Connect to Mysql database for TMDB"
+    cmds:
+      - |
+        ${CONTAINER_RUNTIME} exec \
+          -e MYSQL_PWD={{.TMDB_MYSQL_PASSWORD}} \
+          -it tmdb-mysql \
+          mysql -u {{.TMDB_MYSQL_USER}} -D {{.TMDB_MYSQL_DATABASE}}
+  build.local:
+    desc: "Build local binary"
+    cmds:
+      - goreleaser release --snapshot --clean

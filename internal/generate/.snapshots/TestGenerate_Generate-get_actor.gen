@@ -1,0 +1,107 @@
+package api
+
+var content = `{
+  "packageName": "api", 
+  "imports": [
+ "github.com/aakash-rajur/sqlxgen-example/internal/store"
+],
+	"query": {
+ "store_package_dir": "github.com/aakash-rajur/sqlxgen-example/internal/store",
+ "store_package_name": "store",
+ "filename": "get-actor.sql",
+ "pascal_name": "GetActor",
+ "camel_name": "getActor",
+ "fields": [
+  {
+   "name": "Id",
+   "type": {
+    "DbType": "int8",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "id",
+    "type": "int8",
+    "type_id": "20",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Name",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "name",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Movies",
+   "type": {
+    "DbType": "jsonb",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "movies",
+    "type": "jsonb",
+    "type_id": "3802",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "array"
+   }
+  }
+ ],
+ "params": [
+  {
+   "name": "Id",
+   "type": {
+    "DbType": "bigint",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "id",
+    "type": "bigint",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  }
+ ]
+},
+  "insertFields": null
+	"updateFields": null
+	"selectFields": null
+}`
+

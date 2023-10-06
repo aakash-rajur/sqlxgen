@@ -1,0 +1,30 @@
+{
+  "schema_name": "app",
+  "table_name": "movies_countries",
+  "columns": [
+    {
+      "column_name": "movie_id",
+      "type": "bigint",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "PRIMARY",
+      "pk_ordinal_position": 1,
+      "json_type": ""
+    },
+    {
+      "column_name": "country_id",
+      "type": "text",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "PRIMARY",
+      "pk_ordinal_position": 2,
+      "json_type": ""
+    }
+  ]
+}

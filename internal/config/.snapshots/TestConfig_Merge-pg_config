@@ -1,0 +1,45 @@
+{
+  "Writer": null,
+  "name": "pnp",
+  "engine": "postgres",
+  "database": {
+    "host": "localhost",
+    "port": "5432",
+    "db": "app",
+    "user": "app",
+    "password": "app",
+    "sslmode": "disable",
+    "url": "postgres://app:app@localhost:5432/app"
+  },
+  "source": {
+    "models": {
+      "schemas": [
+        "public"
+      ],
+      "include": [],
+      "exclude": [
+        "^public.migrations$",
+        "^public.entity_status_logs_vof_v2_backup$",
+        "^public.t_movies$",
+        "^public.t_movies_credits$"
+      ]
+    },
+    "queries": {
+      "paths": [
+        "gen/pg"
+      ],
+      "include": [],
+      "exclude": [
+        "^list-project-2.sql$"
+      ]
+    }
+  },
+  "gen": {
+    "store": {
+      "path": "gen/pg/store"
+    },
+    "models": {
+      "path": "gen/pg/models"
+    }
+  }
+}

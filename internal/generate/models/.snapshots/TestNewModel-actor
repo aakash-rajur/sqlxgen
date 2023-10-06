@@ -1,0 +1,52 @@
+(models.model) {
+  WriterCreator: (writer.Creator) <nil>,
+  ModelTemplate: (string) "",
+  FileName: (string) (len=5) "actor",
+  PascalName: (string) (len=5) "Actor",
+  CamelName: (string) (len=5) "actor",
+  Fields: ([]types.Field) (len=3) {
+    (types.Field) {
+      Name: (string) (len=2) "Id",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int8",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: id, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: actors_pkey, PkOrdinalPosition: 1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=4) "Name",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "text",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: name, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    },
+    (types.Field) {
+      Name: (string) (len=10) "NameSearch",
+      Type: (types.GoType) {
+        DbType: (string) (len=8) "tsvector",
+        GoType: (string) (len=7) "*string",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: name_search, Type: tsvector, TypeId: 3614, IsArray: false, Nullable: true, Generated: true, PkName: NONE, PkOrdinalPosition: -1, JsonType: }
+    }
+  },
+  PkFields: ([]types.Field) (len=1) {
+    (types.Field) {
+      Name: (string) (len=2) "Id",
+      Type: (types.GoType) {
+        DbType: (string) (len=4) "int8",
+        GoType: (string) (len=4) "*int",
+        Import: (string) "",
+        IsPointer: (bool) true
+      },
+      Column: (introspect.Column) Column{ColumnName: id, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: actors_pkey, PkOrdinalPosition: 1, JsonType: }
+    }
+  },
+  Table: (introspect.Table) Table{SchemaName: public, TableName: actors, Columns: [Column{ColumnName: id, Type: int8, TypeId: 20, IsArray: false, Nullable: false, Generated: false, PkName: actors_pkey, PkOrdinalPosition: 1, JsonType: }, Column{ColumnName: name, Type: text, TypeId: 25, IsArray: false, Nullable: false, Generated: false, PkName: NONE, PkOrdinalPosition: -1, JsonType: }, Column{ColumnName: name_search, Type: tsvector, TypeId: 3614, IsArray: false, Nullable: true, Generated: true, PkName: NONE, PkOrdinalPosition: -1, JsonType: }]}
+}

@@ -1,0 +1,68 @@
+### example sqlxgen.yml file
+version: 1
+
+log:
+  level: info # debug, info, warn, error
+  format: text # json, text
+
+configs:
+  - name: pnp
+    engine: postgres # postgres, mysql
+    database:
+      url: "postgres://app:app@localhost:5432/app"
+      host: "localhost"
+      port: "5432"
+      user: "app"
+      password: "app"
+      db: "app"
+      sslmode: "disable"
+    source:
+      models:
+        schemas:
+          - public
+        # array of go regex pattern, empty means all, e.g. ["^.+$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^public\\.migrations*"]
+        exclude:
+          - "^public.migrations$"
+          - "^public.entity_status_logs_vof_v2_backup$"
+      queries:
+        paths:
+          - gen/pg
+        # array of go regex pattern, empty means all e.g. ["^[a-zA-Z0-9_]*.sql$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^migrations*.sql$"]
+        exclude:
+          - "^list-project-2.sql$"
+    gen:
+      store:
+        path: gen/pg/store
+      models:
+        path: gen/pg/models
+  - name: mysql
+    engine: mysql # postgres, mysql
+    database:
+      url: "root:@localhost:3306/public"
+      host: "localhost"
+      port: "3306"
+      user: "root"
+      password: ""
+      db: "public"
+      sslmode: "disable"
+    source:
+      models:
+        schemas:
+          - public
+        include: []
+        exclude: []
+      queries:
+        paths:
+          - gen/mysql
+        include: []
+        exclude: []
+    gen:
+      store:
+        path: gen/mysql/store
+      models:
+        path: gen/mysql/models
+

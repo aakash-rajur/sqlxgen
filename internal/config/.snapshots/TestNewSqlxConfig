@@ -1,0 +1,92 @@
+{
+  "version": "1",
+  "projectDir": "/playground",
+  "log": {
+    "level": "info",
+    "format": "text",
+    "Writer": {}
+  },
+  "configs": [
+    {
+      "Writer": null,
+      "name": "pnp",
+      "engine": "postgres",
+      "database": {
+        "host": "localhost",
+        "port": "5432",
+        "db": "app",
+        "user": "app",
+        "password": "app",
+        "sslmode": "disable",
+        "url": "postgres://app:app@localhost:5432/app"
+      },
+      "source": {
+        "models": {
+          "schemas": [
+            "public"
+          ],
+          "include": [],
+          "exclude": [
+            "^public.migrations$",
+            "^public.entity_status_logs_vof_v2_backup$"
+          ]
+        },
+        "queries": {
+          "paths": [
+            "gen/pg"
+          ],
+          "include": [],
+          "exclude": [
+            "^list-project-2.sql$"
+          ]
+        }
+      },
+      "gen": {
+        "store": {
+          "path": "gen/pg/store"
+        },
+        "models": {
+          "path": "gen/pg/models"
+        }
+      }
+    },
+    {
+      "Writer": null,
+      "name": "mysql",
+      "engine": "mysql",
+      "database": {
+        "host": "localhost",
+        "port": "3306",
+        "db": "public",
+        "user": "root",
+        "password": "",
+        "sslmode": "disable",
+        "url": "root:@localhost:3306/public"
+      },
+      "source": {
+        "models": {
+          "schemas": [
+            "public"
+          ],
+          "include": [],
+          "exclude": []
+        },
+        "queries": {
+          "paths": [
+            "gen/mysql"
+          ],
+          "include": [],
+          "exclude": []
+        }
+      },
+      "gen": {
+        "store": {
+          "path": "gen/mysql/store"
+        },
+        "models": {
+          "path": "gen/mysql/models"
+        }
+      }
+    }
+  ]
+}

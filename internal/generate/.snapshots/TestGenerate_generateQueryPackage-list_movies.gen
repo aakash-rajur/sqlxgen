@@ -1,0 +1,252 @@
+package api
+
+var content = `{
+  "packageName": "api", 
+  "imports": [
+ "time",
+ "github.com/aakash-rajur/sqlxgen-example/internal/store"
+],
+	"query": {
+ "store_package_dir": "github.com/aakash-rajur/sqlxgen-example/internal/store",
+ "store_package_name": "store",
+ "filename": "list-movies.sql",
+ "pascal_name": "ListMovies",
+ "camel_name": "listMovies",
+ "fields": [
+  {
+   "name": "TotalRecordsCount",
+   "type": {
+    "DbType": "int8",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "totalRecordsCount",
+    "type": "int8",
+    "type_id": "20",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Id",
+   "type": {
+    "DbType": "int4",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "id",
+    "type": "int4",
+    "type_id": "23",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Title",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "title",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "ReleaseDate",
+   "type": {
+    "DbType": "date",
+    "GoType": "*time.Time",
+    "Import": "time",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "releaseDate",
+    "type": "date",
+    "type_id": "1082",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Status",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "status",
+    "type": "text",
+    "type_id": "25",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  },
+  {
+   "name": "Popularity",
+   "type": {
+    "DbType": "float8",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "popularity",
+    "type": "float8",
+    "type_id": "701",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": ""
+   }
+  }
+ ],
+ "params": [
+  {
+   "name": "Search",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "search",
+    "type": "text",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "GenreId",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "genre_id",
+    "type": "text",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "Sort",
+   "type": {
+    "DbType": "text",
+    "GoType": "*string",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "sort",
+    "type": "text",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "Limit",
+   "type": {
+    "DbType": "int",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "limit",
+    "type": "int",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  },
+  {
+   "name": "Offset",
+   "type": {
+    "DbType": "int",
+    "GoType": "*int",
+    "Import": "",
+    "IsPointer": true
+   },
+   "column": {
+    "column_name": "offset",
+    "type": "int",
+    "type_id": "0",
+    "is_array": false,
+    "is_sequence": false,
+    "nullable": true,
+    "generated": false,
+    "pk_name": "",
+    "pk_ordinal_position": 0,
+    "json_type": "identity"
+   }
+  }
+ ]
+},
+}`
+

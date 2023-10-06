@@ -1,0 +1,95 @@
+{
+  "filename": "list-actors.sql",
+  "query_name": "ListActors",
+  "pascal_name": "ListActors.sql",
+  "camel_name": "listActors.sql",
+  "columns": [
+    {
+      "column_name": "totalRecordsCount",
+      "type": "bigint",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "id",
+      "type": "bigint",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "name",
+      "type": "text",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    }
+  ],
+  "params": [
+    {
+      "column_name": "limit",
+      "type": "int",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": "identity"
+    },
+    {
+      "column_name": "offset",
+      "type": "int",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": "identity"
+    },
+    {
+      "column_name": "search",
+      "type": "text",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": "identity"
+    },
+    {
+      "column_name": "sort",
+      "type": "text",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": "identity"
+    }
+  ],
+  "source_dir": "fixtures"
+}

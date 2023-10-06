@@ -1,0 +1,55 @@
+{
+  "filename": "get-actor.sql",
+  "query_name": "GetActor",
+  "pascal_name": "GetActor.sql",
+  "camel_name": "getActor.sql",
+  "columns": [
+    {
+      "column_name": "id",
+      "type": "int8",
+      "type_id": "20",
+      "is_array": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "name",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "movies",
+      "type": "jsonb",
+      "type_id": "3802",
+      "is_array": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": "array"
+    }
+  ],
+  "params": [
+    {
+      "column_name": "id",
+      "type": "bigint",
+      "type_id": "0",
+      "is_array": false,
+      "nullable": true,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": "identity"
+    }
+  ],
+  "source_dir": "internal/api"
+}

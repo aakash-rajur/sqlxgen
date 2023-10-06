@@ -1,0 +1,54 @@
+{
+  "schema_name": "public",
+  "table_name": "movies_crew",
+  "columns": [
+    {
+      "column_name": "movie_id",
+      "type": "int8",
+      "type_id": "20",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "movies_crew_pkey",
+      "pk_ordinal_position": 1,
+      "json_type": ""
+    },
+    {
+      "column_name": "crew_id",
+      "type": "int8",
+      "type_id": "20",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "movies_crew_pkey",
+      "pk_ordinal_position": 2,
+      "json_type": ""
+    },
+    {
+      "column_name": "job_id",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "department_id",
+      "type": "text",
+      "type_id": "25",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "",
+      "pk_ordinal_position": 0,
+      "json_type": ""
+    }
+  ]
+}

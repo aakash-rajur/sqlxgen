@@ -1,0 +1,3 @@
+id,int4,23,false,false,true,false
+name,text,25,false,false,true,false
+movies,jsonb,3802,false,false,true,false
