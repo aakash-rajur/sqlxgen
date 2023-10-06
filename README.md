@@ -56,150 +56,31 @@ erDiagram
    bigint id
 }
 ```
-following query generates [get_movies.gen.go](example/internal/tmdb_pg/api/get_movie.gen.go)
+following query generates [get_actor.gen.go](example/internal/tmdb_pg/api/get_actor.gen.go)
 ```sql
 select
-m."id" as "id",
-m."title" as "title",
-m."original_title" as "originalTitle",
-m."original_language" as "originalLanguage",
-m."overview" as "overview",
-m."runtime" as "runtime",
-m."release_date" as "releaseDate",
-m."tagline" as "tagline",
-m."status" as "status",
-m."homepage" as "homepage",
-m."popularity" as "popularity",
-m."vote_average" as "voteAverage",
-m."vote_count" as "voteCount",
-m."budget" as "budget",
-m."revenue" as "revenue",
-m."keywords" as "keywords",
+a."id" as "id",
+a."name" as "name",
 coalesce(
   (
     select
     jsonb_agg(
       jsonb_build_object(
-        'id', g.genre_id,
-        'name', hp.friendly_name
-      ) order by hp.friendly_name
-    )
-    from movies_genres g
-    inner join hyper_parameters hp on (
-      true
-      and hp.type = 'genre'
-      and hp.value = g.genre_id
-    )
-    where true
-    and g.movie_id = m.id
-  ),
-  '[]'
-) as "genres",
-coalesce(
-  (
-    select
-    jsonb_agg(
-      jsonb_build_object(
-        'id', c.country_id,
-        'name', hp.friendly_name
-      ) order by hp.friendly_name
-    )
-    from movies_countries c
-    inner join hyper_parameters hp on (
-      true
-      and hp.type = 'country'
-      and hp.value = c.country_id
-    )
-    where true
-    and c.movie_id = m.id
-  ),
-  '[]'
-) as "countries",
-coalesce(
-  (
-    select
-    jsonb_agg(
-      jsonb_build_object(
-        'id', l.language_id,
-        'name', hp.friendly_name
-      ) order by hp.friendly_name
-    )
-    from movies_languages l
-    inner join hyper_parameters hp on (
-      true
-      and hp.type = 'language'
-      and hp.value = l.language_id
-    )
-    where true
-    and l.movie_id = m.id
-  ),
-  '[]'
-) as "languages",
-coalesce(
-  (
-    select
-    jsonb_agg(
-      jsonb_build_object(
-        'id', mc.company_id,
-        'name', c.name
-      ) order by c.name
-    )
-    from movies_companies mc
-    inner join companies c on mc.company_id = c.id
-    where true
-    and mc.movie_id = m.id
-  ),
-  '[]'
-) as "companies",
-coalesce(
-  (
-    select
-    jsonb_agg(
-      jsonb_build_object(
-        'id', ma.actor_id,
-        'name', a.name,
-        'character', ma.character,
-        'order', ma.cast_order
-      ) order by ma.cast_order
+        'id', ma.movie_id,
+        'title', m.title,
+        'releaseDate', m.release_date,
+        'character', ma.character
+      ) order by m.release_date desc
     )
     from movies_actors ma
-    inner join actors a on ma.actor_id = a.id
+    inner join movies m on ma.movie_id = m.id
     where true
-    and ma.movie_id = m.id
+    and ma.actor_id = a.id
   ),
   '[]'
-) as "actors",
-coalesce(
-  (
-    select
-    jsonb_agg(
-      jsonb_build_object(
-        'id', mc.crew_id,
-        'name', c.name,
-        'job', j.friendly_name,
-        'department', d.friendly_name
-      ) order by j.friendly_name
-    )
-    from movies_crew mc
-    inner join crew c on mc.crew_id = c.id
-    inner join hyper_parameters d on (
-      true
-      and d.type = 'department'
-      and d.value = mc.department_id
-    )
-    inner join hyper_parameters j on (
-      true
-      and j.type = 'job'
-      and j.value = mc.job_id
-    )
-    where true
-    and mc.movie_id = m.id
-  ),
-  '[]'
-) as "crews"
-from movies m
-where true
-and m.id = :id; -- :id type: bigint
+) as "movies"
+from actors a
+where a.id = :id; -- :id type: bigint
 ```
 
 ## Issues
