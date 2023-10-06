@@ -1,0 +1,66 @@
+# this is used for testing locally within this repo
+version: 1
+
+log:
+  level: info # debug, info, warn, error
+  format: text # json, text
+
+configs:
+  - name: tmdb_pg
+    engine: postgres # postgres, mysql
+    database:
+      url: "${TMDB_PG_URL}"
+      host: "${TMDB_PG_HOST}"
+      port: "${TMDB_PG_PORT}"
+      db: "${TMDB_PG_DATABASE}"
+      user: "${TMDB_PG_USER}"
+      password: "${TMDB_PG_PASSWORD}"
+      sslmode: "${TMDB_PG_SSLMODE}"
+    source:
+      models:
+        schemas:
+          - public
+        # array of go regex pattern, empty means all, e.g. ["^.+$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^public\\.migrations*"]
+        exclude:
+          - "^public.migrations$"
+          - "^public.entity_status_logs_vof_v2_backup$"
+      queries:
+        paths:
+          - fixtures/tmdb_pg
+        # array of go regex pattern, empty means all e.g. ["^[a-zA-Z0-9_]*.sql$"]
+        include: []
+        # array of go regex pattern, empty means none e.g. ["^migrations*.sql$"]
+        exclude: []
+    gen:
+      store:
+        path: fixtures/tmdb_pg/store
+      models:
+        path: fixtures/tmdb_pg/models
+  - name: tmdb_mysql
+    engine: mysql
+    database:
+      url: "${TMDB_MYSQL_URL}"
+      host: "${TMDB_MYSQL_HOST}"
+      port: "${TMDB_MYSQL_PORT}"
+      user: "${TMDB_MYSQL_USER}"
+      password: "${TMDB_MYSQL_PASSWORD}"
+      db: "${TMDB_MYSQL_DATABASE}"
+      sslmode: "${TMDB_MYSQL_SSLMODE}"
+    source:
+      models:
+        schemas:
+          - app
+        include: []
+        exclude: []
+      queries:
+        paths:
+          - fixtures/tmdb_mysql
+        include: []
+        exclude: []
+    gen:
+      store:
+        path: fixtures/tmdb_mysql/store
+      models:
+        path: fixtures/tmdb_mysql/models

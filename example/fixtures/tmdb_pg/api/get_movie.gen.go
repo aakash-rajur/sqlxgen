@@ -1,0 +1,94 @@
+package api
+
+import (
+	_ "embed"
+	"fmt"
+	"strings"
+	"time"
+
+	"github.com/aakash-rajur/example/fixtures/tmdb_pg/store"
+	"github.com/lib/pq"
+)
+
+type GetMovieArgs struct {
+	Id *int64 `db:"id" json:"id"`
+}
+
+func (args GetMovieArgs) String() string {
+	content := strings.Join(
+		[]string{
+			fmt.Sprintf("Id: %v", *args.Id),
+		},
+		", ",
+	)
+
+	return fmt.Sprintf("GetMovieArgs{%s}", content)
+}
+
+func (args GetMovieArgs) Query(db store.Database) ([]GetMovieResult, error) {
+	return store.Query[GetMovieResult](db, args)
+}
+
+func (args GetMovieArgs) Sql() string {
+	return getMovieSql
+}
+
+type GetMovieResult struct {
+	Id               *int32                   `db:"id" json:"id"`
+	Title            *string                  `db:"title" json:"title"`
+	OriginalTitle    *string                  `db:"originalTitle" json:"originalTitle"`
+	OriginalLanguage *string                  `db:"originalLanguage" json:"originalLanguage"`
+	Overview         *string                  `db:"overview" json:"overview"`
+	Runtime          *int32                   `db:"runtime" json:"runtime"`
+	ReleaseDate      *time.Time               `db:"releaseDate" json:"releaseDate"`
+	Tagline          *string                  `db:"tagline" json:"tagline"`
+	Status           *string                  `db:"status" json:"status"`
+	Homepage         *string                  `db:"homepage" json:"homepage"`
+	Popularity       *float64                 `db:"popularity" json:"popularity"`
+	VoteAverage      *float64                 `db:"voteAverage" json:"voteAverage"`
+	VoteCount        *int32                   `db:"voteCount" json:"voteCount"`
+	Budget           *int64                   `db:"budget" json:"budget"`
+	Revenue          *int64                   `db:"revenue" json:"revenue"`
+	Keywords         *pq.StringArray          `db:"keywords" json:"keywords"`
+	Genres           []map[string]interface{} `db:"genres" json:"genres"`
+	Countries        []map[string]interface{} `db:"countries" json:"countries"`
+	Languages        []map[string]interface{} `db:"languages" json:"languages"`
+	Companies        []map[string]interface{} `db:"companies" json:"companies"`
+	Actors           []map[string]interface{} `db:"actors" json:"actors"`
+	Crews            []map[string]interface{} `db:"crews" json:"crews"`
+}
+
+func (result GetMovieResult) String() string {
+	content := strings.Join(
+		[]string{
+			fmt.Sprintf("Id: %v", *result.Id),
+			fmt.Sprintf("Title: %v", *result.Title),
+			fmt.Sprintf("OriginalTitle: %v", *result.OriginalTitle),
+			fmt.Sprintf("OriginalLanguage: %v", *result.OriginalLanguage),
+			fmt.Sprintf("Overview: %v", *result.Overview),
+			fmt.Sprintf("Runtime: %v", *result.Runtime),
+			fmt.Sprintf("ReleaseDate: %v", *result.ReleaseDate),
+			fmt.Sprintf("Tagline: %v", *result.Tagline),
+			fmt.Sprintf("Status: %v", *result.Status),
+			fmt.Sprintf("Homepage: %v", *result.Homepage),
+			fmt.Sprintf("Popularity: %v", *result.Popularity),
+			fmt.Sprintf("VoteAverage: %v", *result.VoteAverage),
+			fmt.Sprintf("VoteCount: %v", *result.VoteCount),
+			fmt.Sprintf("Budget: %v", *result.Budget),
+			fmt.Sprintf("Revenue: %v", *result.Revenue),
+			fmt.Sprintf("Keywords: %v", *result.Keywords),
+			fmt.Sprintf("Genres: %v", result.Genres),
+			fmt.Sprintf("Countries: %v", result.Countries),
+			fmt.Sprintf("Languages: %v", result.Languages),
+			fmt.Sprintf("Companies: %v", result.Companies),
+			fmt.Sprintf("Actors: %v", result.Actors),
+			fmt.Sprintf("Crews: %v", result.Crews),
+		},
+		", ",
+	)
+
+	return fmt.Sprintf("GetMovieResult{%s}", content)
+}
+
+//go:embed get-movie.sql
+var getMovieSql string
