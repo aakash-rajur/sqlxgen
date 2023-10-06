@@ -35,7 +35,7 @@ example can be found [here](example)
 ## Issues
 1. `::` type cast is broken in sqlx
 2. parameters are required to be annotated with typings `-- :param_name type: <param type>` as such,
-```postgresql
+```sql
 select 
 u.* 
 from users u 
@@ -44,7 +44,7 @@ and id = :user_id; -- :user_id type: bigint
 ```
 3. otherwise, they'll have `interface{}` type and will not be type safe.
 4. json (`json` or `jsonb`) selects required to annotated with `-- json_type: <array | object>` as such,
-```postgresql
+```sql
 select
 u.id,
 u.metadata -- json_type: object
