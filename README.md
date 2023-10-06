@@ -23,7 +23,7 @@
 ```bash
 sqlxgen init
 ```
-2. edit `sqlxgen.yaml` file to suit your needs.
+2. edit `sqlxgen.yml` file to suit your needs.
 3. generate table model and query model code with the following command. Picks `sqlxgen.yml` from current directory.
 ```bash
 sqlxgen generate [--config <path-to-config-file>]
