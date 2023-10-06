@@ -84,7 +84,7 @@ where a.id = :id; -- :id type: bigint
 ```
 
 ## Issues
-1. `::` type cast is broken in sqlx
+1. `::` type casting is broken in sqlx
 2. parameters are required to be annotated with typings `-- :param_name type: <param type>` as such,
 ```sql
 select 
@@ -104,7 +104,7 @@ where true
 and id = :user_id; -- :user_id type: bigint
 ```
 5. otherwise, they'll have `json.RawMessage` type.
-6. `json[b]_agg`, `json[b]_build_object` and etch are taken care of [ref](internal/introspect/pg/json.go#L34)
+6. `json[b]_agg`, `json[b]_build_object` and etc are taken care of [ref](internal/introspect/pg/json.go#L34)
 
 ## Motivation
 1. age-old sql generation vs sql debate, i prefer writing sql queries over sql generation. (eat your greens!)
