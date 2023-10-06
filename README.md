@@ -94,7 +94,7 @@ where true
 and id = :user_id; -- :user_id type: bigint
 ```
 3. otherwise, they'll have `interface{}` type and will not be type safe.
-4. json (`json` or `jsonb`) selects required to annotated with `-- json_type: <array | object>` as such,
+4. json (`json` or `jsonb`) column selects required to annotated with `-- column: <column_name> json_type: <array | object>` as such,
 ```sql
 select
 u.id,
@@ -104,6 +104,7 @@ where true
 and id = :user_id; -- :user_id type: bigint
 ```
 5. otherwise, they'll have `json.RawMessage` type.
+6. `json[b]_agg`, `json[b]_build_object` and etch are taken care of [ref](internal/introspect/pg/json.go#L34)
 
 ## Motivation
 1. age-old sql generation vs sql debate, i prefer writing sql queries over sql generation. (eat your greens!)
