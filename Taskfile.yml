@@ -89,7 +89,7 @@ tasks:
         | grep running > /dev/null
     cmds:
       - |
-        ${CONTAINER_RUNTIME} run -d --name tmdb-mysql \
+        ${CONTAINER_RUNTIME} run -d --name {{.TMDB_MYSQL_CONTAINER_NAME}} \
           -v {{.USER_WORKING_DIR}}/fixtures/mysql/backup.sql:/docker-entrypoint-initdb.d/backup.sql \
           -p {{.TMDB_MYSQL_PORT}}:3306 \
           -e MYSQL_ROOT_USER=root \
@@ -113,7 +113,7 @@ tasks:
       - |
         ${CONTAINER_RUNTIME} exec \
           -e MYSQL_PWD={{.TMDB_MYSQL_PASSWORD}} \
-          -it tmdb-mysql \
+          -it {{.TMDB_MYSQL_CONTAINER_NAME}} \
           mysql -u {{.TMDB_MYSQL_USER}} -D {{.TMDB_MYSQL_DATABASE}}
   build.local:
     desc: "Build local binary"
