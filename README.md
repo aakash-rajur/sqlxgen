@@ -98,7 +98,7 @@ and id = :user_id; -- :user_id type: bigint
 ```sql
 select
 u.id,
-u.metadata -- json_type: object
+u.metadata -- column: metadata json_type: object
 from users u
 where true
 and id = :user_id; -- :user_id type: bigint
