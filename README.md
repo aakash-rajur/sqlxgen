@@ -7,7 +7,7 @@
 1. Run [postgres query](https://github.com/aakash-rajur/sqlxgen/blob/main/internal/introspect/pg/model.sql) 
    or [mysql query](https://github.com/aakash-rajur/sqlxgen/blob/main/internal/introspect/mysql/model.sql) 
    to generate model code.
-2. Run your query without selecting any rows to generate model code for the query.
+2. Run your query without selecting any rows to generate model code for the output and input structs.
 3. support for postgres and mysql databases.
 
 ## Installation
