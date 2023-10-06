@@ -37,6 +37,7 @@ then run following to generate code
 sqlxgen generate
 ```
 
+### generated code
 [postgresql models](internal/tmdb_pg/models)  
 [postgresql queries](internal/tmdb_pg/api)
 
