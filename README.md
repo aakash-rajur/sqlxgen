@@ -32,6 +32,31 @@ sqlxgen generate [--config <path-to-config-file>]
 ## Example
 example can be found [here](example)
 
+following movies table generates [movies.gen.go](example/internal/tmdb_pg/models/movie.gen.go)
+```mermaid
+erDiagram
+  movies {
+   text title
+   text original_title
+   text original_language
+   text overview
+   integer runtime
+   date release_date
+   text tagline
+   text status
+   text homepage
+   double precision popularity
+   double precision vote_average
+   integer vote_count
+   bigint budget
+   bigint revenue
+   text[] keywords
+   tsvector title_search
+   tsvector keywords_search
+   integer id
+}
+```
+
 ## Issues
 1. `::` type cast is broken in sqlx
 2. parameters are required to be annotated with typings `-- :param_name type: <param type>` as such,
