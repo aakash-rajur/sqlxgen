@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aakash-rajur/example/fixtures/tmdb_mysql/store"
+	"github.com/aakash-rajur/example/internal/tmdb_mysql/store"
 )
 
 type GetCompanyArgs struct {

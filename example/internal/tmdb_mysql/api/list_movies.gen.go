@@ -4,9 +4,8 @@ import (
 	_ "embed"
 	"fmt"
 	"strings"
-	"time"
 
-	"github.com/aakash-rajur/example/fixtures/tmdb_pg/store"
+	"github.com/aakash-rajur/example/internal/tmdb_mysql/store"
 )
 
 type ListMoviesArgs struct {
@@ -41,24 +40,11 @@ func (args ListMoviesArgs) Sql() string {
 }
 
 type ListMoviesResult struct {
-	TotalRecordsCount *int64     `db:"totalRecordsCount" json:"totalRecordsCount"`
-	Id                *int32     `db:"id" json:"id"`
-	Title             *string    `db:"title" json:"title"`
-	ReleaseDate       *time.Time `db:"releaseDate" json:"releaseDate"`
-	Status            *string    `db:"status" json:"status"`
-	Popularity        *float64   `db:"popularity" json:"popularity"`
 }
 
 func (result ListMoviesResult) String() string {
 	content := strings.Join(
-		[]string{
-			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
-			fmt.Sprintf("Id: %v", *result.Id),
-			fmt.Sprintf("Title: %v", *result.Title),
-			fmt.Sprintf("ReleaseDate: %v", *result.ReleaseDate),
-			fmt.Sprintf("Status: %v", *result.Status),
-			fmt.Sprintf("Popularity: %v", *result.Popularity),
-		},
+		[]string{},
 		", ",
 	)
 

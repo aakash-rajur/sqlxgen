@@ -21,6 +21,7 @@
 go.work
 
 .env
+!example/.env
 .idea
 playground
 gen

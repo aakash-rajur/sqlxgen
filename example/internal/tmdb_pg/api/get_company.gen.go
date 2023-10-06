@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aakash-rajur/example/fixtures/tmdb_pg/store"
+	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 )
 
 type GetCompanyArgs struct {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aakash-rajur/example/fixtures/tmdb_pg/store"
+	"github.com/aakash-rajur/example/internal/tmdb_mysql/store"
 )
 
 type ListCompaniesArgs struct {
@@ -38,18 +38,11 @@ func (args ListCompaniesArgs) Sql() string {
 }
 
 type ListCompaniesResult struct {
-	TotalRecordsCount *int64  `db:"totalRecordsCount" json:"totalRecordsCount"`
-	Id                *int64  `db:"id" json:"id"`
-	Name              *string `db:"name" json:"name"`
 }
 
 func (result ListCompaniesResult) String() string {
 	content := strings.Join(
-		[]string{
-			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
-			fmt.Sprintf("Id: %v", *result.Id),
-			fmt.Sprintf("Name: %v", *result.Name),
-		},
+		[]string{},
 		", ",
 	)
 

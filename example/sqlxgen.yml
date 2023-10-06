@@ -28,16 +28,16 @@ configs:
           - "^public.entity_status_logs_vof_v2_backup$"
       queries:
         paths:
-          - fixtures/tmdb_pg
+          - internal/tmdb_pg
         # array of go regex pattern, empty means all e.g. ["^[a-zA-Z0-9_]*.sql$"]
         include: []
         # array of go regex pattern, empty means none e.g. ["^migrations*.sql$"]
         exclude: []
     gen:
       store:
-        path: fixtures/tmdb_pg/store
+        path: internal/tmdb_pg/store
       models:
-        path: fixtures/tmdb_pg/models
+        path: internal/tmdb_pg/models
   - name: tmdb_mysql
     engine: mysql
     database:
@@ -56,11 +56,11 @@ configs:
         exclude: []
       queries:
         paths:
-          - fixtures/tmdb_mysql
+          - internal/tmdb_mysql
         include: []
         exclude: []
     gen:
       store:
-        path: fixtures/tmdb_mysql/store
+        path: internal/tmdb_mysql/store
       models:
-        path: fixtures/tmdb_mysql/models
+        path: internal/tmdb_mysql/models

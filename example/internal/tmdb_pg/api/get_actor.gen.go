@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aakash-rajur/example/fixtures/tmdb_pg/store"
+	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 )
 
-type GetCrewArgs struct {
+type GetActorArgs struct {
 	Id *int64 `db:"id" json:"id"`
 }
 
-func (args GetCrewArgs) String() string {
+func (args GetActorArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *args.Id),
@@ -20,24 +20,24 @@ func (args GetCrewArgs) String() string {
 		", ",
 	)
 
-	return fmt.Sprintf("GetCrewArgs{%s}", content)
+	return fmt.Sprintf("GetActorArgs{%s}", content)
 }
 
-func (args GetCrewArgs) Query(db store.Database) ([]GetCrewResult, error) {
-	return store.Query[GetCrewResult](db, args)
+func (args GetActorArgs) Query(db store.Database) ([]GetActorResult, error) {
+	return store.Query[GetActorResult](db, args)
 }
 
-func (args GetCrewArgs) Sql() string {
-	return getCrewSql
+func (args GetActorArgs) Sql() string {
+	return getActorSql
 }
 
-type GetCrewResult struct {
+type GetActorResult struct {
 	Id     *int32                   `db:"id" json:"id"`
 	Name   *string                  `db:"name" json:"name"`
 	Movies []map[string]interface{} `db:"movies" json:"movies"`
 }
 
-func (result GetCrewResult) String() string {
+func (result GetActorResult) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *result.Id),
@@ -47,8 +47,8 @@ func (result GetCrewResult) String() string {
 		", ",
 	)
 
-	return fmt.Sprintf("GetCrewResult{%s}", content)
+	return fmt.Sprintf("GetActorResult{%s}", content)
 }
 
-//go:embed get-crew.sql
-var getCrewSql string
+//go:embed get-actor.sql
+var getActorSql string

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/aakash-rajur/example/fixtures/tmdb_mysql/store"
+	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 )
 
 type ListHyperParametersArgs struct {
@@ -40,11 +40,18 @@ func (args ListHyperParametersArgs) Sql() string {
 }
 
 type ListHyperParametersResult struct {
+	TotalRecordsCount *int64  `db:"totalRecordsCount" json:"totalRecordsCount"`
+	Value             *string `db:"value" json:"value"`
+	FriendlyName      *string `db:"friendlyName" json:"friendlyName"`
 }
 
 func (result ListHyperParametersResult) String() string {
 	content := strings.Join(
-		[]string{},
+		[]string{
+			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
+			fmt.Sprintf("Value: %v", *result.Value),
+			fmt.Sprintf("FriendlyName: %v", *result.FriendlyName),
+		},
 		", ",
 	)
 
