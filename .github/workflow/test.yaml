@@ -1,0 +1,80 @@
+name: Test
+
+on:
+  - push
+
+env:
+  POSTGRESQL_VERSION: 16
+  POSTGRESQL_IMAGE: bitnami/postgresql
+  TMDB_PG_PORT: 54320
+  TMDB_PG_DATABASE: app
+  TMDB_PG_USER: app
+  TMDB_PG_PASSWORD: app
+  TMDB_PG_CONTAINER_NAME: tmdb-pg
+  MYSQL_IMAGE: mysql
+  MYSQL_VERSION: 8.0
+  TMDB_MYSQL_PORT: 33060
+  TMDB_MYSQL_DATABASE: app
+  TMDB_MYSQL_USER: app
+  TMDB_MYSQL_PASSWORD: app
+  TMDB_MYSQL_ROOT_PASSWORD: root
+  TMDB_MYSQL_CONTAINER_NAME: tmdb-mysql
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      tmdb-pg:
+        image: ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }}
+        ports:
+          - ${{ env.TMDB_PG_PORT }}:5432
+        env:
+          POSTGRESQL_POSTGRES_PASSWORD: postgres
+          POSTGRESQL_DATABASE: ${{ env.TMDB_PG_DATABASE }}
+          POSTGRESQL_USERNAME: ${{ env.TMDB_PG_USER }}
+          POSTGRESQL_PASSWORD: ${{ env.TMDB_PG_PASSWORD }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: setup go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21
+      - name: install dependencies
+        run: go mod tidy
+      - name: boot service containers
+        run: |
+          docker run -d --name ${{ env.TMDB_PG_CONTAINER_NAME }} \
+            -p ${{ env.TMDB_PG_PORT }}:5432 \
+            -e POSTGRESQL_POSTGRES_PASSWORD=postgres \
+            -e POSTGRESQL_DATABASE=${{ env.TMDB_PG_DATABASE }} \
+            -e POSTGRESQL_USERNAME=${{ env.TMDB_PG_USER }} \
+            -e POSTGRESQL_PASSWORD=${{ env.TMDB_PG_PASSWORD }} \
+            ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }};
+          
+          echo "waiting for tmdb-pg to start";
+          
+          sleep 15;
+          
+          docker inspect ${{ env.TMDB_PG_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
+
+          docker run -d --name ${{ env.TMDB_MYSQL_CONTAINER_NAME }} \
+            -p ${{ env.TMDB_MYSQL_PORT }}:3306 \
+            -e MYSQL_ROOT_PASSWORD=${{ env.TMDB_MYSQL_ROOT_PASSWORD }} \
+            -e MYSQL_DATABASE=${{ env.TMDB_MYSQL_DATABASE }} \
+            -e MYSQL_USER=${{ env.TMDB_MYSQL_USER }} \
+            -e MYSQL_PASSWORD=${{ env.TMDB_MYSQL_PASSWORD }} \
+            ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }};
+          
+          echo "waiting for tmdb-mysql to start";
+          
+          sleep 15;
+          
+          docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
+      - name: run tests
+        run: go test -json ./internal/... ./integration/... > TestResults.json
+      - name: upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: TestResults.json
