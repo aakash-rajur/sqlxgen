@@ -62,9 +62,9 @@ jobs:
           
           docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
       - name: run tests
-        run: go test -json ./internal/... ./integration/... > TestResults.json
-      - name: upload test results
-        uses: actions/upload-artifact@v3
-        with:
-          name: TestResults
-          path: TestResults.json
+        run: go test -json ./internal/... ./integration/...
+#      - name: upload test results
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: TestResults
+#          path: TestResults.json
