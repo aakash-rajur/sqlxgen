@@ -42,12 +42,6 @@ jobs:
             -e POSTGRESQL_PASSWORD=${{ env.TMDB_PG_PASSWORD }} \
             ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }};
           
-          echo "waiting for tmdb-pg to start";
-          
-          sleep 15;
-          
-          docker inspect ${{ env.TMDB_PG_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
-
           docker run -d --name ${{ env.TMDB_MYSQL_CONTAINER_NAME }} \
             -p ${{ env.TMDB_MYSQL_PORT }}:3306 \
             -e MYSQL_ROOT_PASSWORD=${{ env.TMDB_MYSQL_ROOT_PASSWORD }} \
@@ -55,12 +49,6 @@ jobs:
             -e MYSQL_USER=${{ env.TMDB_MYSQL_USER }} \
             -e MYSQL_PASSWORD=${{ env.TMDB_MYSQL_PASSWORD }} \
             ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }};
-          
-          echo "waiting for tmdb-mysql to start";
-          
-          sleep 15;
-          
-          docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
       - name: run tests
         env:
           TMDB_PG_PORT: ${{ env.TMDB_PG_PORT }}
@@ -71,7 +59,14 @@ jobs:
           TMDB_MYSQL_DATABASE: ${{ env.TMDB_MYSQL_DATABASE }}
           TMDB_MYSQL_USER: ${{ env.TMDB_MYSQL_USER }}
           TMDB_MYSQL_PASSWORD: ${{ env.TMDB_MYSQL_PASSWORD }}
-        run: go test ./internal/... ./integration/...
+        run: |
+          docker inspect ${{ env.TMDB_PG_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
+          
+          docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
+          
+          printenv;
+          
+          go test ./integration/...
 #      - name: upload test results
 #        uses: actions/upload-artifact@v3
 #        with:

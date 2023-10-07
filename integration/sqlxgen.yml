@@ -2,7 +2,7 @@
 version: 1
 
 log:
-  level: info # debug, info, warn, error
+  level: debug # debug, info, warn, error
   format: text # json, text
 
 configs:
