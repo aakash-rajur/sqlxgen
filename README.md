@@ -104,7 +104,7 @@ where true
 and id = :user_id; -- :user_id type: bigint
 ```
 5. otherwise, they'll have `json.RawMessage` type.
-6. `json[b]_agg`, `json[b]_build_object` and etc are taken care of [ref](internal/introspect/pg/json.go#L34)
+6. `json[b]_agg`, `json[b]_build_object`, `json_arrayagg`, `json_objectagg`, `json_object` and etc are taken care of [ref](internal/introspect/pg/json.go#L34)
 
 ## Motivation
 1. age-old sql generation vs sql debate, i prefer writing sql queries over sql generation. (eat your greens!)
