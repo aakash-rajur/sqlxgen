@@ -31,7 +31,7 @@ jobs:
         with:
           go-version: 1.21
       - name: install dependencies
-        run: go mod tidy
+        run: go get .
       - name: boot service containers
         run: |
           docker run -d --name ${{ env.TMDB_PG_CONTAINER_NAME }} \
