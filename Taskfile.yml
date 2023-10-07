@@ -115,6 +115,22 @@ tasks:
           -e MYSQL_PWD={{.TMDB_MYSQL_PASSWORD}} \
           -it {{.TMDB_MYSQL_CONTAINER_NAME}} \
           mysql -u {{.TMDB_MYSQL_USER}} -D {{.TMDB_MYSQL_DATABASE}}
+  tag:
+    desc: "Tag a new release"
+    cmds:
+      - git tag -a ${VERSION} -m "Release ${VERSION}"
+  tag.verify:
+    desc: "Verify a release tag"
+    cmds:
+      - git tag -v ${VERSION}
+  tag.remove:
+    desc: "Remove a release tag"
+    cmds:
+      - git tag -d ${VERSION}
+  tag.push:
+    desc: "Push a new release tag"
+    cmds:
+      - git push origin ${VERSION}
   build.local:
     desc: "Build local binary"
     cmds:
