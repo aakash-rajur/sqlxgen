@@ -62,6 +62,15 @@ jobs:
           
           docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
       - name: run tests
+        env:
+          TMDB_PG_PORT: ${{ env.TMDB_PG_PORT }}
+          TMDB_PG_DATABASE: ${{ env.TMDB_PG_DATABASE }}
+          TMDB_PG_USER: ${{ env.TMDB_PG_USER }}
+          TMDB_PG_PASSWORD: ${{ env.TMDB_PG_PASSWORD }}
+          TMDB_MYSQL_PORT: ${{ env.TMDB_MYSQL_PORT }}
+          TMDB_MYSQL_DATABASE: ${{ env.TMDB_MYSQL_DATABASE }}
+          TMDB_MYSQL_USER: ${{ env.TMDB_MYSQL_USER }}
+          TMDB_MYSQL_PASSWORD: ${{ env.TMDB_MYSQL_PASSWORD }}
         run: go test ./internal/... ./integration/...
 #      - name: upload test results
 #        uses: actions/upload-artifact@v3

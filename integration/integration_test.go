@@ -44,12 +44,6 @@ func TestIntegration(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = checkEnvFile(workingDir)
-
-	if err != nil {
-		t.Fatalf("unable to load env file: %v\nenv file required", err)
-	}
-
 	cleanup := setupTest(workingDir, t)
 
 	defer cleanup(t)
@@ -150,14 +144,6 @@ func TestIntegration(t *testing.T) {
 			cupaloy.SnapshotT(t, w.Content)
 		})
 	}
-}
-
-func checkEnvFile(workDir string) error {
-	envFile := path.Join(workDir, ".env")
-
-	_, err := os.Stat(envFile)
-
-	return err
 }
 
 func withGoMod(workDir string) (func() error, error) {
