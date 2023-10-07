@@ -23,16 +23,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    services:
-      tmdb-pg:
-        image: ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }}
-        ports:
-          - ${{ env.TMDB_PG_PORT }}:5432
-        env:
-          POSTGRESQL_POSTGRES_PASSWORD: postgres
-          POSTGRESQL_DATABASE: ${{ env.TMDB_PG_DATABASE }}
-          POSTGRESQL_USERNAME: ${{ env.TMDB_PG_USER }}
-          POSTGRESQL_PASSWORD: ${{ env.TMDB_PG_PASSWORD }}
     steps:
       - name: checkout
         uses: actions/checkout@v4
