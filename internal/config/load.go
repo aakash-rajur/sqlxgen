@@ -2,25 +2,17 @@ package config
 
 import (
 	"log/slog"
+	"maps"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/joomcode/errorx"
 )
 
 func loadAndExpand(workDir string, sqlxGenAltPath string) (string, error) {
-	envFile := path.Join(workDir, ".env")
-
-	_, err := os.Stat(envFile)
-
-	env := make(map[string]string)
-
-	if err == nil {
-		env, err = godotenv.Read(envFile)
-	} else if !os.IsNotExist(err) {
-		slog.Warn("failed to read environment variables")
-	}
+	env := loadEnvFile(workDir)
 
 	cfgPath := getSqlxGenPath(workDir, env, sqlxGenAltPath)
 
@@ -64,4 +56,40 @@ func getSqlxGenPath(
 	}
 
 	return path.Join(workDir, cfgEnvPath)
+}
+
+func loadEnvFile(workDir string) map[string]string {
+	envFile := path.Join(workDir, ".env")
+
+	_, err := os.Stat(envFile)
+
+	env := loadEnv()
+
+	if err == nil {
+		dotEnv, err := godotenv.Read(envFile)
+
+		if err != nil {
+			slog.Warn("failed to read environment variables")
+		}
+
+		if dotEnv != nil {
+			maps.Copy(env, dotEnv)
+		}
+	} else if !os.IsNotExist(err) {
+		slog.Warn("local environment file not found")
+	}
+
+	return env
+}
+
+func loadEnv() map[string]string {
+	env := make(map[string]string)
+
+	for _, e := range os.Environ() {
+		pair := strings.SplitN(e, "=", 2)
+
+		env[pair[0]] = pair[1]
+	}
+
+	return env
 }
