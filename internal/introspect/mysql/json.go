@@ -61,9 +61,9 @@ func parseJsonAnnotations(query string) (map[string]string, error) {
 
 func getJsonType(jsonFn string) string {
 	switch jsonFn {
-	case "json_arrayagg":
+	case "json_arrayagg", "array":
 		return "array"
-	case "json_objectagg", "json_object":
+	case "json_objectagg", "json_object", "object":
 		return "object"
 	}
 
