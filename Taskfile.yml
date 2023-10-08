@@ -131,7 +131,11 @@ tasks:
     desc: "Push a new release tag"
     cmds:
       - git push origin ${VERSION}
-  build.local:
-    desc: "Build local binary"
+  build.snapshot:
+    desc: "Build snapshot binary"
     cmds:
       - goreleaser release --snapshot --clean
+  build:
+    desc: "Build snapshot binary"
+    cmds:
+      - goreleaser release --clean

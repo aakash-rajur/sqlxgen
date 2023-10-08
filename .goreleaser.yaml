@@ -18,7 +18,7 @@ builds:
       - linux
       - windows
       - darwin
-    main: ./cmd/cli
+    main: ./cmd/sqlxgen
     ldflags:
       - -s -w -X main.Version={{.Version}}
 
@@ -48,3 +48,5 @@ announce:
   skip: true
 
 report_sizes: true
+
+release: {}
