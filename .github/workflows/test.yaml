@@ -64,7 +64,7 @@ jobs:
           
           docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
           
-          printenv;
+          docker logs ${{ env.TMDB_PG_CONTAINER_NAME }}
           
           go test ./integration/...
 #      - name: upload test results
