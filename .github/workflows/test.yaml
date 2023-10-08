@@ -35,6 +35,10 @@ jobs:
       - name: boot service containers
         run: |
           docker run -d --name ${{ env.TMDB_PG_CONTAINER_NAME }} \
+            -v fixtures/pg/seed.sh:/docker-entrypoint-initdb.d/seed.sh \
+            -v fixtures/pg/01.features.sql:/tmp/01.features.sql \
+            -v fixtures/pg/02.schema.sql:/tmp/02.schema.sql \
+            -v fixtures/pg/03.data.sql:/tmp/03.data.sql \
             -p ${{ env.TMDB_PG_PORT }}:5432 \
             -e POSTGRESQL_POSTGRES_PASSWORD=postgres \
             -e POSTGRESQL_DATABASE=${{ env.TMDB_PG_DATABASE }} \
@@ -43,6 +47,7 @@ jobs:
             ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }};
           
           docker run -d --name ${{ env.TMDB_MYSQL_CONTAINER_NAME }} \
+            -v fixtures/mysql/backup.sql:/docker-entrypoint-initdb.d/backup.sql \
             -p ${{ env.TMDB_MYSQL_PORT }}:3306 \
             -e MYSQL_ROOT_PASSWORD=${{ env.TMDB_MYSQL_ROOT_PASSWORD }} \
             -e MYSQL_DATABASE=${{ env.TMDB_MYSQL_DATABASE }} \
@@ -63,8 +68,6 @@ jobs:
           docker inspect ${{ env.TMDB_PG_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
           
           docker inspect ${{ env.TMDB_MYSQL_CONTAINER_NAME }} --format='{{.Name}}: {{.State.Status}}';
-          
-          docker logs ${{ env.TMDB_PG_CONTAINER_NAME }}
           
           go test ./integration/...
 #      - name: upload test results
