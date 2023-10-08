@@ -11,6 +11,11 @@
 3. support for postgres and mysql databases.
 
 ## Installation
+### homebrew
+```bash
+brew install aakash-rajur/tap/sqlxgen
+```
+
 ### Releases
 checkout releases [here](https://github.com/aakash-rajur/sqlxgen/releases)
 
@@ -21,7 +26,7 @@ go install -v github.com/aakash-rajur/sqlxgen/cmd/sqlxgen@latest
 
 ## Usage
 
-1. generate sqlxgen.yaml file in your project root directory with the following command.
+1. generate `sqlxgen.yml` file in your project root directory with the following command.
 ```bash
 sqlxgen init
 ```
