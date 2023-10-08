@@ -13,7 +13,7 @@ jobs:
     name: Test
     uses: ./.github/workflows/test-job.yml
     with:
-      ref: ${{  github.ref_name }}
+      ref: ${{ github.ref_name }}
   release:
     name: Release
     runs-on: ubuntu-latest
