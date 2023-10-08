@@ -33,8 +33,11 @@ go install -v github.com/aakash-rajur/sqlxgen/cmd/sqlxgen@latest
 sqlxgen init
 ```
 2. edit `sqlxgen.yml` file to suit your needs. [example](example/sqlxgen.yml#L12-L14)
-    1. `host` takes precedence over `url`.
-    2. with `host` other parameters can be omitted.
+   1. `host` takes precedence over `url`.
+   2. with `host` other parameters can be omitted.
+   3. just provide `url` if you want to use it as is.
+   4. default connection for postgres is `postgres://postgres:@localhost:5432/postgres?sslmode=disable`
+   5. default connection for mysql is `root:@tcp(localhost:3306)/mysql?parseTime=true`
 ```yaml
 # expand env vars, host takes precedence over url
 # url: postgres://u:p@h:5432/db?sslmode=disable
