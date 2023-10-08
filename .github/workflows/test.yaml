@@ -24,12 +24,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: setup go
         uses: actions/setup-go@v4
         with:
           go-version: 1.21
-      - name: checkout
-        uses: actions/checkout@v4
       - name: install dependencies
         run: go mod download
       - name: boot service containers
