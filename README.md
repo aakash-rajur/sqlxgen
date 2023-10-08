@@ -11,6 +11,8 @@
 3. support for postgres and mysql databases.
 
 ## Installation
+### Releases
+checkout releases [here](https://github.com/aakash-rajur/sqlxgen/releases)
 
 ### Install from source
 ```bash
