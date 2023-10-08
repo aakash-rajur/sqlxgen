@@ -135,6 +135,10 @@ tasks:
     desc: "Build snapshot binary"
     cmds:
       - goreleaser release --snapshot --clean
+  release.local:
+    desc: "Build snapshot binary"
+    cmds:
+      - goreleaser release --clean --skip=publish
   release:
     desc: "Build snapshot binary"
     cmds:
