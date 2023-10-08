@@ -55,5 +55,6 @@ brews:
   - name: sqlxgen
     homepage: https://github.com/aakash-rajur/sqlxgen
     description: tool to generate sqlx models from schemas and queries
+    license: MIT
     test: |
       system "#{bin}/sqlxgen version"
