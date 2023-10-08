@@ -1,7 +1,15 @@
 name: Test
 
 on:
-  - push
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch or tag'
+        required: true
+        default: 'main'
 
 env:
   POSTGRESQL_VERSION: 16
