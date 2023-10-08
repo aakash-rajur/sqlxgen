@@ -69,12 +69,6 @@ func (s source) IntrospectQueries(tx *sqlx.Tx) ([]i.Query, error) {
 		}
 	}
 
-	_, err = tx.Exec("drop table if exists sample_query_introspection;")
-
-	if err != nil {
-		return nil, errorx.InternalError.Wrap(err, "failed to cleanup sample_query_introspection table")
-	}
-
 	return qs, nil
 }
 

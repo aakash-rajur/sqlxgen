@@ -891,11 +891,6 @@ func prepareMysqlMock(
 			)
 	}
 
-	m.ExpectExec("drop table if exists sample_query_introspection").
-		WillReturnResult(
-			sqlmock.NewResult(0, 0),
-		)
-
 	m.ExpectRollback()
 
 	m.ExpectClose()

@@ -883,11 +883,6 @@ func TestIntrospectQueries(t *testing.T) {
 			)
 	}
 
-	mock.ExpectExec("drop table if exists sample_query_introspection").
-		WillReturnResult(
-			sqlmock.NewResult(0, 0),
-		)
-
 	mock.ExpectRollback()
 
 	mock.ExpectClose()
