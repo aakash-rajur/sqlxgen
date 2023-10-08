@@ -24,14 +24,14 @@
 sqlxgen init
 ```
 2. edit `sqlxgen.yml` file to suit your needs. [example](example/sqlxgen.yml#L12-L14)
-  1. `host` takes precedence over `url`.
+    1. `host` takes precedence over `url`.
+    2. with `host` other parameters can be omitted.
 ```yaml
 # expand env vars, host takes precedence over url
 # url: postgres://u:p@h:5432/db?sslmode=disable
 # host: h1
 # result: postgres://postgres:@h1:5432/db?sslmode=disable
 ```
-  2. with `host` other parameters can be omitted.
 3. generate table model and query model code with the following command. Picks `sqlxgen.yml` from current directory.
 ```bash
 sqlxgen generate [--config <path-to-config-file>]
