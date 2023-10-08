@@ -1,6 +1,8 @@
 # sqlxgen
 
-[![Test](https://github.com/aakash-rajur/sqlxgen/actions/workflows/test.yaml/badge.svg)](https://github.com/aakash-rajur/sqlxgen/actions/workflows/test.yaml) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/aakash-rajur/sqlxgen/main/LICENSE.md)
+[![Test](https://github.com/aakash-rajur/sqlxgen/actions/workflows/test.yml/badge.svg)](https://github.com/aakash-rajur/sqlxgen/actions/workflows/test.yml) 
+[![Release](https://github.com/aakash-rajur/sqlxgen/actions/workflows/release.yml/badge.svg)](https://github.com/aakash-rajur/sqlxgen/actions/workflows/release.yml) 
+[![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/aakash-rajur/sqlxgen/main/LICENSE.md)
 
 `sqlxgen` is a tool to generate sqlx compatible code from database schema and sql queries in your project.
 
