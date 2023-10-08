@@ -8,6 +8,10 @@ log:
 configs:
   - name: tmdb_pg
     engine: postgres # postgres, mysql
+    # expand env vars, host takes precedence over url
+    # url: postgres://u:p@h:5432/db?sslmode=disable
+    # host: h1
+    # result: postgres://postgres:@h1:5432/db?sslmode=disable
     database:
       url: "${TMDB_PG_URL}"
       host: "${TMDB_PG_HOST}"

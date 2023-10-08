@@ -2,7 +2,6 @@ package types
 
 import (
 	"fmt"
-	"net/url"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
@@ -42,7 +41,7 @@ func (d *Database) GetUrl(engine string) (string, error) {
 	}
 
 	if engine == "postgres" {
-		return getPgUrl(d)
+		return getPgUrl(d), nil
 	}
 
 	return "", errorx.IllegalArgument.New("invalid engine: %s", engine)
@@ -98,28 +97,75 @@ func (d *Database) Merge(other *Database) *Database {
 	return d
 }
 
-func getPgUrl(d *Database) (string, error) {
-	safeUrl, err := url.Parse(*d.Url)
+func getPgUrl(d *Database) string {
+	isUrlEmpty := d.Url == nil || *d.Url == ""
 
-	if err != nil {
-		return "", errorx.IllegalArgument.Wrap(err, "failed to parse db connection url")
+	isHostEmpty := d.Host == nil || *d.Host == ""
+
+	if isHostEmpty && !isUrlEmpty {
+		return *d.Url
 	}
 
-	safeUrl.Host = fmt.Sprintf("%s:%s", *d.Host, *d.Port)
+	port := safeValue("5432", d.Port)
 
-	safeUrl.Path = *d.Db
+	host := safeValue("localhost", d.Host)
 
-	safeUrl.User = url.UserPassword(*d.User, *d.Password)
+	db := safeValue("postgres", d.Db)
 
-	query := safeUrl.Query()
+	user := safeValue("postgres", d.User)
 
-	query.Set("sslmode", *d.SslMode)
+	password := safeValue("", d.Password)
 
-	safeUrl.RawQuery = query.Encode()
+	sslMode := safeValue("disable", d.SslMode)
 
-	return safeUrl.String(), nil
+	safeUrl := fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=%s",
+		user,
+		password,
+		host,
+		port,
+		db,
+		sslMode,
+	)
+
+	return safeUrl
 }
 
 func getMysqlUrl(d *Database) string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", *d.User, *d.Password, *d.Host, *d.Port, *d.Db)
+	isUrlEmpty := d.Url == nil || *d.Url == ""
+
+	isHostEmpty := d.Host == nil || *d.Host == ""
+
+	if isHostEmpty && !isUrlEmpty {
+		return *d.Url
+	}
+
+	port := safeValue("3306", d.Port)
+
+	host := safeValue("localhost", d.Host)
+
+	db := safeValue("mysql", d.Db)
+
+	user := safeValue("root", d.User)
+
+	password := safeValue("", d.Password)
+
+	safeUrl := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
+		user,
+		password,
+		host,
+		port,
+		db,
+	)
+
+	return safeUrl
+}
+
+func safeValue(left string, right *string) string {
+	if right != nil && *right != "" {
+		return *right
+	}
+
+	return left
 }

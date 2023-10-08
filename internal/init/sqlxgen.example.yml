@@ -10,7 +10,10 @@ configs:
   - name: example-pg1
     # postgres, mysql
     engine: postgres
-    # expand env vars
+    # expand env vars, host takes precedence over url
+    # url: postgres://u:p@h:5432/db?sslmode=disable
+    # host: h1
+    # result: postgres://postgres:@h1:5432/db?sslmode=disable
     database:
       url: "${POSTGRESQL_URL}"
       host: "${POSTGRESQL_HOST}"
