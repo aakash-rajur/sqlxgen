@@ -6,15 +6,15 @@ import (
 )
 
 type MoviesCountry struct {
-	CountryId *string `db:"country_id" json:"country_id"`
 	MovieId   *int64  `db:"movie_id" json:"movie_id"`
+	CountryId *string `db:"country_id" json:"country_id"`
 }
 
 func (moviesCountry MoviesCountry) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("CountryId: %v", *moviesCountry.CountryId),
 			fmt.Sprintf("MovieId: %v", *moviesCountry.MovieId),
+			fmt.Sprintf("CountryId: %v", *moviesCountry.CountryId),
 		},
 		", ",
 	)
@@ -28,8 +28,8 @@ func (_ MoviesCountry) TableName() string {
 
 func (_ MoviesCountry) PrimaryKey() []string {
 	return []string{
-		"country_id",
 		"movie_id",
+		"country_id",
 	}
 }
 
@@ -56,60 +56,60 @@ func (_ MoviesCountry) DeleteQuery() string {
 // language=mysql
 var moviesCountryInsertSql = `
 INSERT INTO app.movies_countries(
-  country_id,
-  movie_id
+  movie_id,
+  country_id
 )
 VALUES (
-  :country_id,
-  :movie_id
+  :movie_id,
+  :country_id
 )
 RETURNING
-  country_id,
-  movie_id;
+  movie_id,
+  country_id;
 `
 
 // language=mysql
 var moviesCountryUpdateSql = `
 UPDATE app.movies_countries
 SET
-  country_id = :country_id,
-  movie_id = :movie_id
+  movie_id = :movie_id,
+  country_id = :country_id
 WHERE TRUE
-  AND country_id = :country_id
   AND movie_id = :movie_id
+  AND country_id = :country_id
 RETURNING
-  country_id,
-  movie_id;
+  movie_id,
+  country_id;
 `
 
 // language=mysql
 var moviesCountryFindSql = `
 SELECT
-  country_id,
-  movie_id
+  movie_id,
+  country_id
 FROM app.movies_countries
 WHERE TRUE
-  AND (:country_id IS NULL or country_id = :country_id)
   AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:country_id IS NULL or country_id = :country_id)
 LIMIT 1;
 `
 
 // language=mysql
 var moviesCountryFindAllSql = `
 SELECT
-  country_id,
-  movie_id
+  movie_id,
+  country_id
 FROM app.movies_countries
 WHERE TRUE
-  AND (:country_id IS NULL or country_id = :country_id)
-  AND (:movie_id IS NULL or movie_id = :movie_id);
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:country_id IS NULL or country_id = :country_id);
 `
 
 // language=mysql
 var moviesCountryDeleteSql = `
 DELETE FROM app.movies_countries
 WHERE TRUE
-  AND country_id = :country_id
-  AND movie_id = :movie_id;
+  AND movie_id = :movie_id
+  AND country_id = :country_id;
 `
 

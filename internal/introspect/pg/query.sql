@@ -18,4 +18,4 @@ where true
 and attr.attrelid = cast('sample_query_introspection' as regclass)
 and attr.attnum > 0
 and not attr.attisdropped
-order by attnum;
+order by attr.attname;

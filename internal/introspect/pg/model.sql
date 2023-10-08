@@ -12,7 +12,7 @@ json_agg(
     'generated', attr.attgenerated = 's',
     'pk_name', coalesce(kcu.constraint_name, ''),
     'pk_ordinal_position', coalesce(kcu.ordinal_position, 0)
-  ) order by kcu.ordinal_position, attr.attnum
+  ) order by kcu.ordinal_position, attr.attname
 ) as columns
 from pg_catalog.pg_attribute attr
 inner join pg_catalog.pg_class cls on cls.oid = attr.attrelid

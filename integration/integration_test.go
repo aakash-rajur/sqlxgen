@@ -129,6 +129,8 @@ func TestIntegration(t *testing.T) {
 		"fixtures/tmdb_pg/store/store.gen.go",
 	}
 
+	assert.Len(t, mw.Writers, len(testCases), "number of generated files should match number of test cases")
+
 	for i, testCase := range testCases {
 		w := mw.Writers[i]
 

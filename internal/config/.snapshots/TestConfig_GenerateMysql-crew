@@ -6,15 +6,15 @@ import (
 )
 
 type Crew struct {
-	Id   *int64  `db:"id" json:"id"`
 	Name *string `db:"name" json:"name"`
+	Id   *int64  `db:"id" json:"id"`
 }
 
 func (crew Crew) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *crew.Id),
 			fmt.Sprintf("Name: %v", *crew.Name),
+			fmt.Sprintf("Id: %v", *crew.Id),
 		},
 		", ",
 	)
@@ -61,28 +61,28 @@ VALUES (
   :name
 )
 RETURNING
-  id,
-  name;
+  name,
+  id;
 `
 
 // language=mysql
 var crewUpdateSql = `
 UPDATE app.crew
 SET
-  id = :id,
-  name = :name
+  name = :name,
+  id = :id
 WHERE TRUE
   AND id = :id
 RETURNING
-  id,
-  name;
+  name,
+  id;
 `
 
 // language=mysql
 var crewFindSql = `
 SELECT
-  id,
-  name
+  name,
+  id
 FROM app.crew
 WHERE TRUE
   AND (:id IS NULL or id = :id)
@@ -92,8 +92,8 @@ LIMIT 1;
 // language=mysql
 var crewFindAllSql = `
 SELECT
-  id,
-  name
+  name,
+  id
 FROM app.crew
 WHERE TRUE
   AND (:id IS NULL or id = :id);

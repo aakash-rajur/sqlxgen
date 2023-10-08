@@ -6,19 +6,19 @@ import (
 )
 
 type MoviesActor struct {
-	MovieId   *int64  `db:"movie_id" json:"movie_id"`
-	ActorId   *int64  `db:"actor_id" json:"actor_id"`
 	Cast      *string `db:"cast" json:"cast"`
 	CastOrder *int32  `db:"cast_order" json:"cast_order"`
+	MovieId   *int64  `db:"movie_id" json:"movie_id"`
+	ActorId   *int64  `db:"actor_id" json:"actor_id"`
 }
 
 func (moviesActor MoviesActor) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("MovieId: %v", *moviesActor.MovieId),
-			fmt.Sprintf("ActorId: %v", *moviesActor.ActorId),
 			fmt.Sprintf("Cast: %v", *moviesActor.Cast),
 			fmt.Sprintf("CastOrder: %v", *moviesActor.CastOrder),
+			fmt.Sprintf("MovieId: %v", *moviesActor.MovieId),
+			fmt.Sprintf("ActorId: %v", *moviesActor.ActorId),
 		},
 		", ",
 	)
@@ -60,49 +60,49 @@ func (_ MoviesActor) DeleteQuery() string {
 // language=mysql
 var moviesActorInsertSql = `
 INSERT INTO app.movies_actors(
-  movie_id,
-  actor_id,
   cast,
-  cast_order
+  cast_order,
+  movie_id,
+  actor_id
 )
 VALUES (
-  :movie_id,
-  :actor_id,
   :cast,
-  :cast_order
+  :cast_order,
+  :movie_id,
+  :actor_id
 )
 RETURNING
-  movie_id,
-  actor_id,
   cast,
-  cast_order;
+  cast_order,
+  movie_id,
+  actor_id;
 `
 
 // language=mysql
 var moviesActorUpdateSql = `
 UPDATE app.movies_actors
 SET
-  movie_id = :movie_id,
-  actor_id = :actor_id,
   cast = :cast,
-  cast_order = :cast_order
+  cast_order = :cast_order,
+  movie_id = :movie_id,
+  actor_id = :actor_id
 WHERE TRUE
   AND movie_id = :movie_id
   AND actor_id = :actor_id
 RETURNING
-  movie_id,
-  actor_id,
   cast,
-  cast_order;
+  cast_order,
+  movie_id,
+  actor_id;
 `
 
 // language=mysql
 var moviesActorFindSql = `
 SELECT
-  movie_id,
-  actor_id,
   cast,
-  cast_order
+  cast_order,
+  movie_id,
+  actor_id
 FROM app.movies_actors
 WHERE TRUE
   AND (:movie_id IS NULL or movie_id = :movie_id)
@@ -113,10 +113,10 @@ LIMIT 1;
 // language=mysql
 var moviesActorFindAllSql = `
 SELECT
-  movie_id,
-  actor_id,
   cast,
-  cast_order
+  cast_order,
+  movie_id,
+  actor_id
 FROM app.movies_actors
 WHERE TRUE
   AND (:movie_id IS NULL or movie_id = :movie_id)

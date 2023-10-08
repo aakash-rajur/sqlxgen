@@ -3,30 +3,6 @@
   "table_name": "movies_actors",
   "columns": [
     {
-      "column_name": "movie_id",
-      "type": "bigint",
-      "type_id": "0",
-      "is_array": false,
-      "is_sequence": false,
-      "nullable": false,
-      "generated": false,
-      "pk_name": "PRIMARY",
-      "pk_ordinal_position": 1,
-      "json_type": ""
-    },
-    {
-      "column_name": "actor_id",
-      "type": "bigint",
-      "type_id": "0",
-      "is_array": false,
-      "is_sequence": false,
-      "nullable": false,
-      "generated": false,
-      "pk_name": "PRIMARY",
-      "pk_ordinal_position": 2,
-      "json_type": ""
-    },
-    {
       "column_name": "cast",
       "type": "text",
       "type_id": "0",
@@ -48,6 +24,30 @@
       "generated": false,
       "pk_name": "",
       "pk_ordinal_position": 0,
+      "json_type": ""
+    },
+    {
+      "column_name": "movie_id",
+      "type": "bigint",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "PRIMARY",
+      "pk_ordinal_position": 1,
+      "json_type": ""
+    },
+    {
+      "column_name": "actor_id",
+      "type": "bigint",
+      "type_id": "0",
+      "is_array": false,
+      "is_sequence": false,
+      "nullable": false,
+      "generated": false,
+      "pk_name": "PRIMARY",
+      "pk_ordinal_position": 2,
       "json_type": ""
     }
   ]

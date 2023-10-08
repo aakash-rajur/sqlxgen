@@ -34,8 +34,6 @@ jobs:
         run: go mod download
       - name: boot service containers
         run: |
-          pwd
-          
           docker run -d --name ${{ env.TMDB_PG_CONTAINER_NAME }} \
             -v ./fixtures/pg/seed.sh:/docker-entrypoint-initdb.d/seed.sh \
             -v ./fixtures/pg/01.features.sql:/tmp/01.features.sql \

@@ -1,8 +1,10 @@
 package mysql
 
 import (
+	"cmp"
 	_ "embed"
 	"fmt"
+	"slices"
 
 	i "github.com/aakash-rajur/sqlxgen/internal/introspect"
 	"github.com/aakash-rajur/sqlxgen/internal/utils"
@@ -49,6 +51,19 @@ func (s source) IntrospectSchema(tx *sqlx.Tx) ([]i.Table, error) {
 			if !validateTableName(fullTableName) {
 				continue
 			}
+
+			slices.SortStableFunc(
+				table.Columns,
+				func(a, b i.Column) int {
+					ordinal := cmp.Compare(a.PkOrdinalPosition, b.PkOrdinalPosition)
+
+					if ordinal != 0 {
+						return ordinal
+					}
+
+					return cmp.Compare(a.ColumnName, b.ColumnName)
+				},
+			)
 
 			tables = append(tables, table)
 		}

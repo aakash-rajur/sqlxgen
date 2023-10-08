@@ -90,7 +90,8 @@ left join information_schema.key_column_usage kc on (
 )
 where true
 and c.table_schema = 'public'
-and c.table_name = 'sample_query_introspection';
+and c.table_name = 'sample_query_introspection'
+order by c.column_name;
 `,
 			err: nil,
 		},
@@ -126,7 +127,8 @@ left join information_schema.key_column_usage kc on (
 )
 where true
 and c.table_schema = 'public'
-and c.table_name = 'sample_query_introspection';
+and c.table_name = 'sample_query_introspection'
+order by c.column_name;
 `,
 			err: nil,
 		},
@@ -217,7 +219,8 @@ left join information_schema.key_column_usage kc on (
 )
 where true
 and c.table_schema = 'public'
-and c.table_name = 'sample_query_introspection';
+and c.table_name = 'sample_query_introspection'
+order by c.column_name;
 `,
 			err: nil,
 		},
@@ -558,7 +561,8 @@ left join information_schema.key_column_usage kc on (
 )
 where true
 and c.table_schema = 'public'
-and c.table_name = 'sample_query_introspection';
+and c.table_name = 'sample_query_introspection'
+order by c.column_name;
 `,
 			err: nil,
 		},
@@ -661,7 +665,8 @@ left join information_schema.key_column_usage kc on (
 )
 where true
 and c.table_schema = 'public'
-and c.table_name = 'sample_query_introspection';
+and c.table_name = 'sample_query_introspection'
+order by c.column_name;
 `,
 			err: nil,
 		},
