@@ -14,7 +14,7 @@
 
 ### Install from source
 ```bash
-# todo
+go install -v github.com/aakash-rajur/sqlxgen/cmd/sqlxgen@latest
 ```
 
 ## Usage
