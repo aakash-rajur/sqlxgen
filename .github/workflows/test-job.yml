@@ -1,4 +1,4 @@
-name: "Test Job"
+name: "Unit and Integration Tests"
 
 on:
   workflow_call:
@@ -28,6 +28,7 @@ env:
 
 jobs:
   test:
+    name: "Unit and Integration Tests"
     runs-on: ubuntu-latest
     steps:
       - name: checkout

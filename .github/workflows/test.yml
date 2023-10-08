@@ -14,7 +14,7 @@ on:
 
 jobs:
   test:
-    name: test
+    name: Test
     uses: ./.github/workflows/test-job.yml
     with:
       ref: ${{ github.event.inputs.ref }}
