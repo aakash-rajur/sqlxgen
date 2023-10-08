@@ -31,17 +31,47 @@ jobs:
     name: "Unit and Integration"
     runs-on: ubuntu-latest
     steps:
-      - name: checkout
+      - id: checkout
+        name: checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.ref }}
-      - name: setup go
+      - id: setup-go
+        name: setup go
         uses: actions/setup-go@v4
         with:
           go-version: 1.21
-      - name: install dependencies
+      - id: install-dependencies
+        name: install dependencies
         run: go mod download
-      - name: boot service containers
+      - id: image-cache-setup
+        name: service container cache setup
+        uses: actions/cache@v3
+        with:
+          path: /tmp/image-cache
+          key: test-${{ runner.os }}-image-cache
+      - id: image-cache
+        name: service container cache
+        if: steps.image-cache-setup.outputs.cache-hit != 'true'
+        run: |
+          docker pull ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }};
+          
+          docker pull ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }};
+          
+          mkdir -p /tmp/image-cache;
+          
+          docker save ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }} > /tmp/image-cache/postgresql.tar;
+          
+          docker save ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }} > /tmp/image-cache/mysql.tar;
+      - id: image-cache-restore
+        name: service container cache restore
+        if: steps.image-cache-setup.outputs.cache-hit == 'true'
+        run: |
+          docker load -i /tmp/image-cache/postgresql.tar;
+          
+          docker load -i /tmp/image-cache/mysql.tar;
+      - id: boot-service-containers
+        name: boot service containers
         run: |
           docker run -d --name ${{ env.TMDB_PG_CONTAINER_NAME }} \
             -v ./fixtures/pg/seed.sh:/docker-entrypoint-initdb.d/seed.sh \
@@ -63,7 +93,8 @@ jobs:
             -e MYSQL_USER=${{ env.TMDB_MYSQL_USER }} \
             -e MYSQL_PASSWORD=${{ env.TMDB_MYSQL_PASSWORD }} \
             ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }};
-      - name: run tests
+      - id: test
+        name: run tests
         env:
           TMDB_PG_PORT: ${{ env.TMDB_PG_PORT }}
           TMDB_PG_DATABASE: ${{ env.TMDB_PG_DATABASE }}
