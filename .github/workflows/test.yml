@@ -1,5 +1,5 @@
 name: Test
-run-name: Test ${{ github.ref_name }} 🧪
+run-name: Test ${{ github.ref_name }} 🧪 - ${{ github.event.head_commit.message }}
 
 on:
   push:
