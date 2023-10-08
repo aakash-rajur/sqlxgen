@@ -44,32 +44,32 @@ jobs:
       - id: install-dependencies
         name: install dependencies
         run: go mod download
-      - id: image-cache-setup
-        name: service container cache setup
-        uses: actions/cache@v3
-        with:
-          path: /tmp/image-cache
-          key: test-${{ runner.os }}-image-cache
-      - id: image-cache
-        name: service container cache
-        if: steps.image-cache-setup.outputs.cache-hit != 'true'
-        run: |
-          docker pull ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }};
-          
-          docker pull ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }};
-          
-          mkdir -p /tmp/image-cache;
-          
-          docker save ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }} > /tmp/image-cache/postgresql.tar;
-          
-          docker save ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }} > /tmp/image-cache/mysql.tar;
-      - id: image-cache-restore
-        name: service container cache restore
-        if: steps.image-cache-setup.outputs.cache-hit == 'true'
-        run: |
-          docker load -i /tmp/image-cache/postgresql.tar;
-          
-          docker load -i /tmp/image-cache/mysql.tar;
+#      - id: image-cache-setup
+#        name: service container cache setup
+#        uses: actions/cache@v3
+#        with:
+#          path: /tmp/image-cache
+#          key: test-${{ runner.os }}-image-cache
+#      - id: image-cache
+#        name: service container cache
+#        if: steps.image-cache-setup.outputs.cache-hit != 'true'
+#        run: |
+#          docker pull ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }};
+#
+#          docker pull ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }};
+#
+#          mkdir -p /tmp/image-cache;
+#
+#          docker save ${{ env.POSTGRESQL_IMAGE }}:${{ env.POSTGRESQL_VERSION }} > /tmp/image-cache/postgresql.tar;
+#
+#          docker save ${{ env.MYSQL_IMAGE }}:${{ env.MYSQL_VERSION }} > /tmp/image-cache/mysql.tar;
+#      - id: image-cache-restore
+#        name: service container cache restore
+#        if: steps.image-cache-setup.outputs.cache-hit == 'true'
+#        run: |
+#          docker load -i /tmp/image-cache/postgresql.tar;
+#
+#          docker load -i /tmp/image-cache/mysql.tar;
       - id: boot-service-containers
         name: boot service containers
         run: |
