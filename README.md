@@ -143,6 +143,9 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## License
 [MIT](LICENSE.md)
 
+## Feedback
+Please feel free to [open an issue](https://github.com/aakash-rajur/sqlxgen/issues/new) if you have any feedback or suggestions.
+
 ## Acknowledgements
 1. [TMDB](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
 2. [sqlc](https://github.com/sqlc-dev/sqlc)
