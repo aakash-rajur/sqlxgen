@@ -2,6 +2,9 @@ package {{.PackageName}}
 
 import (
   "database/sql"
+  "database/sql/driver"
+  "encoding/json"
+  "fmt"
   "regexp"
 
   "github.com/jmoiron/sqlx"
