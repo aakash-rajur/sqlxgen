@@ -27,8 +27,7 @@
           ],
           "include": [],
           "exclude": [
-            "^public.migrations$",
-            "^public.entity_status_logs_vof_v2_backup$"
+            "^public.migrations$"
           ]
         },
         "queries": {

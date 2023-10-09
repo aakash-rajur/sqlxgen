@@ -484,10 +484,9 @@ configs:
           - public
         # array of go regex pattern, empty means all, e.g. ["^.+$"]
         include: []
-        # array of go regex pattern, empty means none e.g. ["^public\\.migrations*"]
+        # array of go regex pattern, empty means none e.g. ["^public\.migrations*"]
         exclude:
           - "^public.migrations$"
-          - "^public.entity_status_logs_vof_v2_backup$"
           - "^public.t_movies$"
           - "^public.t_movies_credits$"
       queries:

@@ -19,7 +19,6 @@
       "include": [],
       "exclude": [
         "^public.migrations$",
-        "^public.entity_status_logs_vof_v2_backup$",
         "^public.t_movies$",
         "^public.t_movies_credits$"
       ]

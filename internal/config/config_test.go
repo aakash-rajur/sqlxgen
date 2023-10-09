@@ -31,7 +31,7 @@ func TestConfig_String(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		want := `Config{Name: pnp, Engine: postgres, Database: Database{Host: localhost, Port: 5432, Db: app, User: app, Password: app, SslMode: disable, Url: postgres://app:app@localhost:5432/app}, Source: Source{models: Model{schemas: [public], include: [], exclude: [^public.migrations$ ^public.entity_status_logs_vof_v2_backup$ ^public.t_movies$ ^public.t_movies_credits$]}, queries: Query{paths: [gen/pg], include: [], exclude: [^list-project-2.sql$]}}, Gen: Gen{store: GenPartial{path: gen/pg/store}, model: GenPartial{path: gen/pg/models}}}`
+		want := `Config{Name: pnp, Engine: postgres, Database: Database{Host: localhost, Port: 5432, Db: app, User: app, Password: app, SslMode: disable, Url: postgres://app:app@localhost:5432/app}, Source: Source{models: Model{schemas: [public], include: [], exclude: [^public.migrations$ ^public.t_movies$ ^public.t_movies_credits$]}, queries: Query{paths: [gen/pg], include: [], exclude: [^list-project-2.sql$]}}, Gen: Gen{store: GenPartial{path: gen/pg/store}, model: GenPartial{path: gen/pg/models}}}`
 
 		got := cfg.String()
 
@@ -740,10 +740,9 @@ source:
       - public
     # array of go regex pattern, empty means all, e.g. ["^.+$"]
     include: []
-    # array of go regex pattern, empty means none e.g. ["^public\\.migrations*"]
+    # array of go regex pattern, empty means none e.g. ["^public\.migrations*"]
     exclude:
       - "^public.migrations$"
-      - "^public.entity_status_logs_vof_v2_backup$"
       - "^public.t_movies$"
       - "^public.t_movies_credits$"
   queries:
