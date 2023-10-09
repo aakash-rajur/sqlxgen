@@ -132,11 +132,18 @@ and id = :user_id; -- :user_id type: bigint
 3. [sqlc](https://github.com/sqlc-dev/sqlc) generates models for table and queries but has the following challenges:
    1. dumps all generated code in a single place, not allowing me to organize my code more contextually. 
    2. does not introspect my queries through database unless I type cast my selects explicitly.
-   3. introduces sqlc syntax for writing queries, which is not sql.
+   3. introduces sqlc [syntax](https://docs.sqlc.dev/en/latest/howto/named_parameters.html#nullable-parameters) for 
+      writing queries, which is not sql. Fine in most cases but if i want to run that query in my database client, 
+      i have to rewrite it.
+   4. does not generate crud operations for my tables.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-
 ## License
 [MIT](LICENSE.md)
+
+## Acknowledgements
+1. [TMDB](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
+2. [sqlc](https://github.com/sqlc-dev/sqlc)
+3. [sqlx](https://github.com/jmoiron/sqlx)
