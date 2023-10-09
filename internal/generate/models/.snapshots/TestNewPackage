@@ -8,6 +8,8 @@
   Models: ([]models.model) (len=2) {
     (models.model) {
       WriterCreator: (writer.Creator) <nil>,
+      StorePackageDir: (string) (len=5) "store",
+      StorePackageName: (string) (len=5) "store",
       ModelTemplate: (string) "",
       FileName: (string) (len=5) "actor",
       PascalName: (string) (len=5) "Actor",
@@ -60,6 +62,8 @@
     },
     (models.model) {
       WriterCreator: (writer.Creator) <nil>,
+      StorePackageDir: (string) (len=5) "store",
+      StorePackageName: (string) (len=5) "store",
       ModelTemplate: (string) "",
       FileName: (string) (len=5) "movie",
       PascalName: (string) (len=5) "Movie",

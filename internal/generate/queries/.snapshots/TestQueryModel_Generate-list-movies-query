@@ -8,7 +8,7 @@ var content = `{
 ],
 	"query": {
  "store_package_dir": "gen/store",
- "store_package_name": "gen/store",
+ "store_package_name": "github.com/john-doe/gen/store",
  "filename": "list-movies.sql",
  "pascal_name": "ListMovies",
  "camel_name": "listMovies",

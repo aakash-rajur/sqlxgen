@@ -31,9 +31,9 @@ func (args GetActorArgs) Sql() string {
 }
 
 type GetActorResult struct {
-	Id     *int32                   `db:"id" json:"id"`
-	Movies []map[string]interface{} `db:"movies" json:"movies"`
-	Name   *string                  `db:"name" json:"name"`
+	Id     *int32           `db:"id" json:"id"`
+	Movies *store.JsonArray `db:"movies" json:"movies"`
+	Name   *string          `db:"name" json:"name"`
 }
 
 func (result GetActorResult) String() string {

@@ -5,7 +5,7 @@ import (
 	"github.com/aakash-rajur/sqlxgen/internal/introspect"
 )
 
-func infer(column introspect.Column) (types.GoType, error) {
+func infer(storePackageDir string, column introspect.Column) (types.GoType, error) {
 	goType := types.GoType{
 		DbType:    column.Type,
 		GoType:    "interface{}",
@@ -63,15 +63,15 @@ func infer(column introspect.Column) (types.GoType, error) {
 		goType.Import = "encoding/json"
 
 		if column.JsonType == "array" {
-			goType.GoType = "[]map[string]interface{}"
+			goType.GoType = "*store.JsonArray"
 
-			goType.Import = ""
+			goType.Import = storePackageDir
 		}
 
 		if column.JsonType == "object" {
-			goType.GoType = "map[string]interface{}"
+			goType.GoType = "*store.JsonObject"
 
-			goType.Import = ""
+			goType.Import = storePackageDir
 		}
 
 		return goType, nil

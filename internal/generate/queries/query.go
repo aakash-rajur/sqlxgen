@@ -158,7 +158,7 @@ func newQueryModel(
 	fields := make([]types.Field, len(query.Columns))
 
 	for i, column := range query.Columns {
-		f, err := types.NewField(column, translate)
+		f, err := types.NewField(column, translate, storePackageDir, storePackageName)
 
 		if err != nil {
 			return queryModel{}, err
@@ -170,7 +170,7 @@ func newQueryModel(
 	params := make([]types.Field, len(query.Params))
 
 	for i, param := range query.Params {
-		p, err := types.NewField(param, translate)
+		p, err := types.NewField(param, translate, storePackageDir, storePackageName)
 
 		if err != nil {
 			return queryModel{}, err

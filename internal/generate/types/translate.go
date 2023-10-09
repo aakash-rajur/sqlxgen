@@ -7,7 +7,11 @@ import (
 )
 
 type Translate interface {
-	Infer(column introspect.Column) (GoType, error)
+	Infer(
+		storePackageDir string,
+		storePackageName string,
+		column introspect.Column,
+	) (GoType, error)
 
 	ModelTemplate() string
 
@@ -19,7 +23,11 @@ type fakeTranslate struct {
 	QueryTemplateContent string
 }
 
-func (t fakeTranslate) Infer(column introspect.Column) (GoType, error) {
+func (t fakeTranslate) Infer(
+	_ string,
+	_ string,
+	column introspect.Column,
+) (GoType, error) {
 	goType := GoType{
 		DbType:    column.Type,
 		GoType:    "interface{}",

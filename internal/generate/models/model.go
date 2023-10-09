@@ -23,14 +23,16 @@ import (
 )
 
 type model struct {
-	WriterCreator writer.Creator   `json:"-"`
-	ModelTemplate string           `json:"model_template"`
-	FileName      string           `json:"file_name"`
-	PascalName    string           `json:"pascal_name"`
-	CamelName     string           `json:"camel_name"`
-	Fields        []types.Field    `json:"fields"`
-	PkFields      []types.Field    `json:"pk_fields"`
-	Table         introspect.Table `json:"table"`
+	WriterCreator    writer.Creator   `json:"-"`
+	StorePackageDir  string           `json:"store_package_dir"`
+	StorePackageName string           `json:"store_package_name"`
+	ModelTemplate    string           `json:"model_template"`
+	FileName         string           `json:"file_name"`
+	PascalName       string           `json:"pascal_name"`
+	CamelName        string           `json:"camel_name"`
+	Fields           []types.Field    `json:"fields"`
+	PkFields         []types.Field    `json:"pk_fields"`
+	Table            introspect.Table `json:"table"`
 }
 
 func (m model) getImports() []string {
@@ -129,6 +131,8 @@ func (m model) generate(
 func newModel(
 	writerCreator writer.Creator,
 	translate types.Translate,
+	storePackageDir string,
+	storePackageName string,
 	table introspect.Table,
 ) (model, error) {
 	singular := inflection.Singular(table.TableName)
@@ -156,7 +160,7 @@ func newModel(
 	pkFields := make([]types.Field, 0)
 
 	for index, column := range table.Columns {
-		f, err := types.NewField(column, translate)
+		f, err := types.NewField(column, translate, storePackageDir, storePackageName)
 
 		if err != nil {
 			return model{}, err
@@ -179,13 +183,15 @@ func newModel(
 	}
 
 	m := model{
-		WriterCreator: writerCreator,
-		FileName:      fileName,
-		PascalName:    pascalName,
-		CamelName:     camelName,
-		Fields:        fields,
-		PkFields:      pkFields,
-		Table:         table,
+		WriterCreator:    writerCreator,
+		StorePackageDir:  storePackageDir,
+		StorePackageName: storePackageName,
+		FileName:         fileName,
+		PascalName:       pascalName,
+		CamelName:        camelName,
+		Fields:           fields,
+		PkFields:         pkFields,
+		Table:            table,
 	}
 
 	return m, nil

@@ -57,7 +57,7 @@ func TestNewQueryModel(t *testing.T) {
 				ft,
 				tmpDir,
 				"gen/store",
-				"gen/store",
+				"github.com/john-doe/gen/store",
 				testCase.query,
 			)
 
@@ -119,7 +119,7 @@ func TestQueryModel_GetImports(t *testing.T) {
 				ft,
 				tmpDir,
 				"gen/store",
-				"gen/store",
+				"github.com/john-doe/gen/store",
 				testCase.query,
 			)
 
@@ -189,7 +189,7 @@ var content = `+"`"+`{
 				ft,
 				tmpDir,
 				"gen/store",
-				"gen/store",
+				"github.com/john-doe/gen/store",
 				testCase.query,
 			)
 

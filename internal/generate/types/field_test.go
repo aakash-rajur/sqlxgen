@@ -49,7 +49,7 @@ func TestNewField(t *testing.T) {
 
 			want := fields[i]
 
-			got, err := NewField(column, ft)
+			got, err := NewField(column, ft, "gen/store", "github.com/john-doe/gen/store")
 
 			assert.Nil(t, err)
 

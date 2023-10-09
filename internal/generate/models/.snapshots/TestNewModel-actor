@@ -1,5 +1,7 @@
 (models.model) {
   WriterCreator: (writer.Creator) <nil>,
+  StorePackageDir: (string) (len=9) "gen/store",
+  StorePackageName: (string) (len=29) "github.com/john-doe/gen/store",
   ModelTemplate: (string) "",
   FileName: (string) (len=5) "actor",
   PascalName: (string) (len=5) "Actor",

@@ -169,9 +169,9 @@ func TestPg_Infer(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
-				Import:    "",
 			},
 		},
 		{
@@ -197,9 +197,9 @@ func TestPg_Infer(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
-				Import:    "",
 			},
 		},
 		{
@@ -378,7 +378,11 @@ func TestPg_Infer(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			got, err := translate.Infer(testCase.column)
+			got, err := translate.Infer(
+				"github.com/john-doe/gen/store",
+				"store",
+				testCase.column,
+			)
 
 			assert.NoError(t, err)
 

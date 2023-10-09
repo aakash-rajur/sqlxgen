@@ -33,28 +33,28 @@ func (args GetMovieArgs) Sql() string {
 }
 
 type GetMovieResult struct {
-	Id               *int32                   `db:"id" json:"id"`
-	Title            *string                  `db:"title" json:"title"`
-	OriginalTitle    *string                  `db:"originalTitle" json:"originalTitle"`
-	OriginalLanguage *string                  `db:"originalLanguage" json:"originalLanguage"`
-	Overview         *string                  `db:"overview" json:"overview"`
-	Runtime          *int32                   `db:"runtime" json:"runtime"`
-	ReleaseDate      *time.Time               `db:"releaseDate" json:"releaseDate"`
-	Tagline          *string                  `db:"tagline" json:"tagline"`
-	Status           *string                  `db:"status" json:"status"`
-	Homepage         *string                  `db:"homepage" json:"homepage"`
-	Popularity       *float64                 `db:"popularity" json:"popularity"`
-	VoteAverage      *float64                 `db:"voteAverage" json:"voteAverage"`
-	VoteCount        *int32                   `db:"voteCount" json:"voteCount"`
-	Budget           *int64                   `db:"budget" json:"budget"`
-	Revenue          *int64                   `db:"revenue" json:"revenue"`
-	Keywords         *pq.StringArray          `db:"keywords" json:"keywords"`
-	Genres           []map[string]interface{} `db:"genres" json:"genres"`
-	Countries        []map[string]interface{} `db:"countries" json:"countries"`
-	Languages        []map[string]interface{} `db:"languages" json:"languages"`
-	Companies        []map[string]interface{} `db:"companies" json:"companies"`
-	Actors           []map[string]interface{} `db:"actors" json:"actors"`
-	Crews            []map[string]interface{} `db:"crews" json:"crews"`
+	Id               *int32           `db:"id" json:"id"`
+	Title            *string          `db:"title" json:"title"`
+	OriginalTitle    *string          `db:"originalTitle" json:"originalTitle"`
+	OriginalLanguage *string          `db:"originalLanguage" json:"originalLanguage"`
+	Overview         *string          `db:"overview" json:"overview"`
+	Runtime          *int32           `db:"runtime" json:"runtime"`
+	ReleaseDate      *time.Time       `db:"releaseDate" json:"releaseDate"`
+	Tagline          *string          `db:"tagline" json:"tagline"`
+	Status           *string          `db:"status" json:"status"`
+	Homepage         *string          `db:"homepage" json:"homepage"`
+	Popularity       *float64         `db:"popularity" json:"popularity"`
+	VoteAverage      *float64         `db:"voteAverage" json:"voteAverage"`
+	VoteCount        *int32           `db:"voteCount" json:"voteCount"`
+	Budget           *int64           `db:"budget" json:"budget"`
+	Revenue          *int64           `db:"revenue" json:"revenue"`
+	Keywords         *pq.StringArray  `db:"keywords" json:"keywords"`
+	Genres           *store.JsonArray `db:"genres" json:"genres"`
+	Countries        *store.JsonArray `db:"countries" json:"countries"`
+	Languages        *store.JsonArray `db:"languages" json:"languages"`
+	Companies        *store.JsonArray `db:"companies" json:"companies"`
+	Actors           *store.JsonArray `db:"actors" json:"actors"`
+	Crews            *store.JsonArray `db:"crews" json:"crews"`
 }
 
 func (result GetMovieResult) String() string {

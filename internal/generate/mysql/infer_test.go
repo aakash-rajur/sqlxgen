@@ -238,7 +238,8 @@ func TestInfer(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 			err: nil,
@@ -252,7 +253,8 @@ func TestInfer(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 			err: nil,
@@ -359,7 +361,7 @@ func TestInfer(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			got, err := infer(testCase.column)
+			got, err := infer("github.com/john-doe/gen/store", testCase.column)
 
 			assert.Equal(t, testCase.err, err)
 

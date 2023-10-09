@@ -46,7 +46,13 @@ func TestNewModel(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			got, err := newModel(nil, ft, testCase.table)
+			got, err := newModel(
+				nil,
+				ft,
+				"gen/store",
+				"github.com/john-doe/gen/store",
+				testCase.table,
+			)
 
 			if testCase.err != nil {
 				errMsgLeft := testCase.err.Error()
@@ -95,7 +101,13 @@ func TestModel_GetImports(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			m, err := newModel(nil, ft, testCase.t)
+			m, err := newModel(
+				nil,
+				ft,
+				"gen/store",
+				"github.com/john-doe/gen/store",
+				testCase.t,
+			)
 
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
@@ -153,7 +165,13 @@ var content = `+"`"+`{
 
 	for i, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			m, err := newModel(mw.Creator, ft, testCase.t)
+			m, err := newModel(
+				mw.Creator,
+				ft,
+				"gen/store",
+				"github.com/john-doe/gen/store",
+				testCase.t,
+			)
 
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
@@ -1371,7 +1389,13 @@ func TestDistinguishFields(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			m, err := newModel(nil, ft, testCase.table)
+			m, err := newModel(
+				nil,
+				ft,
+				"gen/store",
+				"github.com/john-doe/gen/store",
+				testCase.table,
+			)
 
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)

@@ -9,8 +9,12 @@ import (
 
 type Pg struct{}
 
-func (pg Pg) Infer(column introspect.Column) (types.GoType, error) {
-	return infer(column)
+func (pg Pg) Infer(
+	storePackageDir string,
+	_ string,
+	column introspect.Column,
+) (types.GoType, error) {
+	return infer(storePackageDir, column)
 }
 
 func (pg Pg) ModelTemplate() string {

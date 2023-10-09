@@ -9,8 +9,12 @@ import (
 
 type Mysql struct{}
 
-func (mysql Mysql) Infer(column introspect.Column) (types.GoType, error) {
-	return infer(column)
+func (mysql Mysql) Infer(
+	storePackageDir string,
+	_ string,
+	column introspect.Column,
+) (types.GoType, error) {
+	return infer(storePackageDir, column)
 }
 
 func (mysql Mysql) ModelTemplate() string {

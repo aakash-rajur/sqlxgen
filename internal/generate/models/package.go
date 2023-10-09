@@ -59,7 +59,13 @@ func NewPackage(
 	models := make([]model, len(tables))
 
 	for index, table := range tables {
-		m, err := newModel(writerCreator, translate, table)
+		m, err := newModel(
+			writerCreator,
+			translate,
+			storePackageDir,
+			storePackageName,
+			table,
+		)
 
 		if err != nil {
 			return Package{}, errorx.IllegalState.Wrap(err, "unable to generate model from table")

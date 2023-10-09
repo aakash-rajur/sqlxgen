@@ -260,7 +260,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -272,7 +273,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "jsonb",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -284,7 +286,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -296,7 +299,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "jsonb",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -614,7 +618,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "pg_catalog.json",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -626,7 +631,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "pg_catalog.jsonb",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -638,7 +644,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "pg_catalog.json",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -650,7 +657,8 @@ func TestFromSingle(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "pg_catalog.jsonb",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
 			},
 		},
@@ -711,7 +719,7 @@ func TestFromSingle(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			got, err := fromSingle(testCase.column)
+			got, err := fromSingle("github.com/john-doe/gen/store", testCase.column)
 
 			assert.Nil(t, err)
 
@@ -1577,9 +1585,9 @@ func TestInfer(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "map[string]interface{}",
+				GoType:    "*store.JsonObject",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
-				Import:    "",
 			},
 		},
 		{
@@ -1605,9 +1613,9 @@ func TestInfer(t *testing.T) {
 			},
 			want: types.GoType{
 				DbType:    "json",
-				GoType:    "[]map[string]interface{}",
+				GoType:    "*store.JsonArray",
+				Import:    "github.com/john-doe/gen/store",
 				IsPointer: false,
-				Import:    "",
 			},
 		},
 		{
@@ -1786,7 +1794,7 @@ func TestInfer(t *testing.T) {
 
 	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
-			got, err := infer(testCase.column)
+			got, err := infer("github.com/john-doe/gen/store", testCase.column)
 
 			assert.Nil(t, err)
 

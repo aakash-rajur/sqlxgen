@@ -14,6 +14,8 @@ type Field struct {
 func NewField(
 	column introspect.Column,
 	translate Translate,
+	storePackageDir string,
+	storePackageName string,
 ) (Field, error) {
 	fieldName, err := casing.PascalCase(column.ColumnName)
 
@@ -21,7 +23,7 @@ func NewField(
 		return Field{}, err
 	}
 
-	goType, err := translate.Infer(column)
+	goType, err := translate.Infer(storePackageDir, storePackageName, column)
 
 	if err != nil {
 		return Field{}, err
