@@ -4,7 +4,7 @@
 [![Release](https://github.com/aakash-rajur/sqlxgen/actions/workflows/release.yml/badge.svg)](https://github.com/aakash-rajur/sqlxgen/actions/workflows/release.yml) 
 [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/aakash-rajur/sqlxgen/main/LICENSE.md)
 
-`sqlxgen` is a tool to generate sqlx compatible code from database schema and sql queries in your project.
+`sqlxgen` is a cli tool to generate sqlx compatible code from database schema and sql queries in your project.
 
 1. Run [postgres query](https://github.com/aakash-rajur/sqlxgen/blob/main/internal/introspect/pg/model.sql) 
    or [mysql query](https://github.com/aakash-rajur/sqlxgen/blob/main/internal/introspect/mysql/model.sql) 
