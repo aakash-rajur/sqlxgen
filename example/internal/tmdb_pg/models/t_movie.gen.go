@@ -10,8 +10,8 @@ import (
 type TMovie struct {
 	Id                  *int64          `db:"id" json:"id"`
 	Budget              *float64        `db:"budget" json:"budget"`
-	Homepage            *string         `db:"homepage" json:"homepage"`
 	Genre               json.RawMessage `db:"genre" json:"genre"`
+	Homepage            *string         `db:"homepage" json:"homepage"`
 	Keywords            json.RawMessage `db:"keywords" json:"keywords"`
 	OriginalLanguage    *string         `db:"original_language" json:"original_language"`
 	OriginalTitle       *string         `db:"original_title" json:"original_title"`
@@ -35,8 +35,8 @@ func (tMovie TMovie) String() string {
 		[]string{
 			fmt.Sprintf("Id: %v", *tMovie.Id),
 			fmt.Sprintf("Budget: %v", *tMovie.Budget),
-			fmt.Sprintf("Homepage: %v", *tMovie.Homepage),
 			fmt.Sprintf("Genre: %v", tMovie.Genre),
+			fmt.Sprintf("Homepage: %v", *tMovie.Homepage),
 			fmt.Sprintf("Keywords: %v", tMovie.Keywords),
 			fmt.Sprintf("OriginalLanguage: %v", *tMovie.OriginalLanguage),
 			fmt.Sprintf("OriginalTitle: %v", *tMovie.OriginalTitle),
@@ -95,8 +95,8 @@ var tMovieInsertSql = `
 INSERT INTO public.t_movies(
   id,
   budget,
-  homepage,
   genre,
+  homepage,
   keywords,
   original_language,
   original_title,
@@ -117,8 +117,8 @@ INSERT INTO public.t_movies(
 VALUES (
   :id,
   :budget,
-  :homepage,
   :genre,
+  :homepage,
   :keywords,
   :original_language,
   :original_title,
@@ -139,8 +139,8 @@ VALUES (
 RETURNING
   id,
   budget,
-  homepage,
   genre,
+  homepage,
   keywords,
   original_language,
   original_title,
@@ -165,8 +165,8 @@ UPDATE public.t_movies
 SET
   id = :id,
   budget = :budget,
-  homepage = :homepage,
   genre = :genre,
+  homepage = :homepage,
   keywords = :keywords,
   original_language = :original_language,
   original_title = :original_title,
@@ -188,8 +188,8 @@ WHERE TRUE
 RETURNING
   id,
   budget,
-  homepage,
   genre,
+  homepage,
   keywords,
   original_language,
   original_title,
@@ -213,8 +213,8 @@ var tMovieFindSql = `
 SELECT
   id,
   budget,
-  homepage,
   genre,
+  homepage,
   keywords,
   original_language,
   original_title,
@@ -242,8 +242,8 @@ var tMovieFindAllSql = `
 SELECT
   id,
   budget,
-  homepage,
   genre,
+  homepage,
   keywords,
   original_language,
   original_title,

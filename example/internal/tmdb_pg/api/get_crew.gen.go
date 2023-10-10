@@ -3,9 +3,8 @@ package api
 import (
 	_ "embed"
 	"fmt"
-	"strings"
-
 	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
+	"strings"
 )
 
 type GetCrewArgs struct {
@@ -32,17 +31,17 @@ func (args GetCrewArgs) Sql() string {
 }
 
 type GetCrewResult struct {
-	Id     *int32                   `db:"id" json:"id"`
-	Name   *string                  `db:"name" json:"name"`
-	Movies []map[string]interface{} `db:"movies" json:"movies"`
+	Id     *int32           `db:"id" json:"id"`
+	Movies *store.JsonArray `db:"movies" json:"movies"`
+	Name   *string          `db:"name" json:"name"`
 }
 
 func (result GetCrewResult) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *result.Id),
-			fmt.Sprintf("Name: %v", *result.Name),
 			fmt.Sprintf("Movies: %v", result.Movies),
+			fmt.Sprintf("Name: %v", *result.Name),
 		},
 		", ",
 	)

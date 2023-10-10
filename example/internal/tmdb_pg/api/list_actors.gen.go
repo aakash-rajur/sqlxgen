@@ -3,9 +3,8 @@ package api
 import (
 	_ "embed"
 	"fmt"
-	"strings"
-
 	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
+	"strings"
 )
 
 type ListActorsArgs struct {
@@ -38,17 +37,17 @@ func (args ListActorsArgs) Sql() string {
 }
 
 type ListActorsResult struct {
-	TotalRecordsCount *int64  `db:"totalRecordsCount" json:"totalRecordsCount"`
 	Id                *int32  `db:"id" json:"id"`
 	Name              *string `db:"name" json:"name"`
+	TotalRecordsCount *int64  `db:"totalRecordsCount" json:"totalRecordsCount"`
 }
 
 func (result ListActorsResult) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
 			fmt.Sprintf("Id: %v", *result.Id),
 			fmt.Sprintf("Name: %v", *result.Name),
+			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
 		},
 		", ",
 	)

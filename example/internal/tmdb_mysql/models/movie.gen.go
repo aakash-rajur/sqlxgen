@@ -7,43 +7,43 @@ import (
 )
 
 type Movie struct {
-	Revenue          *int64     `db:"revenue" json:"revenue"`
-	Keywords         *string    `db:"keywords" json:"keywords"`
 	Budget           *int64     `db:"budget" json:"budget"`
-	VoteCount        *int32     `db:"vote_count" json:"vote_count"`
-	VoteAverage      *float32   `db:"vote_average" json:"vote_average"`
-	Popularity       *float32   `db:"popularity" json:"popularity"`
 	Homepage         *string    `db:"homepage" json:"homepage"`
-	Status           *string    `db:"status" json:"status"`
-	ReleaseDate      *time.Time `db:"release_date" json:"release_date"`
-	Runtime          *int32     `db:"runtime" json:"runtime"`
-	Overview         *string    `db:"overview" json:"overview"`
+	Keywords         *string    `db:"keywords" json:"keywords"`
 	OriginalLanguage *string    `db:"original_language" json:"original_language"`
 	OriginalTitle    *string    `db:"original_title" json:"original_title"`
-	Title            *string    `db:"title" json:"title"`
-	Id               *int64     `db:"id" json:"id"`
+	Overview         *string    `db:"overview" json:"overview"`
+	Popularity       *float32   `db:"popularity" json:"popularity"`
+	ReleaseDate      *time.Time `db:"release_date" json:"release_date"`
+	Revenue          *int64     `db:"revenue" json:"revenue"`
+	Runtime          *int32     `db:"runtime" json:"runtime"`
+	Status           *string    `db:"status" json:"status"`
 	Tagline          *string    `db:"tagline" json:"tagline"`
+	Title            *string    `db:"title" json:"title"`
+	VoteAverage      *float32   `db:"vote_average" json:"vote_average"`
+	VoteCount        *int32     `db:"vote_count" json:"vote_count"`
+	Id               *int64     `db:"id" json:"id"`
 }
 
 func (movie Movie) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Revenue: %v", *movie.Revenue),
-			fmt.Sprintf("Keywords: %v", *movie.Keywords),
 			fmt.Sprintf("Budget: %v", *movie.Budget),
-			fmt.Sprintf("VoteCount: %v", *movie.VoteCount),
-			fmt.Sprintf("VoteAverage: %v", *movie.VoteAverage),
-			fmt.Sprintf("Popularity: %v", *movie.Popularity),
 			fmt.Sprintf("Homepage: %v", *movie.Homepage),
-			fmt.Sprintf("Status: %v", *movie.Status),
-			fmt.Sprintf("ReleaseDate: %v", *movie.ReleaseDate),
-			fmt.Sprintf("Runtime: %v", *movie.Runtime),
-			fmt.Sprintf("Overview: %v", *movie.Overview),
+			fmt.Sprintf("Keywords: %v", *movie.Keywords),
 			fmt.Sprintf("OriginalLanguage: %v", *movie.OriginalLanguage),
 			fmt.Sprintf("OriginalTitle: %v", *movie.OriginalTitle),
-			fmt.Sprintf("Title: %v", *movie.Title),
-			fmt.Sprintf("Id: %v", *movie.Id),
+			fmt.Sprintf("Overview: %v", *movie.Overview),
+			fmt.Sprintf("Popularity: %v", *movie.Popularity),
+			fmt.Sprintf("ReleaseDate: %v", *movie.ReleaseDate),
+			fmt.Sprintf("Revenue: %v", *movie.Revenue),
+			fmt.Sprintf("Runtime: %v", *movie.Runtime),
+			fmt.Sprintf("Status: %v", *movie.Status),
 			fmt.Sprintf("Tagline: %v", *movie.Tagline),
+			fmt.Sprintf("Title: %v", *movie.Title),
+			fmt.Sprintf("VoteAverage: %v", *movie.VoteAverage),
+			fmt.Sprintf("VoteCount: %v", *movie.VoteCount),
+			fmt.Sprintf("Id: %v", *movie.Id),
 		},
 		", ",
 	)
@@ -84,118 +84,118 @@ func (_ Movie) DeleteQuery() string {
 // language=mysql
 var movieInsertSql = `
 INSERT INTO app.movies(
-  revenue,
-  keywords,
   budget,
-  vote_count,
-  vote_average,
-  popularity,
   homepage,
-  status,
-  release_date,
-  runtime,
-  overview,
+  keywords,
   original_language,
   original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
   title,
-  tagline
+  vote_average,
+  vote_count
 )
 VALUES (
-  :revenue,
-  :keywords,
   :budget,
-  :vote_count,
-  :vote_average,
-  :popularity,
   :homepage,
-  :status,
-  :release_date,
-  :runtime,
-  :overview,
+  :keywords,
   :original_language,
   :original_title,
+  :overview,
+  :popularity,
+  :release_date,
+  :revenue,
+  :runtime,
+  :status,
+  :tagline,
   :title,
-  :tagline
+  :vote_average,
+  :vote_count
 )
 RETURNING
-  revenue,
-  keywords,
   budget,
-  vote_count,
-  vote_average,
-  popularity,
   homepage,
-  status,
-  release_date,
-  runtime,
-  overview,
+  keywords,
   original_language,
   original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
   title,
-  id,
-  tagline;
+  vote_average,
+  vote_count,
+  id;
 `
 
 // language=mysql
 var movieUpdateSql = `
 UPDATE app.movies
 SET
-  revenue = :revenue,
-  keywords = :keywords,
   budget = :budget,
-  vote_count = :vote_count,
-  vote_average = :vote_average,
-  popularity = :popularity,
   homepage = :homepage,
-  status = :status,
-  release_date = :release_date,
-  runtime = :runtime,
-  overview = :overview,
+  keywords = :keywords,
   original_language = :original_language,
   original_title = :original_title,
+  overview = :overview,
+  popularity = :popularity,
+  release_date = :release_date,
+  revenue = :revenue,
+  runtime = :runtime,
+  status = :status,
+  tagline = :tagline,
   title = :title,
-  id = :id,
-  tagline = :tagline
+  vote_average = :vote_average,
+  vote_count = :vote_count,
+  id = :id
 WHERE TRUE
   AND id = :id
 RETURNING
-  revenue,
-  keywords,
   budget,
-  vote_count,
-  vote_average,
-  popularity,
   homepage,
-  status,
-  release_date,
-  runtime,
-  overview,
+  keywords,
   original_language,
   original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
   title,
-  id,
-  tagline;
+  vote_average,
+  vote_count,
+  id;
 `
 
 // language=mysql
 var movieFindSql = `
 SELECT
-  revenue,
-  keywords,
   budget,
-  vote_count,
-  vote_average,
-  popularity,
   homepage,
-  status,
-  release_date,
-  runtime,
-  overview,
+  keywords,
   original_language,
   original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
   title,
-  id,
-  tagline
+  vote_average,
+  vote_count,
+  id
 FROM app.movies
 WHERE TRUE
   AND (:id IS NULL or id = :id)
@@ -205,22 +205,22 @@ LIMIT 1;
 // language=mysql
 var movieFindAllSql = `
 SELECT
-  revenue,
-  keywords,
   budget,
-  vote_count,
-  vote_average,
-  popularity,
   homepage,
-  status,
-  release_date,
-  runtime,
-  overview,
+  keywords,
   original_language,
   original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
   title,
-  id,
-  tagline
+  vote_average,
+  vote_count,
+  id
 FROM app.movies
 WHERE TRUE
   AND (:id IS NULL or id = :id);

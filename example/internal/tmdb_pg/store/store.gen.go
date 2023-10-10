@@ -2,6 +2,9 @@ package store
 
 import (
 	"database/sql"
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
@@ -169,4 +172,48 @@ type Database interface {
 	NamedExec(query string, arg interface{}) (sql.Result, error)
 
 	NamedQuery(query string, arg interface{}) (*sqlx.Rows, error)
+}
+
+type JsonObject map[string]interface{}
+
+func (j *JsonObject) Scan(src any) error {
+	jsonBytes, ok := src.([]byte)
+
+	if !ok {
+		return fmt.Errorf("expected []byte, got %T", src)
+	}
+
+	err := json.Unmarshal(jsonBytes, &j)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (j *JsonObject) Value() (driver.Value, error) {
+	return json.Marshal(j)
+}
+
+type JsonArray []map[string]interface{}
+
+func (j *JsonArray) Scan(src any) error {
+	jsonBytes, ok := src.([]byte)
+
+	if !ok {
+		return fmt.Errorf("expected []byte, got %T", src)
+	}
+
+	err := json.Unmarshal(jsonBytes, &j)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (j *JsonArray) Value() (driver.Value, error) {
+	return json.Marshal(j)
 }

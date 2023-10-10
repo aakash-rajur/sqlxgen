@@ -32,17 +32,17 @@ func (args GetActorArgs) Sql() string {
 }
 
 type GetActorResult struct {
-	Id     *int32                   `db:"id" json:"id"`
-	Name   *string                  `db:"name" json:"name"`
-	Movies []map[string]interface{} `db:"movies" json:"movies"`
+	Id     *int32           `db:"id" json:"id"`
+	Movies *store.JsonArray `db:"movies" json:"movies"`
+	Name   *string          `db:"name" json:"name"`
 }
 
 func (result GetActorResult) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *result.Id),
-			fmt.Sprintf("Name: %v", *result.Name),
 			fmt.Sprintf("Movies: %v", result.Movies),
+			fmt.Sprintf("Name: %v", *result.Name),
 		},
 		", ",
 	)

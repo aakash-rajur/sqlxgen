@@ -9,46 +9,46 @@ import (
 
 type Movie struct {
 	Id               *int32          `db:"id" json:"id"`
-	Title            *string         `db:"title" json:"title"`
-	OriginalTitle    *string         `db:"original_title" json:"original_title"`
-	OriginalLanguage *string         `db:"original_language" json:"original_language"`
-	Overview         *string         `db:"overview" json:"overview"`
-	Runtime          *int32          `db:"runtime" json:"runtime"`
-	ReleaseDate      *time.Time      `db:"release_date" json:"release_date"`
-	Tagline          *string         `db:"tagline" json:"tagline"`
-	Status           *string         `db:"status" json:"status"`
+	Budget           *int64          `db:"budget" json:"budget"`
 	Homepage         *string         `db:"homepage" json:"homepage"`
+	Keywords         *pq.StringArray `db:"keywords" json:"keywords"`
+	KeywordsSearch   *string         `db:"keywords_search" json:"keywords_search"`
+	OriginalLanguage *string         `db:"original_language" json:"original_language"`
+	OriginalTitle    *string         `db:"original_title" json:"original_title"`
+	Overview         *string         `db:"overview" json:"overview"`
 	Popularity       *float64        `db:"popularity" json:"popularity"`
+	ReleaseDate      *time.Time      `db:"release_date" json:"release_date"`
+	Revenue          *int64          `db:"revenue" json:"revenue"`
+	Runtime          *int32          `db:"runtime" json:"runtime"`
+	Status           *string         `db:"status" json:"status"`
+	Tagline          *string         `db:"tagline" json:"tagline"`
+	Title            *string         `db:"title" json:"title"`
+	TitleSearch      *string         `db:"title_search" json:"title_search"`
 	VoteAverage      *float64        `db:"vote_average" json:"vote_average"`
 	VoteCount        *int32          `db:"vote_count" json:"vote_count"`
-	Budget           *int64          `db:"budget" json:"budget"`
-	Revenue          *int64          `db:"revenue" json:"revenue"`
-	Keywords         *pq.StringArray `db:"keywords" json:"keywords"`
-	TitleSearch      *string         `db:"title_search" json:"title_search"`
-	KeywordsSearch   *string         `db:"keywords_search" json:"keywords_search"`
 }
 
 func (movie Movie) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *movie.Id),
-			fmt.Sprintf("Title: %v", *movie.Title),
-			fmt.Sprintf("OriginalTitle: %v", *movie.OriginalTitle),
-			fmt.Sprintf("OriginalLanguage: %v", *movie.OriginalLanguage),
-			fmt.Sprintf("Overview: %v", *movie.Overview),
-			fmt.Sprintf("Runtime: %v", *movie.Runtime),
-			fmt.Sprintf("ReleaseDate: %v", *movie.ReleaseDate),
-			fmt.Sprintf("Tagline: %v", *movie.Tagline),
-			fmt.Sprintf("Status: %v", *movie.Status),
+			fmt.Sprintf("Budget: %v", *movie.Budget),
 			fmt.Sprintf("Homepage: %v", *movie.Homepage),
+			fmt.Sprintf("Keywords: %v", *movie.Keywords),
+			fmt.Sprintf("KeywordsSearch: %v", *movie.KeywordsSearch),
+			fmt.Sprintf("OriginalLanguage: %v", *movie.OriginalLanguage),
+			fmt.Sprintf("OriginalTitle: %v", *movie.OriginalTitle),
+			fmt.Sprintf("Overview: %v", *movie.Overview),
 			fmt.Sprintf("Popularity: %v", *movie.Popularity),
+			fmt.Sprintf("ReleaseDate: %v", *movie.ReleaseDate),
+			fmt.Sprintf("Revenue: %v", *movie.Revenue),
+			fmt.Sprintf("Runtime: %v", *movie.Runtime),
+			fmt.Sprintf("Status: %v", *movie.Status),
+			fmt.Sprintf("Tagline: %v", *movie.Tagline),
+			fmt.Sprintf("Title: %v", *movie.Title),
+			fmt.Sprintf("TitleSearch: %v", *movie.TitleSearch),
 			fmt.Sprintf("VoteAverage: %v", *movie.VoteAverage),
 			fmt.Sprintf("VoteCount: %v", *movie.VoteCount),
-			fmt.Sprintf("Budget: %v", *movie.Budget),
-			fmt.Sprintf("Revenue: %v", *movie.Revenue),
-			fmt.Sprintf("Keywords: %v", *movie.Keywords),
-			fmt.Sprintf("TitleSearch: %v", *movie.TitleSearch),
-			fmt.Sprintf("KeywordsSearch: %v", *movie.KeywordsSearch),
 		},
 		", ",
 	)
@@ -89,58 +89,58 @@ func (_ Movie) DeleteQuery() string {
 // language=postgresql
 var movieInsertSql = `
 INSERT INTO public.movies(
-  title,
-  original_title,
-  original_language,
-  overview,
-  runtime,
-  release_date,
-  tagline,
-  status,
-  homepage,
-  popularity,
-  vote_average,
-  vote_count,
   budget,
+  homepage,
+  keywords,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
   revenue,
-  keywords
+  runtime,
+  status,
+  tagline,
+  title,
+  vote_average,
+  vote_count
 )
 VALUES (
-  :title,
-  :original_title,
-  :original_language,
-  :overview,
-  :runtime,
-  :release_date,
-  :tagline,
-  :status,
-  :homepage,
-  :popularity,
-  :vote_average,
-  :vote_count,
   :budget,
+  :homepage,
+  :keywords,
+  :original_language,
+  :original_title,
+  :overview,
+  :popularity,
+  :release_date,
   :revenue,
-  :keywords
+  :runtime,
+  :status,
+  :tagline,
+  :title,
+  :vote_average,
+  :vote_count
 )
 RETURNING
   id,
-  title,
-  original_title,
-  original_language,
-  overview,
-  runtime,
-  release_date,
-  tagline,
-  status,
-  homepage,
-  popularity,
-  vote_average,
-  vote_count,
   budget,
-  revenue,
+  homepage,
   keywords,
+  keywords_search,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
+  title,
   title_search,
-  keywords_search;
+  vote_average,
+  vote_count;
 `
 
 // language=postgresql
@@ -148,65 +148,65 @@ var movieUpdateSql = `
 UPDATE public.movies
 SET
   id = :id,
-  title = :title,
-  original_title = :original_title,
-  original_language = :original_language,
-  overview = :overview,
-  runtime = :runtime,
-  release_date = :release_date,
-  tagline = :tagline,
-  status = :status,
-  homepage = :homepage,
-  popularity = :popularity,
-  vote_average = :vote_average,
-  vote_count = :vote_count,
   budget = :budget,
+  homepage = :homepage,
+  keywords = :keywords,
+  original_language = :original_language,
+  original_title = :original_title,
+  overview = :overview,
+  popularity = :popularity,
+  release_date = :release_date,
   revenue = :revenue,
-  keywords = :keywords
+  runtime = :runtime,
+  status = :status,
+  tagline = :tagline,
+  title = :title,
+  vote_average = :vote_average,
+  vote_count = :vote_count
 WHERE TRUE
   AND id = :id
 RETURNING
   id,
-  title,
-  original_title,
-  original_language,
-  overview,
-  runtime,
-  release_date,
-  tagline,
-  status,
-  homepage,
-  popularity,
-  vote_average,
-  vote_count,
   budget,
-  revenue,
+  homepage,
   keywords,
+  keywords_search,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
+  title,
   title_search,
-  keywords_search;
+  vote_average,
+  vote_count;
 `
 
 // language=postgresql
 var movieFindSql = `
 SELECT
   id,
-  title,
-  original_title,
-  original_language,
-  overview,
-  runtime,
-  release_date,
-  tagline,
-  status,
-  homepage,
-  popularity,
-  vote_average,
-  vote_count,
   budget,
-  revenue,
+  homepage,
   keywords,
+  keywords_search,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
+  title,
   title_search,
-  keywords_search
+  vote_average,
+  vote_count
 FROM public.movies
 WHERE TRUE
   AND (CAST(:id AS INT4) IS NULL or id = :id)
@@ -217,23 +217,23 @@ LIMIT 1;
 var movieFindAllSql = `
 SELECT
   id,
-  title,
-  original_title,
-  original_language,
-  overview,
-  runtime,
-  release_date,
-  tagline,
-  status,
-  homepage,
-  popularity,
-  vote_average,
-  vote_count,
   budget,
-  revenue,
+  homepage,
   keywords,
+  keywords_search,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
+  title,
   title_search,
-  keywords_search
+  vote_average,
+  vote_count
 FROM public.movies
 WHERE TRUE
   AND (CAST(:id AS INT4) IS NULL or id = :id);

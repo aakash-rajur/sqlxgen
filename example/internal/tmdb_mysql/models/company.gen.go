@@ -6,15 +6,15 @@ import (
 )
 
 type Company struct {
-	Id   *int64  `db:"id" json:"id"`
 	Name *string `db:"name" json:"name"`
+	Id   *int64  `db:"id" json:"id"`
 }
 
 func (company Company) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *company.Id),
 			fmt.Sprintf("Name: %v", *company.Name),
+			fmt.Sprintf("Id: %v", *company.Id),
 		},
 		", ",
 	)
@@ -55,36 +55,36 @@ func (_ Company) DeleteQuery() string {
 // language=mysql
 var companyInsertSql = `
 INSERT INTO app.companies(
-  id,
-  name
+  name,
+  id
 )
 VALUES (
-  :id,
-  :name
+  :name,
+  :id
 )
 RETURNING
-  id,
-  name;
+  name,
+  id;
 `
 
 // language=mysql
 var companyUpdateSql = `
 UPDATE app.companies
 SET
-  id = :id,
-  name = :name
+  name = :name,
+  id = :id
 WHERE TRUE
   AND id = :id
 RETURNING
-  id,
-  name;
+  name,
+  id;
 `
 
 // language=mysql
 var companyFindSql = `
 SELECT
-  id,
-  name
+  name,
+  id
 FROM app.companies
 WHERE TRUE
   AND (:id IS NULL or id = :id)
@@ -94,8 +94,8 @@ LIMIT 1;
 // language=mysql
 var companyFindAllSql = `
 SELECT
-  id,
-  name
+  name,
+  id
 FROM app.companies
 WHERE TRUE
   AND (:id IS NULL or id = :id);

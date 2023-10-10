@@ -7,23 +7,23 @@ import (
 )
 
 type SampleQueryIntrospection struct {
-	TotalRecordsCount *int64     `db:"totalRecordsCount" json:"totalRecordsCount"`
 	Id                *int64     `db:"id" json:"id"`
-	Title             *string    `db:"title" json:"title"`
+	Popularity        *float32   `db:"popularity" json:"popularity"`
 	ReleaseDate       *time.Time `db:"releaseDate" json:"releaseDate"`
 	Status            *string    `db:"status" json:"status"`
-	Popularity        *float32   `db:"popularity" json:"popularity"`
+	Title             *string    `db:"title" json:"title"`
+	TotalRecordsCount *int64     `db:"totalRecordsCount" json:"totalRecordsCount"`
 }
 
 func (sampleQueryIntrospection SampleQueryIntrospection) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("TotalRecordsCount: %v", *sampleQueryIntrospection.TotalRecordsCount),
 			fmt.Sprintf("Id: %v", *sampleQueryIntrospection.Id),
-			fmt.Sprintf("Title: %v", *sampleQueryIntrospection.Title),
+			fmt.Sprintf("Popularity: %v", *sampleQueryIntrospection.Popularity),
 			fmt.Sprintf("ReleaseDate: %v", *sampleQueryIntrospection.ReleaseDate),
 			fmt.Sprintf("Status: %v", *sampleQueryIntrospection.Status),
-			fmt.Sprintf("Popularity: %v", *sampleQueryIntrospection.Popularity),
+			fmt.Sprintf("Title: %v", *sampleQueryIntrospection.Title),
+			fmt.Sprintf("TotalRecordsCount: %v", *sampleQueryIntrospection.TotalRecordsCount),
 		},
 		", ",
 	)
@@ -37,12 +37,12 @@ func (_ SampleQueryIntrospection) TableName() string {
 
 func (_ SampleQueryIntrospection) PrimaryKey() []string {
 	return []string{
-		"totalRecordsCount",
 		"id",
-		"title",
+		"popularity",
 		"releaseDate",
 		"status",
-		"popularity",
+		"title",
+		"totalRecordsCount",
 	}
 }
 
@@ -69,103 +69,103 @@ func (_ SampleQueryIntrospection) DeleteQuery() string {
 // language=mysql
 var sampleQueryIntrospectionInsertSql = `
 INSERT INTO app.sample_query_introspection(
-  totalRecordsCount,
   id,
-  title,
+  popularity,
   releaseDate,
   status,
-  popularity
+  title,
+  totalRecordsCount
 )
 VALUES (
-  :totalRecordsCount,
   :id,
-  :title,
+  :popularity,
   :releaseDate,
   :status,
-  :popularity
+  :title,
+  :totalRecordsCount
 )
 RETURNING
-  totalRecordsCount,
   id,
-  title,
+  popularity,
   releaseDate,
   status,
-  popularity;
+  title,
+  totalRecordsCount;
 `
 
 // language=mysql
 var sampleQueryIntrospectionUpdateSql = `
 UPDATE app.sample_query_introspection
 SET
-  totalRecordsCount = :totalRecordsCount,
   id = :id,
-  title = :title,
+  popularity = :popularity,
   releaseDate = :releaseDate,
   status = :status,
-  popularity = :popularity
+  title = :title,
+  totalRecordsCount = :totalRecordsCount
 WHERE TRUE
-  AND totalRecordsCount = :totalRecordsCount
   AND id = :id
-  AND title = :title
+  AND popularity = :popularity
   AND releaseDate = :releaseDate
   AND status = :status
-  AND popularity = :popularity
+  AND title = :title
+  AND totalRecordsCount = :totalRecordsCount
 RETURNING
-  totalRecordsCount,
   id,
-  title,
+  popularity,
   releaseDate,
   status,
-  popularity;
+  title,
+  totalRecordsCount;
 `
 
 // language=mysql
 var sampleQueryIntrospectionFindSql = `
 SELECT
-  totalRecordsCount,
   id,
-  title,
+  popularity,
   releaseDate,
   status,
-  popularity
+  title,
+  totalRecordsCount
 FROM app.sample_query_introspection
 WHERE TRUE
-  AND (:totalRecordsCount IS NULL or totalRecordsCount = :totalRecordsCount)
   AND (:id IS NULL or id = :id)
-  AND (:title IS NULL or title = :title)
+  AND (:popularity IS NULL or popularity = :popularity)
   AND (:releaseDate IS NULL or releaseDate = :releaseDate)
   AND (:status IS NULL or status = :status)
-  AND (:popularity IS NULL or popularity = :popularity)
+  AND (:title IS NULL or title = :title)
+  AND (:totalRecordsCount IS NULL or totalRecordsCount = :totalRecordsCount)
 LIMIT 1;
 `
 
 // language=mysql
 var sampleQueryIntrospectionFindAllSql = `
 SELECT
-  totalRecordsCount,
   id,
-  title,
+  popularity,
   releaseDate,
   status,
-  popularity
+  title,
+  totalRecordsCount
 FROM app.sample_query_introspection
 WHERE TRUE
-  AND (:totalRecordsCount IS NULL or totalRecordsCount = :totalRecordsCount)
   AND (:id IS NULL or id = :id)
-  AND (:title IS NULL or title = :title)
+  AND (:popularity IS NULL or popularity = :popularity)
   AND (:releaseDate IS NULL or releaseDate = :releaseDate)
   AND (:status IS NULL or status = :status)
-  AND (:popularity IS NULL or popularity = :popularity);
+  AND (:title IS NULL or title = :title)
+  AND (:totalRecordsCount IS NULL or totalRecordsCount = :totalRecordsCount);
 `
 
 // language=mysql
 var sampleQueryIntrospectionDeleteSql = `
 DELETE FROM app.sample_query_introspection
 WHERE TRUE
-  AND totalRecordsCount = :totalRecordsCount
   AND id = :id
-  AND title = :title
+  AND popularity = :popularity
   AND releaseDate = :releaseDate
   AND status = :status
-  AND popularity = :popularity;
+  AND title = :title
+  AND totalRecordsCount = :totalRecordsCount;
 `

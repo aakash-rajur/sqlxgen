@@ -8,8 +8,8 @@ import (
 type MoviesActor struct {
 	MovieId         *int64  `db:"movie_id" json:"movie_id"`
 	ActorId         *int64  `db:"actor_id" json:"actor_id"`
-	Character       *string `db:"character" json:"character"`
 	CastOrder       *int32  `db:"cast_order" json:"cast_order"`
+	Character       *string `db:"character" json:"character"`
 	CharacterSearch *string `db:"character_search" json:"character_search"`
 }
 
@@ -18,8 +18,8 @@ func (moviesActor MoviesActor) String() string {
 		[]string{
 			fmt.Sprintf("MovieId: %v", *moviesActor.MovieId),
 			fmt.Sprintf("ActorId: %v", *moviesActor.ActorId),
-			fmt.Sprintf("Character: %v", *moviesActor.Character),
 			fmt.Sprintf("CastOrder: %v", *moviesActor.CastOrder),
+			fmt.Sprintf("Character: %v", *moviesActor.Character),
 			fmt.Sprintf("CharacterSearch: %v", *moviesActor.CharacterSearch),
 		},
 		", ",
@@ -64,20 +64,20 @@ var moviesActorInsertSql = `
 INSERT INTO public.movies_actors(
   movie_id,
   actor_id,
-  character,
-  cast_order
+  cast_order,
+  character
 )
 VALUES (
   :movie_id,
   :actor_id,
-  :character,
-  :cast_order
+  :cast_order,
+  :character
 )
 RETURNING
   movie_id,
   actor_id,
-  character,
   cast_order,
+  character,
   character_search;
 `
 
@@ -87,16 +87,16 @@ UPDATE public.movies_actors
 SET
   movie_id = :movie_id,
   actor_id = :actor_id,
-  character = :character,
-  cast_order = :cast_order
+  cast_order = :cast_order,
+  character = :character
 WHERE TRUE
   AND movie_id = :movie_id
   AND actor_id = :actor_id
 RETURNING
   movie_id,
   actor_id,
-  character,
   cast_order,
+  character,
   character_search;
 `
 
@@ -105,8 +105,8 @@ var moviesActorFindSql = `
 SELECT
   movie_id,
   actor_id,
-  character,
   cast_order,
+  character,
   character_search
 FROM public.movies_actors
 WHERE TRUE
@@ -120,8 +120,8 @@ var moviesActorFindAllSql = `
 SELECT
   movie_id,
   actor_id,
-  character,
   cast_order,
+  character,
   character_search
 FROM public.movies_actors
 WHERE TRUE

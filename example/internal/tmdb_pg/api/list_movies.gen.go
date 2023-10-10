@@ -3,10 +3,9 @@ package api
 import (
 	_ "embed"
 	"fmt"
+	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 	"strings"
 	"time"
-
-	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 )
 
 type ListMoviesArgs struct {
@@ -41,23 +40,23 @@ func (args ListMoviesArgs) Sql() string {
 }
 
 type ListMoviesResult struct {
-	TotalRecordsCount *int64     `db:"totalRecordsCount" json:"totalRecordsCount"`
 	Id                *int32     `db:"id" json:"id"`
-	Title             *string    `db:"title" json:"title"`
+	Popularity        *float64   `db:"popularity" json:"popularity"`
 	ReleaseDate       *time.Time `db:"releaseDate" json:"releaseDate"`
 	Status            *string    `db:"status" json:"status"`
-	Popularity        *float64   `db:"popularity" json:"popularity"`
+	Title             *string    `db:"title" json:"title"`
+	TotalRecordsCount *int64     `db:"totalRecordsCount" json:"totalRecordsCount"`
 }
 
 func (result ListMoviesResult) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
 			fmt.Sprintf("Id: %v", *result.Id),
-			fmt.Sprintf("Title: %v", *result.Title),
+			fmt.Sprintf("Popularity: %v", *result.Popularity),
 			fmt.Sprintf("ReleaseDate: %v", *result.ReleaseDate),
 			fmt.Sprintf("Status: %v", *result.Status),
-			fmt.Sprintf("Popularity: %v", *result.Popularity),
+			fmt.Sprintf("Title: %v", *result.Title),
+			fmt.Sprintf("TotalRecordsCount: %v", *result.TotalRecordsCount),
 		},
 		", ",
 	)

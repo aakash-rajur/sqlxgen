@@ -8,8 +8,8 @@ import (
 type MoviesCrew struct {
 	MovieId      *int64  `db:"movie_id" json:"movie_id"`
 	CrewId       *int64  `db:"crew_id" json:"crew_id"`
-	JobId        *string `db:"job_id" json:"job_id"`
 	DepartmentId *string `db:"department_id" json:"department_id"`
+	JobId        *string `db:"job_id" json:"job_id"`
 }
 
 func (moviesCrew MoviesCrew) String() string {
@@ -17,8 +17,8 @@ func (moviesCrew MoviesCrew) String() string {
 		[]string{
 			fmt.Sprintf("MovieId: %v", *moviesCrew.MovieId),
 			fmt.Sprintf("CrewId: %v", *moviesCrew.CrewId),
-			fmt.Sprintf("JobId: %v", *moviesCrew.JobId),
 			fmt.Sprintf("DepartmentId: %v", *moviesCrew.DepartmentId),
+			fmt.Sprintf("JobId: %v", *moviesCrew.JobId),
 		},
 		", ",
 	)
@@ -62,20 +62,20 @@ var moviesCrewInsertSql = `
 INSERT INTO public.movies_crew(
   movie_id,
   crew_id,
-  job_id,
-  department_id
+  department_id,
+  job_id
 )
 VALUES (
   :movie_id,
   :crew_id,
-  :job_id,
-  :department_id
+  :department_id,
+  :job_id
 )
 RETURNING
   movie_id,
   crew_id,
-  job_id,
-  department_id;
+  department_id,
+  job_id;
 `
 
 // language=postgresql
@@ -84,16 +84,16 @@ UPDATE public.movies_crew
 SET
   movie_id = :movie_id,
   crew_id = :crew_id,
-  job_id = :job_id,
-  department_id = :department_id
+  department_id = :department_id,
+  job_id = :job_id
 WHERE TRUE
   AND movie_id = :movie_id
   AND crew_id = :crew_id
 RETURNING
   movie_id,
   crew_id,
-  job_id,
-  department_id;
+  department_id,
+  job_id;
 `
 
 // language=postgresql
@@ -101,8 +101,8 @@ var moviesCrewFindSql = `
 SELECT
   movie_id,
   crew_id,
-  job_id,
-  department_id
+  department_id,
+  job_id
 FROM public.movies_crew
 WHERE TRUE
   AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
@@ -115,8 +115,8 @@ var moviesCrewFindAllSql = `
 SELECT
   movie_id,
   crew_id,
-  job_id,
-  department_id
+  department_id,
+  job_id
 FROM public.movies_crew
 WHERE TRUE
   AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
