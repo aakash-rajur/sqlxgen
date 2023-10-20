@@ -80,7 +80,7 @@ tasks:
         ${CONTAINER_RUNTIME} exec \
           -e PGPASSWORD={{.POSTGRESQL_PASSWORD}} \
           -it {{.TMDB_PG_CONTAINER_NAME}} \
-          psql -U {{.TMDB_PG_USER}} -d {{.TMDB_PG_PASSWORD}}
+          psql -U {{.TMDB_PG_USER}} -d {{.TMDB_PG_DATABASE}}
   tmdb.mysql:
     desc: "Mysql database for TMDB"
     status:
