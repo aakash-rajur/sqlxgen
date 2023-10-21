@@ -12,7 +12,7 @@ import (
 )
 
 func loadAndExpand(workDir string, sqlxGenAltPath string) (string, error) {
-	env := loadEnvFile(workDir)
+	env := loadEnvFromFile(workDir)
 
 	cfgPath := getSqlxGenPath(workDir, env, sqlxGenAltPath)
 
@@ -25,7 +25,15 @@ func loadAndExpand(workDir string, sqlxGenAltPath string) (string, error) {
 	expanded := os.Expand(
 		string(content),
 		func(key string) string {
-			return env[key]
+			value, ok := env[key]
+
+			if !ok {
+				slog.Warn("environment variable not found", "key", key)
+
+				return ""
+			}
+
+			return value
 		},
 	)
 
@@ -58,31 +66,39 @@ func getSqlxGenPath(
 	return path.Join(workDir, cfgEnvPath)
 }
 
-func loadEnvFile(workDir string) map[string]string {
+func loadEnvFromFile(workDir string) map[string]string {
+	env := loadEnvFromOS()
+
 	envFile := path.Join(workDir, ".env")
 
 	_, err := os.Stat(envFile)
 
-	env := loadEnv()
-
-	if err == nil {
-		dotEnv, err := godotenv.Read(envFile)
-
-		if err != nil {
-			slog.Warn("failed to read environment variables")
+	if err != nil {
+		if !os.IsNotExist(err) {
+			slog.Warn("local environment file not found")
 		}
 
-		if dotEnv != nil {
-			maps.Copy(env, dotEnv)
-		}
-	} else if !os.IsNotExist(err) {
-		slog.Warn("local environment file not found")
+		return env
 	}
+
+	dotEnv, err := godotenv.Read(envFile)
+
+	if err != nil {
+		slog.Warn("failed to read environment file")
+
+		return env
+	}
+
+	if dotEnv == nil {
+		return env
+	}
+
+	maps.Copy(env, dotEnv)
 
 	return env
 }
 
-func loadEnv() map[string]string {
+func loadEnvFromOS() map[string]string {
 	env := make(map[string]string)
 
 	for _, e := range os.Environ() {
