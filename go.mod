@@ -13,7 +13,7 @@ require (
 	github.com/joomcode/errorx v1.1.1
 	github.com/lib/pq v1.10.9
 	github.com/spf13/cobra v1.7.0
-	golang.org/x/mod v0.12.0
+	golang.org/x/mod v0.13.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
