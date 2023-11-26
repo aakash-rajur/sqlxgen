@@ -27,6 +27,7 @@ playground
 gen
 integration/go.mod
 integration/go.sum
+!integration/.env
 
 dist/
 cmd/validate
