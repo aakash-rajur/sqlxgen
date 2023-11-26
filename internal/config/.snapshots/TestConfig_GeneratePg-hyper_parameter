@@ -12,13 +12,13 @@ type HyperParameter struct {
 	FriendlyNameSearch *string `db:"friendly_name_search" json:"friendly_name_search"`
 }
 
-func (hyperParameter HyperParameter) String() string {
+func (h *HyperParameter) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Type: %v", *hyperParameter.Type),
-			fmt.Sprintf("Value: %v", *hyperParameter.Value),
-			fmt.Sprintf("FriendlyName: %v", *hyperParameter.FriendlyName),
-			fmt.Sprintf("FriendlyNameSearch: %v", *hyperParameter.FriendlyNameSearch),
+			fmt.Sprintf("Type: %v", *h.Type),
+			fmt.Sprintf("Value: %v", *h.Value),
+			fmt.Sprintf("FriendlyName: %v", *h.FriendlyName),
+			fmt.Sprintf("FriendlyNameSearch: %v", *h.FriendlyNameSearch),
 		},
 		", ",
 	)
@@ -26,34 +26,34 @@ func (hyperParameter HyperParameter) String() string {
 	return fmt.Sprintf("HyperParameter{%s}", content)
 }
 
-func (_ HyperParameter) TableName() string {
+func (h *HyperParameter) TableName() string {
 	return "public.hyper_parameters"
 }
 
-func (_ HyperParameter) PrimaryKey() []string {
+func (h *HyperParameter) PrimaryKey() []string {
 	return []string{
 		"type",
 		"value",
 	}
 }
 
-func (_ HyperParameter) InsertQuery() string {
+func (h *HyperParameter) InsertQuery() string {
 	return hyperParameterInsertSql
 }
 
-func (_ HyperParameter) UpdateQuery() string {
+func (h *HyperParameter) UpdateQuery() string {
 	return hyperParameterUpdateSql
 }
 
-func (_ HyperParameter) FindQuery() string {
+func (h *HyperParameter) FindQuery() string {
 	return hyperParameterFindSql
 }
 
-func (_ HyperParameter) FindAllQuery() string {
+func (h *HyperParameter) FindAllQuery() string {
 	return hyperParameterFindAllSql
 }
 
-func (_ HyperParameter) DeleteQuery() string {
+func (h *HyperParameter) DeleteQuery() string {
 	return hyperParameterDeleteSql
 }
 
@@ -104,6 +104,8 @@ FROM public.hyper_parameters
 WHERE TRUE
   AND (CAST(:type AS TEXT) IS NULL or type = :type)
   AND (CAST(:value AS TEXT) IS NULL or value = :value)
+  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
+  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search)
 LIMIT 1;
 `
 
@@ -117,7 +119,9 @@ SELECT
 FROM public.hyper_parameters
 WHERE TRUE
   AND (CAST(:type AS TEXT) IS NULL or type = :type)
-  AND (CAST(:value AS TEXT) IS NULL or value = :value);
+  AND (CAST(:value AS TEXT) IS NULL or value = :value)
+  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
+  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search);
 `
 
 // language=postgresql
@@ -125,6 +129,8 @@ var hyperParameterDeleteSql = `
 DELETE FROM public.hyper_parameters
 WHERE TRUE
   AND type = :type
-  AND value = :value;
+  AND value = :value
+  AND friendly_name = :friendly_name
+  AND friendly_name_search = :friendly_name_search;
 `
 

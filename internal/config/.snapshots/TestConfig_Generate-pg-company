@@ -11,12 +11,12 @@ type Company struct {
 	NameSearch *string `db:"name_search" json:"name_search"`
 }
 
-func (company Company) String() string {
+func (c *Company) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *company.Id),
-			fmt.Sprintf("Name: %v", *company.Name),
-			fmt.Sprintf("NameSearch: %v", *company.NameSearch),
+			fmt.Sprintf("Id: %v", *c.Id),
+			fmt.Sprintf("Name: %v", *c.Name),
+			fmt.Sprintf("NameSearch: %v", *c.NameSearch),
 		},
 		", ",
 	)
@@ -24,33 +24,33 @@ func (company Company) String() string {
 	return fmt.Sprintf("Company{%s}", content)
 }
 
-func (_ Company) TableName() string {
+func (c *Company) TableName() string {
 	return "public.companies"
 }
 
-func (_ Company) PrimaryKey() []string {
+func (c *Company) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Company) InsertQuery() string {
+func (c *Company) InsertQuery() string {
 	return companyInsertSql
 }
 
-func (_ Company) UpdateQuery() string {
+func (c *Company) UpdateQuery() string {
 	return companyUpdateSql
 }
 
-func (_ Company) FindQuery() string {
+func (c *Company) FindQuery() string {
 	return companyFindSql
 }
 
-func (_ Company) FindAllQuery() string {
+func (c *Company) FindAllQuery() string {
 	return companyFindAllSql
 }
 
-func (_ Company) DeleteQuery() string {
+func (c *Company) DeleteQuery() string {
 	return companyDeleteSql
 }
 
@@ -93,6 +93,8 @@ SELECT
 FROM public.companies
 WHERE TRUE
   AND (CAST(:id AS INT8) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
 LIMIT 1;
 `
 
@@ -104,13 +106,17 @@ SELECT
   name_search
 FROM public.companies
 WHERE TRUE
-  AND (CAST(:id AS INT8) IS NULL or id = :id);
+  AND (CAST(:id AS INT8) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
 `
 
 // language=postgresql
 var companyDeleteSql = `
 DELETE FROM public.companies
 WHERE TRUE
-  AND id = :id;
+  AND id = :id
+  AND name = :name
+  AND name_search = :name_search;
 `
 

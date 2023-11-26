@@ -11,12 +11,12 @@ type Actor struct {
 	NameSearch *string `db:"name_search" json:"name_search"`
 }
 
-func (actor Actor) String() string {
+func (a *Actor) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *actor.Id),
-			fmt.Sprintf("Name: %v", *actor.Name),
-			fmt.Sprintf("NameSearch: %v", *actor.NameSearch),
+			fmt.Sprintf("Id: %v", *a.Id),
+			fmt.Sprintf("Name: %v", *a.Name),
+			fmt.Sprintf("NameSearch: %v", *a.NameSearch),
 		},
 		", ",
 	)
@@ -24,33 +24,33 @@ func (actor Actor) String() string {
 	return fmt.Sprintf("Actor{%s}", content)
 }
 
-func (_ Actor) TableName() string {
+func (a *Actor) TableName() string {
 	return "public.actors"
 }
 
-func (_ Actor) PrimaryKey() []string {
+func (a *Actor) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Actor) InsertQuery() string {
+func (a *Actor) InsertQuery() string {
 	return actorInsertSql
 }
 
-func (_ Actor) UpdateQuery() string {
+func (a *Actor) UpdateQuery() string {
 	return actorUpdateSql
 }
 
-func (_ Actor) FindQuery() string {
+func (a *Actor) FindQuery() string {
 	return actorFindSql
 }
 
-func (_ Actor) FindAllQuery() string {
+func (a *Actor) FindAllQuery() string {
 	return actorFindAllSql
 }
 
-func (_ Actor) DeleteQuery() string {
+func (a *Actor) DeleteQuery() string {
 	return actorDeleteSql
 }
 
@@ -91,6 +91,8 @@ SELECT
 FROM public.actors
 WHERE TRUE
   AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
 LIMIT 1;
 `
 
@@ -102,13 +104,17 @@ SELECT
   name_search
 FROM public.actors
 WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id);
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
 `
 
 // language=postgresql
 var actorDeleteSql = `
 DELETE FROM public.actors
 WHERE TRUE
-  AND id = :id;
+  AND id = :id
+  AND name = :name
+  AND name_search = :name_search;
 `
 

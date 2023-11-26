@@ -11,12 +11,12 @@ type Crew struct {
 	NameSearch *string `db:"name_search" json:"name_search"`
 }
 
-func (crew Crew) String() string {
+func (c *Crew) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *crew.Id),
-			fmt.Sprintf("Name: %v", *crew.Name),
-			fmt.Sprintf("NameSearch: %v", *crew.NameSearch),
+			fmt.Sprintf("Id: %v", *c.Id),
+			fmt.Sprintf("Name: %v", *c.Name),
+			fmt.Sprintf("NameSearch: %v", *c.NameSearch),
 		},
 		", ",
 	)
@@ -24,33 +24,33 @@ func (crew Crew) String() string {
 	return fmt.Sprintf("Crew{%s}", content)
 }
 
-func (_ Crew) TableName() string {
+func (c *Crew) TableName() string {
 	return "public.crew"
 }
 
-func (_ Crew) PrimaryKey() []string {
+func (c *Crew) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Crew) InsertQuery() string {
+func (c *Crew) InsertQuery() string {
 	return crewInsertSql
 }
 
-func (_ Crew) UpdateQuery() string {
+func (c *Crew) UpdateQuery() string {
 	return crewUpdateSql
 }
 
-func (_ Crew) FindQuery() string {
+func (c *Crew) FindQuery() string {
 	return crewFindSql
 }
 
-func (_ Crew) FindAllQuery() string {
+func (c *Crew) FindAllQuery() string {
 	return crewFindAllSql
 }
 
-func (_ Crew) DeleteQuery() string {
+func (c *Crew) DeleteQuery() string {
 	return crewDeleteSql
 }
 
@@ -91,6 +91,8 @@ SELECT
 FROM public.crew
 WHERE TRUE
   AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
 LIMIT 1;
 `
 
@@ -102,13 +104,17 @@ SELECT
   name_search
 FROM public.crew
 WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id);
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
 `
 
 // language=postgresql
 var crewDeleteSql = `
 DELETE FROM public.crew
 WHERE TRUE
-  AND id = :id;
+  AND id = :id
+  AND name = :name
+  AND name_search = :name_search;
 `
 

@@ -10,11 +10,11 @@ type MoviesCompany struct {
 	CompanyId *int64 `db:"company_id" json:"company_id"`
 }
 
-func (moviesCompany MoviesCompany) String() string {
+func (m *MoviesCompany) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("MovieId: %v", *moviesCompany.MovieId),
-			fmt.Sprintf("CompanyId: %v", *moviesCompany.CompanyId),
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("CompanyId: %v", *m.CompanyId),
 		},
 		", ",
 	)
@@ -22,34 +22,34 @@ func (moviesCompany MoviesCompany) String() string {
 	return fmt.Sprintf("MoviesCompany{%s}", content)
 }
 
-func (_ MoviesCompany) TableName() string {
+func (m *MoviesCompany) TableName() string {
 	return "app.movies_companies"
 }
 
-func (_ MoviesCompany) PrimaryKey() []string {
+func (m *MoviesCompany) PrimaryKey() []string {
 	return []string{
 		"movie_id",
 		"company_id",
 	}
 }
 
-func (_ MoviesCompany) InsertQuery() string {
+func (m *MoviesCompany) InsertQuery() string {
 	return moviesCompanyInsertSql
 }
 
-func (_ MoviesCompany) UpdateQuery() string {
+func (m *MoviesCompany) UpdateQuery() string {
 	return moviesCompanyUpdateSql
 }
 
-func (_ MoviesCompany) FindQuery() string {
+func (m *MoviesCompany) FindQuery() string {
 	return moviesCompanyFindSql
 }
 
-func (_ MoviesCompany) FindAllQuery() string {
+func (m *MoviesCompany) FindAllQuery() string {
 	return moviesCompanyFindAllSql
 }
 
-func (_ MoviesCompany) DeleteQuery() string {
+func (m *MoviesCompany) DeleteQuery() string {
 	return moviesCompanyDeleteSql
 }
 

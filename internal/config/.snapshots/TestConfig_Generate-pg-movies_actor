@@ -13,14 +13,14 @@ type MoviesActor struct {
 	CharacterSearch *string `db:"character_search" json:"character_search"`
 }
 
-func (moviesActor MoviesActor) String() string {
+func (m *MoviesActor) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("MovieId: %v", *moviesActor.MovieId),
-			fmt.Sprintf("ActorId: %v", *moviesActor.ActorId),
-			fmt.Sprintf("Character: %v", *moviesActor.Character),
-			fmt.Sprintf("CastOrder: %v", *moviesActor.CastOrder),
-			fmt.Sprintf("CharacterSearch: %v", *moviesActor.CharacterSearch),
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("ActorId: %v", *m.ActorId),
+			fmt.Sprintf("Character: %v", *m.Character),
+			fmt.Sprintf("CastOrder: %v", *m.CastOrder),
+			fmt.Sprintf("CharacterSearch: %v", *m.CharacterSearch),
 		},
 		", ",
 	)
@@ -28,34 +28,34 @@ func (moviesActor MoviesActor) String() string {
 	return fmt.Sprintf("MoviesActor{%s}", content)
 }
 
-func (_ MoviesActor) TableName() string {
+func (m *MoviesActor) TableName() string {
 	return "public.movies_actors"
 }
 
-func (_ MoviesActor) PrimaryKey() []string {
+func (m *MoviesActor) PrimaryKey() []string {
 	return []string{
 		"movie_id",
 		"actor_id",
 	}
 }
 
-func (_ MoviesActor) InsertQuery() string {
+func (m *MoviesActor) InsertQuery() string {
 	return moviesActorInsertSql
 }
 
-func (_ MoviesActor) UpdateQuery() string {
+func (m *MoviesActor) UpdateQuery() string {
 	return moviesActorUpdateSql
 }
 
-func (_ MoviesActor) FindQuery() string {
+func (m *MoviesActor) FindQuery() string {
 	return moviesActorFindSql
 }
 
-func (_ MoviesActor) FindAllQuery() string {
+func (m *MoviesActor) FindAllQuery() string {
 	return moviesActorFindAllSql
 }
 
-func (_ MoviesActor) DeleteQuery() string {
+func (m *MoviesActor) DeleteQuery() string {
 	return moviesActorDeleteSql
 }
 
@@ -112,6 +112,9 @@ FROM public.movies_actors
 WHERE TRUE
   AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
   AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
+  AND (CAST(:character AS TEXT) IS NULL or character = :character)
+  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
+  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search)
 LIMIT 1;
 `
 
@@ -126,7 +129,10 @@ SELECT
 FROM public.movies_actors
 WHERE TRUE
   AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id);
+  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
+  AND (CAST(:character AS TEXT) IS NULL or character = :character)
+  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
+  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search);
 `
 
 // language=postgresql
@@ -134,6 +140,9 @@ var moviesActorDeleteSql = `
 DELETE FROM public.movies_actors
 WHERE TRUE
   AND movie_id = :movie_id
-  AND actor_id = :actor_id;
+  AND actor_id = :actor_id
+  AND character = :character
+  AND cast_order = :cast_order
+  AND character_search = :character_search;
 `
 

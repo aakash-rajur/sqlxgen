@@ -10,11 +10,11 @@ type Actor struct {
 	Id   *int64  `db:"id" json:"id"`
 }
 
-func (actor Actor) String() string {
+func (a *Actor) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Name: %v", *actor.Name),
-			fmt.Sprintf("Id: %v", *actor.Id),
+			fmt.Sprintf("Name: %v", *a.Name),
+			fmt.Sprintf("Id: %v", *a.Id),
 		},
 		", ",
 	)
@@ -22,33 +22,33 @@ func (actor Actor) String() string {
 	return fmt.Sprintf("Actor{%s}", content)
 }
 
-func (_ Actor) TableName() string {
+func (a *Actor) TableName() string {
 	return "app.actors"
 }
 
-func (_ Actor) PrimaryKey() []string {
+func (a *Actor) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Actor) InsertQuery() string {
+func (a *Actor) InsertQuery() string {
 	return actorInsertSql
 }
 
-func (_ Actor) UpdateQuery() string {
+func (a *Actor) UpdateQuery() string {
 	return actorUpdateSql
 }
 
-func (_ Actor) FindQuery() string {
+func (a *Actor) FindQuery() string {
 	return actorFindSql
 }
 
-func (_ Actor) FindAllQuery() string {
+func (a *Actor) FindAllQuery() string {
 	return actorFindAllSql
 }
 
-func (_ Actor) DeleteQuery() string {
+func (a *Actor) DeleteQuery() string {
 	return actorDeleteSql
 }
 
@@ -85,6 +85,7 @@ SELECT
   id
 FROM app.actors
 WHERE TRUE
+  AND (:name IS NULL or name = :name)
   AND (:id IS NULL or id = :id)
 LIMIT 1;
 `
@@ -96,6 +97,7 @@ SELECT
   id
 FROM app.actors
 WHERE TRUE
+  AND (:name IS NULL or name = :name)
   AND (:id IS NULL or id = :id);
 `
 
@@ -103,6 +105,7 @@ WHERE TRUE
 var actorDeleteSql = `
 DELETE FROM app.actors
 WHERE TRUE
+  AND name = :name
   AND id = :id;
 `
 
