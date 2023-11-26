@@ -15,17 +15,18 @@ import (
 {{- $fields := .Fields }}
 {{- $pkFields := .PkFields }}
 {{- $camelName := .CamelName }}
+{{- $receiverName := (slice $camelName 0 1) }}
 type {{ .PascalName }} struct {
   {{- range .Fields }}
     {{ .Name }} {{ .Type.GoType }} `db:"{{ .Column.ColumnName }}" json:"{{ .Column.ColumnName }}"`
   {{- end }}
 }
 
-func ({{ $camelName }} {{ .PascalName }}) String() string {
+func ({{ $receiverName }} {{ .PascalName }}) String() string {
   content := strings.Join(
     []string{
       {{- range .Fields }}
-        fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $camelName }}.{{ .Name }}),
+        fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $receiverName }}.{{ .Name }}),
       {{- end }}
       },
       ", ",
@@ -34,11 +35,11 @@ func ({{ $camelName }} {{ .PascalName }}) String() string {
   return fmt.Sprintf("{{ .PascalName }}{%s}", content)
 }
 
-func (_ {{ .PascalName }}) TableName() string {
+func ({{ $receiverName }} {{ .PascalName }}) TableName() string {
   return "{{ .Table.SchemaName }}.{{ .Table.TableName }}"
 }
 
-func (_ {{ .PascalName }}) PrimaryKey() []string {
+func ({{ $receiverName }} {{ .PascalName }}) PrimaryKey() []string {
 return []string{
     {{- range .PkFields }}
     "{{ .Column.ColumnName }}",
@@ -46,23 +47,23 @@ return []string{
   }
 }
 
-func (_ {{ .PascalName }}) InsertQuery() string {
+func ({{ $receiverName }} {{ .PascalName }}) InsertQuery() string {
   return {{ .CamelName }}InsertSql
 }
 
-func (_ {{ .PascalName }}) UpdateQuery() string {
+func ({{ $receiverName }} {{ .PascalName }}) UpdateQuery() string {
   return {{ .CamelName }}UpdateSql
 }
 
-func (_ {{ .PascalName }}) FindQuery() string {
+func ({{ $receiverName }} {{ .PascalName }}) FindQuery() string {
   return {{ .CamelName }}FindSql
 }
 
-func (_ {{ .PascalName }}) FindAllQuery() string {
+func ({{ $receiverName }} {{ .PascalName }}) FindAllQuery() string {
   return {{ .CamelName }}FindAllSql
 }
 
-func (_ {{ .PascalName }}) DeleteQuery() string {
+func ({{ $receiverName }} {{ .PascalName }}) DeleteQuery() string {
   return {{ .CamelName }}DeleteSql
 }
 
