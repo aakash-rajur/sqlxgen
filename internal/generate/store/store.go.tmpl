@@ -4,7 +4,9 @@ import (
   "database/sql"
   "database/sql/driver"
   "encoding/json"
+  "errors"
   "fmt"
+  "reflect"
   "regexp"
 
   "github.com/jmoiron/sqlx"
@@ -67,7 +69,21 @@ func Find[T model](db Database, instance T) (T, error) {
     _ = rows.Close()
   }(rows)
 
-  rows.Next()
+  hasNext := rows.Next()
+
+	if !hasNext {
+		t := reflect.TypeOf(instance)
+
+		typeName := t.Name()
+
+		if t.Kind() == reflect.Pointer {
+			typeName = t.Elem().Name()
+    }
+
+		msg := fmt.Sprintf("'%s' not found", typeName)
+
+		return result, fmt.Errorf(msg, ErrNotFound)
+  }
 
   err = rows.StructScan(&result)
 
@@ -217,3 +233,5 @@ func (j *JsonArray) Scan(src any) error {
 func (j *JsonArray) Value() (driver.Value, error) {
   return json.Marshal(j)
 }
+
+var ErrNotFound = errors.New("database entity not found")
