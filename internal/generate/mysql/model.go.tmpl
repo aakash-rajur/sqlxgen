@@ -113,7 +113,7 @@ SELECT
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range .PkFields }}
+{{- range $selectFields }}
   AND (:{{ .Column.ColumnName }} IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
 {{- end }}
 LIMIT 1;
@@ -127,7 +127,7 @@ SELECT
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range .PkFields }}
+{{- range $selectFields }}
   AND (:{{ .Column.ColumnName }} IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
 {{- end }};
 `
@@ -136,7 +136,7 @@ WHERE TRUE
 var {{ .CamelName }}DeleteSql = `
 DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range .PkFields }}
+{{- range $selectFields }}
   AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
