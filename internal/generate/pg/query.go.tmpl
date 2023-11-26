@@ -11,13 +11,15 @@ import (
 
 {{ with .Query }}
 {{- $camelName := .CamelName }}
-type {{ .PascalName }}Args struct {
+{{- $argsType := printf "%sArgs" .PascalName }}
+{{- $resultType := printf "%sResult" .PascalName }}
+type {{ $argsType }} struct {
   {{- range .Params }}
   {{ .Name }} {{ .Type.GoType }} `db:"{{ .Column.ColumnName }}" json:"{{ .Column.ColumnName }}"`
   {{- end }}
 }
 
-func (args {{ .PascalName }}Args) String() string {
+func (args *{{ $argsType }}) String() string {
   content := strings.Join(
     []string{
     {{- range .Params }}
@@ -27,24 +29,24 @@ func (args {{ .PascalName }}Args) String() string {
     ", ",
   )
 
-  return fmt.Sprintf("{{ .PascalName }}Args{%s}", content)
+  return fmt.Sprintf("{{ $argsType }}{%s}", content)
 }
 
-func (args {{ .PascalName }}Args) Query(db {{ .StorePackageName }}.Database) ([]{{ .PascalName }}Result, error) {
-  return {{ .StorePackageName }}.Query[{{ .PascalName }}Result](db, args)
+func (args *{{ $argsType }}) Query(db {{ .StorePackageName }}.Database) ([]*{{ $resultType }}, error) {
+  return {{ .StorePackageName }}.Query[*{{ $resultType }}](db, args)
 }
 
-func (args {{ .PascalName }}Args) Sql() string {
+func (args *{{ $argsType }}) Sql() string {
   return {{ .CamelName }}Sql
 }
 
-type {{ .PascalName }}Result struct {
+type {{ $resultType }} struct {
   {{- range .Fields }}
   {{ .Name }} {{ .Type.GoType }} `db:"{{ .Column.ColumnName }}" json:"{{ .Column.ColumnName }}"`
   {{- end }}
 }
 
-func (result {{ .PascalName }}Result) String() string {
+func (result *{{ $resultType }}) String() string {
   content := strings.Join(
     []string{
     {{- range .Fields }}
@@ -54,7 +56,7 @@ func (result {{ .PascalName }}Result) String() string {
     ", ",
   )
 
-  return fmt.Sprintf("{{ .PascalName }}Result{%s}", content)
+  return fmt.Sprintf("{{ $resultType }}{%s}", content)
 }
 
 //go:embed {{ .Filename }}

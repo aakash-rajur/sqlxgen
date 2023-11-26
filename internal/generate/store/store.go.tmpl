@@ -14,7 +14,7 @@ import (
 
 // orm
 
-func Insert[T model](db Database, instances ...T) error {
+func Insert[T model[P], P any](db Database, instances ...T) error {
 	for _, instance := range instances {
     rows, err := db.NamedQuery(instance.InsertQuery(), instance)
 
@@ -22,11 +22,19 @@ func Insert[T model](db Database, instances ...T) error {
 			return err
 		}
 
-    rows.Next()
+    hasNext := rows.Next()
 
-    err = rows.StructScan(&instance)
+    if !hasNext {
+      return fmt.Errorf("unable to insert %s", instance)
+    }
 
-    _ = rows.Close()
+    err = rows.StructScan(instance)
+
+    if err != nil {
+      return err
+    }
+
+		err = rows.Close()
 
     if err != nil {
       return err
@@ -36,7 +44,7 @@ func Insert[T model](db Database, instances ...T) error {
 	return nil
 }
 
-func Update[T model](db Database, instances ...T) error {
+func Update[T model[P], P any](db Database, instances ...T) error {
 	for _, instance := range instances {
     rows, err := db.NamedQuery(instance.UpdateQuery(), instance)
 
@@ -44,11 +52,19 @@ func Update[T model](db Database, instances ...T) error {
 			return err
 		}
 
-    rows.Next()
+    hasNext := rows.Next()
+
+		if !hasNext {
+      return fmt.Errorf("unable to update %s", instance)
+    }
 
     err = rows.StructScan(&instance)
 
-    _ = rows.Close()
+    if err != nil {
+      return err
+    }
+
+    err = rows.Close()
 
     if err != nil {
       return err
@@ -58,8 +74,8 @@ func Update[T model](db Database, instances ...T) error {
 	return nil
 }
 
-func Find[T model](db Database, instance T) (T, error) {
-  var result T
+func Find[T model[P], P any](db Database, instance T) (T, error) {
+  result := new(P)
 
   rows, err := db.NamedQuery(instance.FindQuery(), instance)
 
@@ -87,7 +103,7 @@ func Find[T model](db Database, instance T) (T, error) {
 		return result, fmt.Errorf(msg, ErrNotFound)
   }
 
-  err = rows.StructScan(&result)
+  err = rows.StructScan(result)
 
   if err != nil {
     return result, err
@@ -96,7 +112,7 @@ func Find[T model](db Database, instance T) (T, error) {
   return result, nil
 }
 
-func FindMany[T model](db Database, instance T) ([]T, error) {
+func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
   rows, err := db.NamedQuery(instance.FindAllQuery(), instance)
 
   if err != nil {
@@ -110,9 +126,9 @@ func FindMany[T model](db Database, instance T) ([]T, error) {
   result := make([]T, 0)
 
   for rows.Next() {
-    var instance T
+    instance := new(P)
 
-    err = rows.StructScan(&instance)
+    err = rows.StructScan(instance)
 
     if err != nil {
       return nil, err
@@ -124,14 +140,16 @@ func FindMany[T model](db Database, instance T) ([]T, error) {
   return result, nil
 }
 
-func Delete[T model](db Database, instance T) error {
+func Delete[T model[P], P any](db Database, instance T) error {
   _, err := db.NamedExec(instance.DeleteQuery(), instance)
 
   return err
 }
 
-type model interface {
-  TableName() string
+type model[P any] interface {
+	*P
+
+	TableName() string
 
   PrimaryKey() []string
 
@@ -148,7 +166,7 @@ type model interface {
 
 // custom sql query
 
-func Query[R any] (db Database, args queryable) ([]R, error) {
+func Query[R result[pR], Q queryable[pQ], pR, pQ any](db Database, args Q) ([]R, error) {
   re, err := regexp.Compile(`-{2,}\s*([\w\W\s\S]*?)(\n|\z)`)
 
   if err != nil {
@@ -170,9 +188,9 @@ func Query[R any] (db Database, args queryable) ([]R, error) {
   result := make([]R, 0)
 
   for rows.Next() {
-    var instance R
+    instance := new(pR)
 
-    err = rows.StructScan(&instance)
+    err = rows.StructScan(instance)
 
     if err != nil {
       return nil, err
@@ -181,11 +199,23 @@ func Query[R any] (db Database, args queryable) ([]R, error) {
     result = append(result, instance)
   }
 
+  err = rows.Close()
+
+  if err != nil {
+    return nil, err
+  }
+
   return result, nil
 }
 
-type queryable interface {
+type queryable[P any] interface {
+  *P
+
   Sql() string
+}
+
+type result[P any] interface {
+  *P
 }
 
 // supplementary types
@@ -242,4 +272,4 @@ func (j *JsonArray) Value() (driver.Value, error) {
 
 // errors
 
-var ErrNotFound = errors.New("database entity not found")
+var ErrNotFound = errors.New("entity not found")
