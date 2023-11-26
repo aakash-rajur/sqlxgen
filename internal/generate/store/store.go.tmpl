@@ -14,64 +14,76 @@ import (
 
 // orm
 
-func Insert[T model[P], P any](db Database, instances ...T) error {
+func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
+	inserts := make([]T, 0)
+
 	for _, instance := range instances {
     rows, err := db.NamedQuery(instance.InsertQuery(), instance)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
     hasNext := rows.Next()
 
     if !hasNext {
-      return fmt.Errorf("unable to insert %s", instance)
+      return nil, fmt.Errorf("unable to insert %s", instance)
     }
 
-    err = rows.StructScan(instance)
+		inserted := new(P)
+
+    err = rows.StructScan(inserted)
 
     if err != nil {
-      return err
+      return nil, err
     }
 
 		err = rows.Close()
 
     if err != nil {
-      return err
+      return nil, err
     }
+
+    inserts = append(inserts, inserted)
 	}
 
-	return nil
+	return inserts, nil
 }
 
-func Update[T model[P], P any](db Database, instances ...T) error {
+func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
+  updates := make([]T, 0)
+
 	for _, instance := range instances {
     rows, err := db.NamedQuery(instance.UpdateQuery(), instance)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
     hasNext := rows.Next()
 
 		if !hasNext {
-      return fmt.Errorf("unable to update %s", instance)
+      return nil, fmt.Errorf("unable to update %s", instance)
     }
 
-    err = rows.StructScan(&instance)
+		updated := new(P)
+
+    err = rows.StructScan(updated)
 
     if err != nil {
-      return err
+      return nil, err
     }
 
     err = rows.Close()
 
     if err != nil {
-      return err
+      return nil, err
     }
+
+    updates = append(updates, updated)
 	}
 
-	return nil
+	return updates, nil
 }
 
 func Find[T model[P], P any](db Database, instance T) (T, error) {
