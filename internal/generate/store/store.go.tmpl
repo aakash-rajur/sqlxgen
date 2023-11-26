@@ -12,6 +12,8 @@ import (
   "github.com/jmoiron/sqlx"
 )
 
+// orm
+
 func Insert[T model](db Database, instances ...T) error {
 	for _, instance := range instances {
     rows, err := db.NamedQuery(instance.InsertQuery(), instance)
@@ -144,6 +146,8 @@ type model interface {
   DeleteQuery() string
 }
 
+// custom sql query
+
 func Query[R any] (db Database, args queryable) ([]R, error) {
   re, err := regexp.Compile(`-{2,}\s*([\w\W\s\S]*?)(\n|\z)`)
 
@@ -183,6 +187,8 @@ func Query[R any] (db Database, args queryable) ([]R, error) {
 type queryable interface {
   Sql() string
 }
+
+// supplementary types
 
 type Database interface {
   NamedExec(query string, arg interface{}) (sql.Result, error)
@@ -233,5 +239,7 @@ func (j *JsonArray) Scan(src any) error {
 func (j *JsonArray) Value() (driver.Value, error) {
   return json.Marshal(j)
 }
+
+// errors
 
 var ErrNotFound = errors.New("database entity not found")
