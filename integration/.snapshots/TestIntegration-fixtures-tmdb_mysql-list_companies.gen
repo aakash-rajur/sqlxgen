@@ -14,7 +14,7 @@ type ListCompaniesArgs struct {
 	Sort   *string `db:"sort" json:"sort"`
 }
 
-func (args ListCompaniesArgs) String() string {
+func (args *ListCompaniesArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Limit: %v", *args.Limit),
@@ -28,18 +28,18 @@ func (args ListCompaniesArgs) String() string {
 	return fmt.Sprintf("ListCompaniesArgs{%s}", content)
 }
 
-func (args ListCompaniesArgs) Query(db store.Database) ([]ListCompaniesResult, error) {
-	return store.Query[ListCompaniesResult](db, args)
+func (args *ListCompaniesArgs) Query(db store.Database) ([]*ListCompaniesResult, error) {
+	return store.Query[*ListCompaniesResult](db, args)
 }
 
-func (args ListCompaniesArgs) Sql() string {
+func (args *ListCompaniesArgs) Sql() string {
 	return listCompaniesSql
 }
 
 type ListCompaniesResult struct {
 }
 
-func (result ListCompaniesResult) String() string {
+func (result *ListCompaniesResult) String() string {
 	content := strings.Join(
 		[]string{},
 		", ",

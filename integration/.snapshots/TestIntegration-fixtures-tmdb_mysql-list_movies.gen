@@ -15,7 +15,7 @@ type ListMoviesArgs struct {
 	Sort    *string `db:"sort" json:"sort"`
 }
 
-func (args ListMoviesArgs) String() string {
+func (args *ListMoviesArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("GenreId: %v", *args.GenreId),
@@ -30,18 +30,18 @@ func (args ListMoviesArgs) String() string {
 	return fmt.Sprintf("ListMoviesArgs{%s}", content)
 }
 
-func (args ListMoviesArgs) Query(db store.Database) ([]ListMoviesResult, error) {
-	return store.Query[ListMoviesResult](db, args)
+func (args *ListMoviesArgs) Query(db store.Database) ([]*ListMoviesResult, error) {
+	return store.Query[*ListMoviesResult](db, args)
 }
 
-func (args ListMoviesArgs) Sql() string {
+func (args *ListMoviesArgs) Sql() string {
 	return listMoviesSql
 }
 
 type ListMoviesResult struct {
 }
 
-func (result ListMoviesResult) String() string {
+func (result *ListMoviesResult) String() string {
 	content := strings.Join(
 		[]string{},
 		", ",

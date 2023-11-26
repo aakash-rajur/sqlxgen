@@ -14,7 +14,7 @@ type ListCrewArgs struct {
 	Sort   *string `db:"sort" json:"sort"`
 }
 
-func (args ListCrewArgs) String() string {
+func (args *ListCrewArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Limit: %v", *args.Limit),
@@ -28,11 +28,11 @@ func (args ListCrewArgs) String() string {
 	return fmt.Sprintf("ListCrewArgs{%s}", content)
 }
 
-func (args ListCrewArgs) Query(db store.Database) ([]ListCrewResult, error) {
-	return store.Query[ListCrewResult](db, args)
+func (args *ListCrewArgs) Query(db store.Database) ([]*ListCrewResult, error) {
+	return store.Query[*ListCrewResult](db, args)
 }
 
-func (args ListCrewArgs) Sql() string {
+func (args *ListCrewArgs) Sql() string {
 	return listCrewSql
 }
 
@@ -42,7 +42,7 @@ type ListCrewResult struct {
 	TotalRecordsCount *int64  `db:"totalRecordsCount" json:"totalRecordsCount"`
 }
 
-func (result ListCrewResult) String() string {
+func (result *ListCrewResult) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *result.Id),

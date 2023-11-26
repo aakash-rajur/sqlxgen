@@ -11,7 +11,7 @@ type GetActorArgs struct {
 	Id *int64 `db:"id" json:"id"`
 }
 
-func (args GetActorArgs) String() string {
+func (args *GetActorArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *args.Id),
@@ -22,18 +22,18 @@ func (args GetActorArgs) String() string {
 	return fmt.Sprintf("GetActorArgs{%s}", content)
 }
 
-func (args GetActorArgs) Query(db store.Database) ([]GetActorResult, error) {
-	return store.Query[GetActorResult](db, args)
+func (args *GetActorArgs) Query(db store.Database) ([]*GetActorResult, error) {
+	return store.Query[*GetActorResult](db, args)
 }
 
-func (args GetActorArgs) Sql() string {
+func (args *GetActorArgs) Sql() string {
 	return getActorSql
 }
 
 type GetActorResult struct {
 }
 
-func (result GetActorResult) String() string {
+func (result *GetActorResult) String() string {
 	content := strings.Join(
 		[]string{},
 		", ",

@@ -10,11 +10,11 @@ type Company struct {
 	Id   *int64  `db:"id" json:"id"`
 }
 
-func (company Company) String() string {
+func (c *Company) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Name: %v", *company.Name),
-			fmt.Sprintf("Id: %v", *company.Id),
+			fmt.Sprintf("Name: %v", *c.Name),
+			fmt.Sprintf("Id: %v", *c.Id),
 		},
 		", ",
 	)
@@ -22,33 +22,33 @@ func (company Company) String() string {
 	return fmt.Sprintf("Company{%s}", content)
 }
 
-func (_ Company) TableName() string {
+func (c *Company) TableName() string {
 	return "app.companies"
 }
 
-func (_ Company) PrimaryKey() []string {
+func (c *Company) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Company) InsertQuery() string {
+func (c *Company) InsertQuery() string {
 	return companyInsertSql
 }
 
-func (_ Company) UpdateQuery() string {
+func (c *Company) UpdateQuery() string {
 	return companyUpdateSql
 }
 
-func (_ Company) FindQuery() string {
+func (c *Company) FindQuery() string {
 	return companyFindSql
 }
 
-func (_ Company) FindAllQuery() string {
+func (c *Company) FindAllQuery() string {
 	return companyFindAllSql
 }
 
-func (_ Company) DeleteQuery() string {
+func (c *Company) DeleteQuery() string {
 	return companyDeleteSql
 }
 
@@ -87,6 +87,7 @@ SELECT
   id
 FROM app.companies
 WHERE TRUE
+  AND (:name IS NULL or name = :name)
   AND (:id IS NULL or id = :id)
 LIMIT 1;
 `
@@ -98,6 +99,7 @@ SELECT
   id
 FROM app.companies
 WHERE TRUE
+  AND (:name IS NULL or name = :name)
   AND (:id IS NULL or id = :id);
 `
 
@@ -105,6 +107,7 @@ WHERE TRUE
 var companyDeleteSql = `
 DELETE FROM app.companies
 WHERE TRUE
+  AND name = :name
   AND id = :id;
 `
 

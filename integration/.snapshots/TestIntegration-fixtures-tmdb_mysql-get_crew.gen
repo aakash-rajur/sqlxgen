@@ -11,7 +11,7 @@ type GetCrewArgs struct {
 	Id *int64 `db:"id" json:"id"`
 }
 
-func (args GetCrewArgs) String() string {
+func (args *GetCrewArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *args.Id),
@@ -22,18 +22,18 @@ func (args GetCrewArgs) String() string {
 	return fmt.Sprintf("GetCrewArgs{%s}", content)
 }
 
-func (args GetCrewArgs) Query(db store.Database) ([]GetCrewResult, error) {
-	return store.Query[GetCrewResult](db, args)
+func (args *GetCrewArgs) Query(db store.Database) ([]*GetCrewResult, error) {
+	return store.Query[*GetCrewResult](db, args)
 }
 
-func (args GetCrewArgs) Sql() string {
+func (args *GetCrewArgs) Sql() string {
 	return getCrewSql
 }
 
 type GetCrewResult struct {
 }
 
-func (result GetCrewResult) String() string {
+func (result *GetCrewResult) String() string {
 	content := strings.Join(
 		[]string{},
 		", ",

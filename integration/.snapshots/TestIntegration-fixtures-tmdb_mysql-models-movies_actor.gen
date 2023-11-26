@@ -12,13 +12,13 @@ type MoviesActor struct {
 	ActorId   *int64  `db:"actor_id" json:"actor_id"`
 }
 
-func (moviesActor MoviesActor) String() string {
+func (m *MoviesActor) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Cast: %v", *moviesActor.Cast),
-			fmt.Sprintf("CastOrder: %v", *moviesActor.CastOrder),
-			fmt.Sprintf("MovieId: %v", *moviesActor.MovieId),
-			fmt.Sprintf("ActorId: %v", *moviesActor.ActorId),
+			fmt.Sprintf("Cast: %v", *m.Cast),
+			fmt.Sprintf("CastOrder: %v", *m.CastOrder),
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("ActorId: %v", *m.ActorId),
 		},
 		", ",
 	)
@@ -26,34 +26,34 @@ func (moviesActor MoviesActor) String() string {
 	return fmt.Sprintf("MoviesActor{%s}", content)
 }
 
-func (_ MoviesActor) TableName() string {
+func (m *MoviesActor) TableName() string {
 	return "app.movies_actors"
 }
 
-func (_ MoviesActor) PrimaryKey() []string {
+func (m *MoviesActor) PrimaryKey() []string {
 	return []string{
 		"movie_id",
 		"actor_id",
 	}
 }
 
-func (_ MoviesActor) InsertQuery() string {
+func (m *MoviesActor) InsertQuery() string {
 	return moviesActorInsertSql
 }
 
-func (_ MoviesActor) UpdateQuery() string {
+func (m *MoviesActor) UpdateQuery() string {
 	return moviesActorUpdateSql
 }
 
-func (_ MoviesActor) FindQuery() string {
+func (m *MoviesActor) FindQuery() string {
 	return moviesActorFindSql
 }
 
-func (_ MoviesActor) FindAllQuery() string {
+func (m *MoviesActor) FindAllQuery() string {
 	return moviesActorFindAllSql
 }
 
-func (_ MoviesActor) DeleteQuery() string {
+func (m *MoviesActor) DeleteQuery() string {
 	return moviesActorDeleteSql
 }
 
@@ -105,6 +105,8 @@ SELECT
   actor_id
 FROM app.movies_actors
 WHERE TRUE
+  AND (:cast IS NULL or cast = :cast)
+  AND (:cast_order IS NULL or cast_order = :cast_order)
   AND (:movie_id IS NULL or movie_id = :movie_id)
   AND (:actor_id IS NULL or actor_id = :actor_id)
 LIMIT 1;
@@ -119,6 +121,8 @@ SELECT
   actor_id
 FROM app.movies_actors
 WHERE TRUE
+  AND (:cast IS NULL or cast = :cast)
+  AND (:cast_order IS NULL or cast_order = :cast_order)
   AND (:movie_id IS NULL or movie_id = :movie_id)
   AND (:actor_id IS NULL or actor_id = :actor_id);
 `
@@ -127,6 +131,8 @@ WHERE TRUE
 var moviesActorDeleteSql = `
 DELETE FROM app.movies_actors
 WHERE TRUE
+  AND cast = :cast
+  AND cast_order = :cast_order
   AND movie_id = :movie_id
   AND actor_id = :actor_id;
 `
