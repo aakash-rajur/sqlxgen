@@ -1,6 +1,9 @@
 package go_type
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/aakash-rajur/sqlxgen/internal/generate/types"
 	"github.com/aakash-rajur/sqlxgen/internal/introspect"
 )
@@ -86,14 +89,16 @@ func fromSingle(storePackageDir string, column introspect.Column) (types.GoType,
 
 		goType.Import = "encoding/json"
 
+		_, storePkg := filepath.Split(storePackageDir)
+
 		if column.JsonType == "array" {
-			goType.GoType = "*store.JsonArray"
+			goType.GoType = fmt.Sprintf("*%s.JsonArray", storePkg)
 
 			goType.Import = storePackageDir
 		}
 
 		if column.JsonType == "object" {
-			goType.GoType = "*store.JsonObject"
+			goType.GoType = fmt.Sprintf("*%s.JsonObject", storePkg)
 
 			goType.Import = storePackageDir
 		}
