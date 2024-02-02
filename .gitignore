@@ -31,3 +31,7 @@ integration/go.sum
 
 dist/
 cmd/validate
+vendor/
+.vscode/
+integration/__debug_bin*
+main
