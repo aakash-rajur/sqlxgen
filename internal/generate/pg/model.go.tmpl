@@ -114,9 +114,9 @@ SELECT
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $selectFields }}
-  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
-{{- end }}
+{{- range $pkFields }}
+  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- end }};
 LIMIT 1;
 `
 
@@ -137,7 +137,7 @@ WHERE TRUE
 var {{ .CamelName }}DeleteSql = `
 DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $selectFields }}
+{{- range $pkFields }}
   AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
