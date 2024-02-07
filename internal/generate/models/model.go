@@ -174,6 +174,7 @@ func newModel(
 	}
 
 	if len(pkFields) == 0 {
+		println("WARN: No primary key found for table", table.TableName)
 		pkFields = array.Filter(
 			fields,
 			func(each types.Field, index int) bool {

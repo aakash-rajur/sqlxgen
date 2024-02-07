@@ -1,0 +1,114 @@
+package models
+
+import (
+	"fmt"
+	"strings"
+)
+
+type MoviesLanguage struct {
+	MovieId    *int64  `db:"movie_id" json:"movie_id"`
+	LanguageId *string `db:"language_id" json:"language_id"`
+}
+
+func (m *MoviesLanguage) String() string {
+	content := strings.Join(
+		[]string{
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("LanguageId: %v", *m.LanguageId),
+		},
+		", ",
+	)
+
+	return fmt.Sprintf("MoviesLanguage{%s}", content)
+}
+
+func (m *MoviesLanguage) TableName() string {
+	return "public.movies_languages"
+}
+
+func (m *MoviesLanguage) PrimaryKey() []string {
+	return []string{
+		"movie_id",
+		"language_id",
+	}
+}
+
+func (m *MoviesLanguage) InsertQuery() string {
+	return moviesLanguageInsertSql
+}
+
+func (m *MoviesLanguage) UpdateQuery() string {
+	return moviesLanguageUpdateSql
+}
+
+func (m *MoviesLanguage) FindQuery() string {
+	return moviesLanguageFindSql
+}
+
+func (m *MoviesLanguage) FindAllQuery() string {
+	return moviesLanguageFindAllSql
+}
+
+func (m *MoviesLanguage) DeleteQuery() string {
+	return moviesLanguageDeleteSql
+}
+
+// language=postgresql
+var moviesLanguageInsertSql = `
+INSERT INTO public.movies_languages(
+  movie_id,
+  language_id
+)
+VALUES (
+  :movie_id,
+  :language_id
+)
+RETURNING
+  movie_id,
+  language_id;
+`
+
+// language=postgresql
+var moviesLanguageUpdateSql = `
+UPDATE public.movies_languages
+SET
+  movie_id = :movie_id,
+  language_id = :language_id
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND language_id = :language_id
+RETURNING
+  movie_id,
+  language_id;
+`
+
+// language=postgresql
+var moviesLanguageFindSql = `
+SELECT
+  movie_id,
+  language_id
+FROM public.movies_languages
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND language_id = :language_id;
+LIMIT 1;
+`
+
+// language=postgresql
+var moviesLanguageFindAllSql = `
+SELECT
+  movie_id,
+  language_id
+FROM public.movies_languages
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id);
+`
+
+// language=postgresql
+var moviesLanguageDeleteSql = `
+DELETE FROM public.movies_languages
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND language_id = :language_id;
+`

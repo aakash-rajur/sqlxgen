@@ -117,7 +117,7 @@ func fromSingle(storePackageDir string, column introspect.Column) (types.GoType,
 
 		return goType, nil
 
-	case "text", "string", "citext", "name", "bpchar", "tsquery", "pg_catalog.varchar", "pg_catalog.bpchar", "pg_catalog.tsquery":
+	case "text", "string", "citext", "name", "bpchar", "tsquery", "varchar", "pg_catalog.varchar", "pg_catalog.bpchar", "pg_catalog.tsquery":
 		goType.GoType = "*string"
 
 		return goType, nil

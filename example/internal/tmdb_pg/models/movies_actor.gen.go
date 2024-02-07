@@ -1,0 +1,141 @@
+package models
+
+import (
+	"fmt"
+	"strings"
+)
+
+type MoviesActor struct {
+	MovieId         *int64  `db:"movie_id" json:"movie_id"`
+	ActorId         *int64  `db:"actor_id" json:"actor_id"`
+	CastOrder       *int32  `db:"cast_order" json:"cast_order"`
+	Character       *string `db:"character" json:"character"`
+	CharacterSearch *string `db:"character_search" json:"character_search"`
+}
+
+func (m *MoviesActor) String() string {
+	content := strings.Join(
+		[]string{
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("ActorId: %v", *m.ActorId),
+			fmt.Sprintf("CastOrder: %v", *m.CastOrder),
+			fmt.Sprintf("Character: %v", *m.Character),
+			fmt.Sprintf("CharacterSearch: %v", *m.CharacterSearch),
+		},
+		", ",
+	)
+
+	return fmt.Sprintf("MoviesActor{%s}", content)
+}
+
+func (m *MoviesActor) TableName() string {
+	return "public.movies_actors"
+}
+
+func (m *MoviesActor) PrimaryKey() []string {
+	return []string{
+		"movie_id",
+		"actor_id",
+	}
+}
+
+func (m *MoviesActor) InsertQuery() string {
+	return moviesActorInsertSql
+}
+
+func (m *MoviesActor) UpdateQuery() string {
+	return moviesActorUpdateSql
+}
+
+func (m *MoviesActor) FindQuery() string {
+	return moviesActorFindSql
+}
+
+func (m *MoviesActor) FindAllQuery() string {
+	return moviesActorFindAllSql
+}
+
+func (m *MoviesActor) DeleteQuery() string {
+	return moviesActorDeleteSql
+}
+
+// language=postgresql
+var moviesActorInsertSql = `
+INSERT INTO public.movies_actors(
+  movie_id,
+  actor_id,
+  cast_order,
+  character
+)
+VALUES (
+  :movie_id,
+  :actor_id,
+  :cast_order,
+  :character
+)
+RETURNING
+  movie_id,
+  actor_id,
+  cast_order,
+  character,
+  character_search;
+`
+
+// language=postgresql
+var moviesActorUpdateSql = `
+UPDATE public.movies_actors
+SET
+  movie_id = :movie_id,
+  actor_id = :actor_id,
+  cast_order = :cast_order,
+  character = :character
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND actor_id = :actor_id
+RETURNING
+  movie_id,
+  actor_id,
+  cast_order,
+  character,
+  character_search;
+`
+
+// language=postgresql
+var moviesActorFindSql = `
+SELECT
+  movie_id,
+  actor_id,
+  cast_order,
+  character,
+  character_search
+FROM public.movies_actors
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND actor_id = :actor_id;
+LIMIT 1;
+`
+
+// language=postgresql
+var moviesActorFindAllSql = `
+SELECT
+  movie_id,
+  actor_id,
+  cast_order,
+  character,
+  character_search
+FROM public.movies_actors
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
+  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
+  AND (CAST(:character AS TEXT) IS NULL or character = :character)
+  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search);
+`
+
+// language=postgresql
+var moviesActorDeleteSql = `
+DELETE FROM public.movies_actors
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND actor_id = :actor_id;
+`

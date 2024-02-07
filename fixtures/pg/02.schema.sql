@@ -174,12 +174,15 @@ CREATE TABLE public.hyper_parameters (
 -- Name: movies; Type: TABLE; Schema: public; Owner: -
 --
 
+
 CREATE TABLE public.movies (
     id integer NOT NULL,
     title text DEFAULT ''::text NOT NULL,
     original_title text DEFAULT ''::text NOT NULL,
     original_language text DEFAULT ''::text NOT NULL,
     overview text DEFAULT ''::text NOT NULL,
+    synopsis varchar DEFAULT ''::text NOT NULL,
+    summary varchar(50) DEFAULT ''::text NOT NULL,
     runtime integer DEFAULT 0 NOT NULL,
     release_date date DEFAULT '1970-01-01'::date NOT NULL,
     tagline text DEFAULT ''::text NOT NULL,
