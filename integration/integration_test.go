@@ -102,7 +102,6 @@ func TestIntegration(t *testing.T) {
 		"fixtures/tmdb_mysql/models/movies_crew.gen.go",
 		"fixtures/tmdb_mysql/models/movies_genre.gen.go",
 		"fixtures/tmdb_mysql/models/movies_language.gen.go",
-		"fixtures/tmdb_mysql/models/sample_query_introspection.gen.go",
 		"fixtures/tmdb_mysql/store/store.gen.go",
 		"fixtures/tmdb_pg/get_actor.gen.go",
 		"fixtures/tmdb_pg/get_company.gen.go",
