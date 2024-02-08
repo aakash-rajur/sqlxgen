@@ -31,3 +31,4 @@ integration/go.sum
 
 dist/
 cmd/validate
+.bin/
