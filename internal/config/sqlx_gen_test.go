@@ -302,6 +302,10 @@ func TestSqlxGen_Generate(t *testing.T) {
 
 	err = withSqlxContext(workDir)
 
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	sqlxGen, err := NewSqlxGen(
 		SqlxGenArgs{
 			WorkingDir:    workDir,
@@ -530,7 +534,7 @@ configs:
         path: gen/mysql/models
 `
 
-	filepath := path.Join(workDir, "sqlxgen.yml")
+	filepath := path.Join(workDir, "sqlxgen.yaml")
 
 	return os.WriteFile(filepath, []byte(content), 0644)
 }
