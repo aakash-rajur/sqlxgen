@@ -873,11 +873,6 @@ func prepareMysqlMock(
 		)
 
 	for _, qm := range qms {
-		m.ExpectExec("drop table if exists sample_query_introspection").
-			WillReturnResult(
-				sqlmock.NewResult(0, 0),
-			)
-
 		m.ExpectExec("create table if not exists sample_query_introspection (.+)").
 			WillReturnResult(
 				sqlmock.NewResult(0, 0),
@@ -887,6 +882,11 @@ func prepareMysqlMock(
 			WillReturnRows(
 				sqlmock.NewRows([]string{"column_name", "type", "type_id", "is_array", "is_sequence", "nullable", "generated"}).
 					FromCSVString(qm.result),
+			)
+
+		m.ExpectExec("drop table if exists sample_query_introspection").
+			WillReturnResult(
+				sqlmock.NewResult(0, 0),
 			)
 	}
 
