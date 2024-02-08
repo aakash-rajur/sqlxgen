@@ -26,7 +26,11 @@ func ({{ $receiverName }} *{{ .PascalName }}) String() string {
   content := strings.Join(
     []string{
       {{- range .Fields }}
+        {{- if eq .Column.Type "interface{}" "point"}}
+        // fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $receiverName }}.{{ .Name }}),
+        {{- else }}
         fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $receiverName }}.{{ .Name }}),
+        {{- end }}
       {{- end }}
       },
       ", ",

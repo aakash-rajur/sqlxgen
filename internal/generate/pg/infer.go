@@ -2,6 +2,7 @@ package go_type
 
 import (
 	"fmt"
+	"log/slog"
 	"path/filepath"
 
 	"github.com/aakash-rajur/sqlxgen/internal/generate/types"
@@ -158,6 +159,8 @@ func fromSingle(storePackageDir string, column introspect.Column) (types.GoType,
 
 	case "void", "pg_catalog.void":
 		return goType, nil
+	default:
+		slog.Warn("Unknown column type, using interface{} as default", column.ColumnName, column.Type)
 	}
 
 	return goType, nil
