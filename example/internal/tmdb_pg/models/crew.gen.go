@@ -90,7 +90,9 @@ SELECT
   name_search
 FROM public.crew
 WHERE TRUE
-  AND id = :id;
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
 LIMIT 1;
 `
 
@@ -111,5 +113,7 @@ WHERE TRUE
 var crewDeleteSql = `
 DELETE FROM public.crew
 WHERE TRUE
-  AND id = :id;
+  AND id = :id
+  AND name = :name
+  AND name_search = :name_search;
 `

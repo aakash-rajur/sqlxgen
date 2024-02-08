@@ -198,7 +198,22 @@ SELECT
   id
 FROM app.movies
 WHERE TRUE
-  AND id = :id;
+  AND (:budget IS NULL or budget = :budget)
+  AND (:homepage IS NULL or homepage = :homepage)
+  AND (:keywords IS NULL or keywords = :keywords)
+  AND (:original_language IS NULL or original_language = :original_language)
+  AND (:original_title IS NULL or original_title = :original_title)
+  AND (:overview IS NULL or overview = :overview)
+  AND (:popularity IS NULL or popularity = :popularity)
+  AND (:release_date IS NULL or release_date = :release_date)
+  AND (:revenue IS NULL or revenue = :revenue)
+  AND (:runtime IS NULL or runtime = :runtime)
+  AND (:status IS NULL or status = :status)
+  AND (:tagline IS NULL or tagline = :tagline)
+  AND (:title IS NULL or title = :title)
+  AND (:vote_average IS NULL or vote_average = :vote_average)
+  AND (:vote_count IS NULL or vote_count = :vote_count)
+  AND (:id IS NULL or id = :id)
 LIMIT 1;
 `
 
@@ -245,5 +260,20 @@ WHERE TRUE
 var movieDeleteSql = `
 DELETE FROM app.movies
 WHERE TRUE
+  AND budget = :budget
+  AND homepage = :homepage
+  AND keywords = :keywords
+  AND original_language = :original_language
+  AND original_title = :original_title
+  AND overview = :overview
+  AND popularity = :popularity
+  AND release_date = :release_date
+  AND revenue = :revenue
+  AND runtime = :runtime
+  AND status = :status
+  AND tagline = :tagline
+  AND title = :title
+  AND vote_average = :vote_average
+  AND vote_count = :vote_count
   AND id = :id;
 `

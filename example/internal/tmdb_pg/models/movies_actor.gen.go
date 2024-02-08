@@ -110,8 +110,11 @@ SELECT
   character_search
 FROM public.movies_actors
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND actor_id = :actor_id;
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
+  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
+  AND (CAST(:character AS TEXT) IS NULL or character = :character)
+  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search)
 LIMIT 1;
 `
 
@@ -137,5 +140,8 @@ var moviesActorDeleteSql = `
 DELETE FROM public.movies_actors
 WHERE TRUE
   AND movie_id = :movie_id
-  AND actor_id = :actor_id;
+  AND actor_id = :actor_id
+  AND cast_order = :cast_order
+  AND character = :character
+  AND character_search = :character_search;
 `

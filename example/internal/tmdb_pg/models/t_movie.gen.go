@@ -233,7 +233,26 @@ SELECT
   vote_count
 FROM public.t_movies
 WHERE TRUE
-  AND id = :id;
+  AND (CAST(:id AS INT8) IS NULL or id = :id)
+  AND (CAST(:budget AS FLOAT8) IS NULL or budget = :budget)
+  AND (CAST(:genre AS JSONB) IS NULL or genre = :genre)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:keywords AS JSONB) IS NULL or keywords = :keywords)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
+  AND (CAST(:production_companies AS JSONB) IS NULL or production_companies = :production_companies)
+  AND (CAST(:production_countries AS JSONB) IS NULL or production_countries = :production_countries)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS FLOAT8) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS FLOAT8) IS NULL or runtime = :runtime)
+  AND (CAST(:spoken_languages AS JSONB) IS NULL or spoken_languages = :spoken_languages)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT8) IS NULL or vote_count = :vote_count)
 LIMIT 1;
 `
 
@@ -288,5 +307,24 @@ WHERE TRUE
 var tMovieDeleteSql = `
 DELETE FROM public.t_movies
 WHERE TRUE
-  AND id = :id;
+  AND id = :id
+  AND budget = :budget
+  AND genre = :genre
+  AND homepage = :homepage
+  AND keywords = :keywords
+  AND original_language = :original_language
+  AND original_title = :original_title
+  AND overview = :overview
+  AND popularity = :popularity
+  AND production_companies = :production_companies
+  AND production_countries = :production_countries
+  AND release_date = :release_date
+  AND revenue = :revenue
+  AND runtime = :runtime
+  AND spoken_languages = :spoken_languages
+  AND status = :status
+  AND tagline = :tagline
+  AND title = :title
+  AND vote_average = :vote_average
+  AND vote_count = :vote_count;
 `

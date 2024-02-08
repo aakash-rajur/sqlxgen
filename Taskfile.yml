@@ -131,6 +131,10 @@ tasks:
     desc: "Push a new release tag"
     cmds:
       - git push origin ${VERSION}
+  build.go:
+    desc: "Build go binary"
+    cmds:
+      - go build -o ./.bin/sqlxgen ./cmd/sqlxgen
   build:
     desc: "Build snapshot binary"
     cmds:

@@ -105,8 +105,10 @@ SELECT
   actor_id
 FROM app.movies_actors
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND actor_id = :actor_id;
+  AND (:cast IS NULL or cast = :cast)
+  AND (:cast_order IS NULL or cast_order = :cast_order)
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:actor_id IS NULL or actor_id = :actor_id)
 LIMIT 1;
 `
 
@@ -129,6 +131,8 @@ WHERE TRUE
 var moviesActorDeleteSql = `
 DELETE FROM app.movies_actors
 WHERE TRUE
+  AND cast = :cast
+  AND cast_order = :cast_order
   AND movie_id = :movie_id
   AND actor_id = :actor_id;
 `

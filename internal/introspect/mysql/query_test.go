@@ -67,8 +67,6 @@ func TestGenerateIntrospectQuery(t *testing.T) {
 			query: `select * from users`,
 			//language=mysql
 			want: `--
-drop table if exists sample_query_introspection;
---
 create table if not exists sample_query_introspection
 select * from users;
 --
@@ -92,6 +90,8 @@ where true
 and c.table_schema = 'public'
 and c.table_name = 'sample_query_introspection'
 order by c.column_name;
+--
+drop table if exists sample_query_introspection;
 `,
 			err: nil,
 		},
@@ -101,8 +101,6 @@ order by c.column_name;
 			query: `select * from users where id = :id; -- :id type: int`,
 			//language=mysql
 			want: `--
-drop table if exists sample_query_introspection;
---
 create table if not exists sample_query_introspection
 select * from users where false and (
 id = :id
@@ -129,6 +127,8 @@ where true
 and c.table_schema = 'public'
 and c.table_name = 'sample_query_introspection'
 order by c.column_name;
+--
+drop table if exists sample_query_introspection;
 `,
 			err: nil,
 		},
@@ -166,8 +166,6 @@ limit :limit -- :limit type: int
 offset :offset; -- :offset type: int`,
 			//language=mysql
 			want: `--
-drop table if exists sample_query_introspection;
---
 create table if not exists sample_query_introspection
 select
 count(*) over () as "totalRecordsCount",
@@ -221,6 +219,8 @@ where true
 and c.table_schema = 'public'
 and c.table_name = 'sample_query_introspection'
 order by c.column_name;
+--
+drop table if exists sample_query_introspection;
 `,
 			err: nil,
 		},
@@ -378,8 +378,6 @@ where true
 and m.id = :id; -- :id type: bigint`,
 			//language=mysql
 			want: `--
-drop table if exists sample_query_introspection;
---
 create table if not exists sample_query_introspection
 select
 m.id as "id",
@@ -563,6 +561,8 @@ where true
 and c.table_schema = 'public'
 and c.table_name = 'sample_query_introspection'
 order by c.column_name;
+--
+drop table if exists sample_query_introspection;
 `,
 			err: nil,
 		},
@@ -606,8 +606,6 @@ from crew c
 where c.id = :id; -- :id type: bigint`,
 			//language=mysql
 			want: `--
-drop table if exists sample_query_introspection;
---
 create table if not exists sample_query_introspection
 select
 c.id as "id",
@@ -667,6 +665,8 @@ where true
 and c.table_schema = 'public'
 and c.table_name = 'sample_query_introspection'
 order by c.column_name;
+--
+drop table if exists sample_query_introspection;
 `,
 			err: nil,
 		},
@@ -744,11 +744,6 @@ func TestIntrospectQuery(t *testing.T) {
 	mock.ExpectBegin()
 
 	for _, testCase := range testCases {
-		mock.ExpectExec("drop table if exists sample_query_introspection").
-			WillReturnResult(
-				sqlmock.NewResult(0, 0),
-			)
-
 		mock.ExpectExec("create table if not exists sample_query_introspection (.+)").
 			WillReturnResult(
 				sqlmock.NewResult(0, 0),
@@ -758,6 +753,11 @@ func TestIntrospectQuery(t *testing.T) {
 			WillReturnRows(
 				sqlmock.NewRows([]string{"column_name", "type", "type_id", "is_array", "is_sequence", "nullable", "generated"}).
 					FromCSVString(testCase.resultsCsv),
+			)
+
+		mock.ExpectExec("drop table if exists sample_query_introspection").
+			WillReturnResult(
+				sqlmock.NewResult(0, 0),
 			)
 	}
 
@@ -866,11 +866,6 @@ func TestIntrospectQueries(t *testing.T) {
 	mock.ExpectBegin()
 
 	for _, testCase := range testCases {
-		mock.ExpectExec("drop table if exists sample_query_introspection").
-			WillReturnResult(
-				sqlmock.NewResult(0, 0),
-			)
-
 		mock.ExpectExec("create table if not exists sample_query_introspection (.+)").
 			WillReturnResult(
 				sqlmock.NewResult(0, 0),
@@ -880,6 +875,11 @@ func TestIntrospectQueries(t *testing.T) {
 			WillReturnRows(
 				sqlmock.NewRows([]string{"column_name", "type", "type_id", "is_array", "is_sequence", "nullable", "generated"}).
 					FromCSVString(testCase.result),
+			)
+
+		mock.ExpectExec("drop table if exists sample_query_introspection").
+			WillReturnResult(
+				sqlmock.NewResult(0, 0),
 			)
 	}
 

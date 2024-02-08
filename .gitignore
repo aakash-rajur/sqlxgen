@@ -39,3 +39,4 @@ vendor/
 .vscode/
 integration/__debug_bin*
 **/.DS_Store
+.bin/
