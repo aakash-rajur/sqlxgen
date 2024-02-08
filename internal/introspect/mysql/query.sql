@@ -1,6 +1,4 @@
 --
-drop table if exists sample_query_introspection;
---
 create table if not exists sample_query_introspection
 {{.Query}};
 --
@@ -24,3 +22,5 @@ where true
 and c.table_schema = 'public'
 and c.table_name = 'sample_query_introspection'
 order by c.column_name;
+--
+drop table if exists sample_query_introspection;

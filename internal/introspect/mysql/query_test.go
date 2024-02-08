@@ -744,11 +744,6 @@ func TestIntrospectQuery(t *testing.T) {
 	mock.ExpectBegin()
 
 	for _, testCase := range testCases {
-		mock.ExpectExec("drop table if exists sample_query_introspection").
-			WillReturnResult(
-				sqlmock.NewResult(0, 0),
-			)
-
 		mock.ExpectExec("create table if not exists sample_query_introspection (.+)").
 			WillReturnResult(
 				sqlmock.NewResult(0, 0),
@@ -758,6 +753,11 @@ func TestIntrospectQuery(t *testing.T) {
 			WillReturnRows(
 				sqlmock.NewRows([]string{"column_name", "type", "type_id", "is_array", "is_sequence", "nullable", "generated"}).
 					FromCSVString(testCase.resultsCsv),
+			)
+
+		mock.ExpectExec("drop table if exists sample_query_introspection").
+			WillReturnResult(
+				sqlmock.NewResult(0, 0),
 			)
 	}
 

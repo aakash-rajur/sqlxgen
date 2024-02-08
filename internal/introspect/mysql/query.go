@@ -115,15 +115,7 @@ func introspectQuery(tx *sqlx.Tx, args QueryArgs) (i.Query, error) {
 		return i.Query{}, errorx.IllegalFormat.New(msg)
 	}
 
-	dropQ, createQ, selectQ := statements[0][1], statements[1][1], statements[2][1]
-
-	_, err = tx.Exec(dropQ)
-
-	if err != nil {
-		msg := msgWithFilename(args.Filename, "failed to execute drop query")
-
-		return i.Query{}, errorx.InternalError.Wrap(err, msg)
-	}
+	createQ, selectQ, dropQ := statements[0][1], statements[1][1], statements[2][1]
 
 	_, err = tx.NamedExec(createQ, nilParams)
 
@@ -141,14 +133,6 @@ func introspectQuery(tx *sqlx.Tx, args QueryArgs) (i.Query, error) {
 		return i.Query{}, errorx.InternalError.Wrap(err, msg)
 	}
 
-	defer func(rows *sqlx.Rows) {
-		err := rows.Close()
-
-		if err != nil {
-			println(err.Error())
-		}
-	}(rows)
-
 	columns := make([]i.Column, 0)
 
 	for rows.Next() {
@@ -165,6 +149,22 @@ func introspectQuery(tx *sqlx.Tx, args QueryArgs) (i.Query, error) {
 		}
 
 		columns = append(columns, column)
+	}
+
+	err = rows.Close()
+
+	if err != nil {
+		msg := msgWithFilename(args.Filename, "failed to close introspection query result")
+
+		return i.Query{}, errorx.InternalError.Wrap(err, msg)
+	}
+
+	_, err = tx.Exec(dropQ)
+
+	if err != nil {
+		msg := msgWithFilename(args.Filename, "failed to execute drop query")
+
+		return i.Query{}, errorx.InternalError.Wrap(err, msg)
 	}
 
 	params, err := i.ParseParams(query)
