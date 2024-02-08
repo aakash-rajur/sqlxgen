@@ -3,8 +3,9 @@ package api
 import (
 	_ "embed"
 	"fmt"
-	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 	"strings"
+
+	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 )
 
 type GetActorArgs struct {

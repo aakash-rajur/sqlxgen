@@ -22,10 +22,6 @@ go.work
 
 .env
 !example/.env
-# example/onternal/*
-# example/fixtures/*
-
-
 .idea
 playground
 gen
