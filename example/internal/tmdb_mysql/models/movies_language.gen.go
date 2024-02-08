@@ -10,11 +10,11 @@ type MoviesLanguage struct {
 	LanguageId *string `db:"language_id" json:"language_id"`
 }
 
-func (moviesLanguage MoviesLanguage) String() string {
+func (m *MoviesLanguage) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("MovieId: %v", *moviesLanguage.MovieId),
-			fmt.Sprintf("LanguageId: %v", *moviesLanguage.LanguageId),
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("LanguageId: %v", *m.LanguageId),
 		},
 		", ",
 	)
@@ -22,34 +22,34 @@ func (moviesLanguage MoviesLanguage) String() string {
 	return fmt.Sprintf("MoviesLanguage{%s}", content)
 }
 
-func (_ MoviesLanguage) TableName() string {
+func (m *MoviesLanguage) TableName() string {
 	return "app.movies_languages"
 }
 
-func (_ MoviesLanguage) PrimaryKey() []string {
+func (m *MoviesLanguage) PrimaryKey() []string {
 	return []string{
 		"movie_id",
 		"language_id",
 	}
 }
 
-func (_ MoviesLanguage) InsertQuery() string {
+func (m *MoviesLanguage) InsertQuery() string {
 	return moviesLanguageInsertSql
 }
 
-func (_ MoviesLanguage) UpdateQuery() string {
+func (m *MoviesLanguage) UpdateQuery() string {
 	return moviesLanguageUpdateSql
 }
 
-func (_ MoviesLanguage) FindQuery() string {
+func (m *MoviesLanguage) FindQuery() string {
 	return moviesLanguageFindSql
 }
 
-func (_ MoviesLanguage) FindAllQuery() string {
+func (m *MoviesLanguage) FindAllQuery() string {
 	return moviesLanguageFindAllSql
 }
 
-func (_ MoviesLanguage) DeleteQuery() string {
+func (m *MoviesLanguage) DeleteQuery() string {
 	return moviesLanguageDeleteSql
 }
 

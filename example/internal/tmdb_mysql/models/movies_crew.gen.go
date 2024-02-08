@@ -12,13 +12,13 @@ type MoviesCrew struct {
 	CrewId       *int64  `db:"crew_id" json:"crew_id"`
 }
 
-func (moviesCrew MoviesCrew) String() string {
+func (m *MoviesCrew) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("DepartmentId: %v", *moviesCrew.DepartmentId),
-			fmt.Sprintf("JobId: %v", *moviesCrew.JobId),
-			fmt.Sprintf("MovieId: %v", *moviesCrew.MovieId),
-			fmt.Sprintf("CrewId: %v", *moviesCrew.CrewId),
+			fmt.Sprintf("DepartmentId: %v", *m.DepartmentId),
+			fmt.Sprintf("JobId: %v", *m.JobId),
+			fmt.Sprintf("MovieId: %v", *m.MovieId),
+			fmt.Sprintf("CrewId: %v", *m.CrewId),
 		},
 		", ",
 	)
@@ -26,34 +26,34 @@ func (moviesCrew MoviesCrew) String() string {
 	return fmt.Sprintf("MoviesCrew{%s}", content)
 }
 
-func (_ MoviesCrew) TableName() string {
+func (m *MoviesCrew) TableName() string {
 	return "app.movies_crew"
 }
 
-func (_ MoviesCrew) PrimaryKey() []string {
+func (m *MoviesCrew) PrimaryKey() []string {
 	return []string{
 		"movie_id",
 		"crew_id",
 	}
 }
 
-func (_ MoviesCrew) InsertQuery() string {
+func (m *MoviesCrew) InsertQuery() string {
 	return moviesCrewInsertSql
 }
 
-func (_ MoviesCrew) UpdateQuery() string {
+func (m *MoviesCrew) UpdateQuery() string {
 	return moviesCrewUpdateSql
 }
 
-func (_ MoviesCrew) FindQuery() string {
+func (m *MoviesCrew) FindQuery() string {
 	return moviesCrewFindSql
 }
 
-func (_ MoviesCrew) FindAllQuery() string {
+func (m *MoviesCrew) FindAllQuery() string {
 	return moviesCrewFindAllSql
 }
 
-func (_ MoviesCrew) DeleteQuery() string {
+func (m *MoviesCrew) DeleteQuery() string {
 	return moviesCrewDeleteSql
 }
 
@@ -105,6 +105,8 @@ SELECT
   crew_id
 FROM app.movies_crew
 WHERE TRUE
+  AND (:department_id IS NULL or department_id = :department_id)
+  AND (:job_id IS NULL or job_id = :job_id)
   AND (:movie_id IS NULL or movie_id = :movie_id)
   AND (:crew_id IS NULL or crew_id = :crew_id)
 LIMIT 1;
@@ -119,6 +121,8 @@ SELECT
   crew_id
 FROM app.movies_crew
 WHERE TRUE
+  AND (:department_id IS NULL or department_id = :department_id)
+  AND (:job_id IS NULL or job_id = :job_id)
   AND (:movie_id IS NULL or movie_id = :movie_id)
   AND (:crew_id IS NULL or crew_id = :crew_id);
 `
@@ -127,6 +131,8 @@ WHERE TRUE
 var moviesCrewDeleteSql = `
 DELETE FROM app.movies_crew
 WHERE TRUE
+  AND department_id = :department_id
+  AND job_id = :job_id
   AND movie_id = :movie_id
   AND crew_id = :crew_id;
 `

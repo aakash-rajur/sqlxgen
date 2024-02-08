@@ -15,7 +15,7 @@ type ListHyperParametersArgs struct {
 	Value  *string `db:"value" json:"value"`
 }
 
-func (args ListHyperParametersArgs) String() string {
+func (args *ListHyperParametersArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Limit: %v", *args.Limit),
@@ -30,18 +30,18 @@ func (args ListHyperParametersArgs) String() string {
 	return fmt.Sprintf("ListHyperParametersArgs{%s}", content)
 }
 
-func (args ListHyperParametersArgs) Query(db store.Database) ([]ListHyperParametersResult, error) {
-	return store.Query[ListHyperParametersResult](db, args)
+func (args *ListHyperParametersArgs) Query(db store.Database) ([]*ListHyperParametersResult, error) {
+	return store.Query[*ListHyperParametersResult](db, args)
 }
 
-func (args ListHyperParametersArgs) Sql() string {
+func (args *ListHyperParametersArgs) Sql() string {
 	return listHyperParametersSql
 }
 
 type ListHyperParametersResult struct {
 }
 
-func (result ListHyperParametersResult) String() string {
+func (result *ListHyperParametersResult) String() string {
 	content := strings.Join(
 		[]string{},
 		", ",

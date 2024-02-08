@@ -4,58 +4,90 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"reflect"
 	"regexp"
 
 	"github.com/jmoiron/sqlx"
 )
 
-func Insert[T model](db Database, instances ...T) error {
+// orm
+
+func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
+	inserts := make([]T, 0)
+
 	for _, instance := range instances {
 		rows, err := db.NamedQuery(instance.InsertQuery(), instance)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		rows.Next()
+		hasNext := rows.Next()
 
-		err = rows.StructScan(&instance)
+		if !hasNext {
+			return nil, fmt.Errorf("unable to insert %s", instance)
+		}
 
-		_ = rows.Close()
+		inserted := new(P)
+
+		err = rows.StructScan(inserted)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
+
+		err = rows.Close()
+
+		if err != nil {
+			return nil, err
+		}
+
+		inserts = append(inserts, inserted)
 	}
 
-	return nil
+	return inserts, nil
 }
 
-func Update[T model](db Database, instances ...T) error {
+func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
+	updates := make([]T, 0)
+
 	for _, instance := range instances {
 		rows, err := db.NamedQuery(instance.UpdateQuery(), instance)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		rows.Next()
+		hasNext := rows.Next()
 
-		err = rows.StructScan(&instance)
+		if !hasNext {
+			return nil, fmt.Errorf("unable to update %s", instance)
+		}
 
-		_ = rows.Close()
+		updated := new(P)
+
+		err = rows.StructScan(updated)
 
 		if err != nil {
-			return err
+			return nil, err
 		}
+
+		err = rows.Close()
+
+		if err != nil {
+			return nil, err
+		}
+
+		updates = append(updates, updated)
 	}
 
-	return nil
+	return updates, nil
 }
 
-func Find[T model](db Database, instance T) (T, error) {
-	var result T
+func Find[T model[P], P any](db Database, instance T) (T, error) {
+	result := new(P)
 
 	rows, err := db.NamedQuery(instance.FindQuery(), instance)
 
@@ -67,9 +99,23 @@ func Find[T model](db Database, instance T) (T, error) {
 		_ = rows.Close()
 	}(rows)
 
-	rows.Next()
+	hasNext := rows.Next()
 
-	err = rows.StructScan(&result)
+	if !hasNext {
+		t := reflect.TypeOf(instance)
+
+		typeName := t.Name()
+
+		if t.Kind() == reflect.Pointer {
+			typeName = t.Elem().Name()
+		}
+
+		msg := fmt.Sprintf("'%s' not found", typeName)
+
+		return result, fmt.Errorf(msg, ErrNotFound)
+	}
+
+	err = rows.StructScan(result)
 
 	if err != nil {
 		return result, err
@@ -78,7 +124,7 @@ func Find[T model](db Database, instance T) (T, error) {
 	return result, nil
 }
 
-func FindMany[T model](db Database, instance T) ([]T, error) {
+func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
 	rows, err := db.NamedQuery(instance.FindAllQuery(), instance)
 
 	if err != nil {
@@ -92,9 +138,9 @@ func FindMany[T model](db Database, instance T) ([]T, error) {
 	result := make([]T, 0)
 
 	for rows.Next() {
-		var instance T
+		instance := new(P)
 
-		err = rows.StructScan(&instance)
+		err = rows.StructScan(instance)
 
 		if err != nil {
 			return nil, err
@@ -106,13 +152,15 @@ func FindMany[T model](db Database, instance T) ([]T, error) {
 	return result, nil
 }
 
-func Delete[T model](db Database, instance T) error {
+func Delete[T model[P], P any](db Database, instance T) error {
 	_, err := db.NamedExec(instance.DeleteQuery(), instance)
 
 	return err
 }
 
-type model interface {
+type model[P any] interface {
+	*P
+
 	TableName() string
 
 	PrimaryKey() []string
@@ -128,7 +176,9 @@ type model interface {
 	DeleteQuery() string
 }
 
-func Query[R any](db Database, args queryable) ([]R, error) {
+// custom sql query
+
+func Query[R result[pR], Q queryable[pQ], pR, pQ any](db Database, args Q) ([]R, error) {
 	re, err := regexp.Compile(`-{2,}\s*([\w\W\s\S]*?)(\n|\z)`)
 
 	if err != nil {
@@ -150,9 +200,9 @@ func Query[R any](db Database, args queryable) ([]R, error) {
 	result := make([]R, 0)
 
 	for rows.Next() {
-		var instance R
+		instance := new(pR)
 
-		err = rows.StructScan(&instance)
+		err = rows.StructScan(instance)
 
 		if err != nil {
 			return nil, err
@@ -161,12 +211,26 @@ func Query[R any](db Database, args queryable) ([]R, error) {
 		result = append(result, instance)
 	}
 
+	err = rows.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
 	return result, nil
 }
 
-type queryable interface {
+type queryable[P any] interface {
+	*P
+
 	Sql() string
 }
+
+type result[P any] interface {
+	*P
+}
+
+// supplementary types
 
 type Database interface {
 	NamedExec(query string, arg interface{}) (sql.Result, error)
@@ -217,3 +281,7 @@ func (j *JsonArray) Scan(src any) error {
 func (j *JsonArray) Value() (driver.Value, error) {
 	return json.Marshal(j)
 }
+
+// errors
+
+var ErrNotFound = errors.New("entity not found")

@@ -13,13 +13,13 @@ type TMoviesCredit struct {
 	Title   *string         `db:"title" json:"title"`
 }
 
-func (tMoviesCredit TMoviesCredit) String() string {
+func (t *TMoviesCredit) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Casting: %v", tMoviesCredit.Casting),
-			fmt.Sprintf("Crew: %v", tMoviesCredit.Crew),
-			fmt.Sprintf("MovieId: %v", *tMoviesCredit.MovieId),
-			fmt.Sprintf("Title: %v", *tMoviesCredit.Title),
+			fmt.Sprintf("Casting: %v", t.Casting),
+			fmt.Sprintf("Crew: %v", t.Crew),
+			fmt.Sprintf("MovieId: %v", *t.MovieId),
+			fmt.Sprintf("Title: %v", *t.Title),
 		},
 		", ",
 	)
@@ -27,11 +27,11 @@ func (tMoviesCredit TMoviesCredit) String() string {
 	return fmt.Sprintf("TMoviesCredit{%s}", content)
 }
 
-func (_ TMoviesCredit) TableName() string {
+func (t *TMoviesCredit) TableName() string {
 	return "public.t_movies_credits"
 }
 
-func (_ TMoviesCredit) PrimaryKey() []string {
+func (t *TMoviesCredit) PrimaryKey() []string {
 	return []string{
 		"casting",
 		"crew",
@@ -40,23 +40,23 @@ func (_ TMoviesCredit) PrimaryKey() []string {
 	}
 }
 
-func (_ TMoviesCredit) InsertQuery() string {
+func (t *TMoviesCredit) InsertQuery() string {
 	return tMoviesCreditInsertSql
 }
 
-func (_ TMoviesCredit) UpdateQuery() string {
+func (t *TMoviesCredit) UpdateQuery() string {
 	return tMoviesCreditUpdateSql
 }
 
-func (_ TMoviesCredit) FindQuery() string {
+func (t *TMoviesCredit) FindQuery() string {
 	return tMoviesCreditFindSql
 }
 
-func (_ TMoviesCredit) FindAllQuery() string {
+func (t *TMoviesCredit) FindAllQuery() string {
 	return tMoviesCreditFindAllSql
 }
 
-func (_ TMoviesCredit) DeleteQuery() string {
+func (t *TMoviesCredit) DeleteQuery() string {
 	return tMoviesCreditDeleteSql
 }
 

@@ -11,7 +11,7 @@ type GetCompanyArgs struct {
 	Id *int64 `db:"id" json:"id"`
 }
 
-func (args GetCompanyArgs) String() string {
+func (args *GetCompanyArgs) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *args.Id),
@@ -22,11 +22,11 @@ func (args GetCompanyArgs) String() string {
 	return fmt.Sprintf("GetCompanyArgs{%s}", content)
 }
 
-func (args GetCompanyArgs) Query(db store.Database) ([]GetCompanyResult, error) {
-	return store.Query[GetCompanyResult](db, args)
+func (args *GetCompanyArgs) Query(db store.Database) ([]*GetCompanyResult, error) {
+	return store.Query[*GetCompanyResult](db, args)
 }
 
-func (args GetCompanyArgs) Sql() string {
+func (args *GetCompanyArgs) Sql() string {
 	return getCompanySql
 }
 
@@ -36,7 +36,7 @@ type GetCompanyResult struct {
 	Name   *string          `db:"name" json:"name"`
 }
 
-func (result GetCompanyResult) String() string {
+func (result *GetCompanyResult) String() string {
 	content := strings.Join(
 		[]string{
 			fmt.Sprintf("Id: %v", *result.Id),

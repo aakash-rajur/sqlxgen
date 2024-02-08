@@ -28,27 +28,27 @@ type Movie struct {
 	VoteCount        *int32          `db:"vote_count" json:"vote_count"`
 }
 
-func (movie Movie) String() string {
+func (m *Movie) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *movie.Id),
-			fmt.Sprintf("Budget: %v", *movie.Budget),
-			fmt.Sprintf("Homepage: %v", *movie.Homepage),
-			fmt.Sprintf("Keywords: %v", *movie.Keywords),
-			fmt.Sprintf("KeywordsSearch: %v", *movie.KeywordsSearch),
-			fmt.Sprintf("OriginalLanguage: %v", *movie.OriginalLanguage),
-			fmt.Sprintf("OriginalTitle: %v", *movie.OriginalTitle),
-			fmt.Sprintf("Overview: %v", *movie.Overview),
-			fmt.Sprintf("Popularity: %v", *movie.Popularity),
-			fmt.Sprintf("ReleaseDate: %v", *movie.ReleaseDate),
-			fmt.Sprintf("Revenue: %v", *movie.Revenue),
-			fmt.Sprintf("Runtime: %v", *movie.Runtime),
-			fmt.Sprintf("Status: %v", *movie.Status),
-			fmt.Sprintf("Tagline: %v", *movie.Tagline),
-			fmt.Sprintf("Title: %v", *movie.Title),
-			fmt.Sprintf("TitleSearch: %v", *movie.TitleSearch),
-			fmt.Sprintf("VoteAverage: %v", *movie.VoteAverage),
-			fmt.Sprintf("VoteCount: %v", *movie.VoteCount),
+			fmt.Sprintf("Id: %v", *m.Id),
+			fmt.Sprintf("Budget: %v", *m.Budget),
+			fmt.Sprintf("Homepage: %v", *m.Homepage),
+			fmt.Sprintf("Keywords: %v", *m.Keywords),
+			fmt.Sprintf("KeywordsSearch: %v", *m.KeywordsSearch),
+			fmt.Sprintf("OriginalLanguage: %v", *m.OriginalLanguage),
+			fmt.Sprintf("OriginalTitle: %v", *m.OriginalTitle),
+			fmt.Sprintf("Overview: %v", *m.Overview),
+			fmt.Sprintf("Popularity: %v", *m.Popularity),
+			fmt.Sprintf("ReleaseDate: %v", *m.ReleaseDate),
+			fmt.Sprintf("Revenue: %v", *m.Revenue),
+			fmt.Sprintf("Runtime: %v", *m.Runtime),
+			fmt.Sprintf("Status: %v", *m.Status),
+			fmt.Sprintf("Tagline: %v", *m.Tagline),
+			fmt.Sprintf("Title: %v", *m.Title),
+			fmt.Sprintf("TitleSearch: %v", *m.TitleSearch),
+			fmt.Sprintf("VoteAverage: %v", *m.VoteAverage),
+			fmt.Sprintf("VoteCount: %v", *m.VoteCount),
 		},
 		", ",
 	)
@@ -56,33 +56,33 @@ func (movie Movie) String() string {
 	return fmt.Sprintf("Movie{%s}", content)
 }
 
-func (_ Movie) TableName() string {
+func (m *Movie) TableName() string {
 	return "public.movies"
 }
 
-func (_ Movie) PrimaryKey() []string {
+func (m *Movie) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Movie) InsertQuery() string {
+func (m *Movie) InsertQuery() string {
 	return movieInsertSql
 }
 
-func (_ Movie) UpdateQuery() string {
+func (m *Movie) UpdateQuery() string {
 	return movieUpdateSql
 }
 
-func (_ Movie) FindQuery() string {
+func (m *Movie) FindQuery() string {
 	return movieFindSql
 }
 
-func (_ Movie) FindAllQuery() string {
+func (m *Movie) FindAllQuery() string {
 	return movieFindAllSql
 }
 
-func (_ Movie) DeleteQuery() string {
+func (m *Movie) DeleteQuery() string {
 	return movieDeleteSql
 }
 
@@ -210,6 +210,23 @@ SELECT
 FROM public.movies
 WHERE TRUE
   AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:budget AS INT8) IS NULL or budget = :budget)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:keywords AS TEXT) IS NULL or keywords = :keywords)
+  AND (CAST(:keywords_search AS TSVECTOR) IS NULL or keywords_search = :keywords_search)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS INT8) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS INT4) IS NULL or runtime = :runtime)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:title_search AS TSVECTOR) IS NULL or title_search = :title_search)
+  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT4) IS NULL or vote_count = :vote_count)
 LIMIT 1;
 `
 
@@ -236,12 +253,46 @@ SELECT
   vote_count
 FROM public.movies
 WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id);
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:budget AS INT8) IS NULL or budget = :budget)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:keywords AS TEXT) IS NULL or keywords = :keywords)
+  AND (CAST(:keywords_search AS TSVECTOR) IS NULL or keywords_search = :keywords_search)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS INT8) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS INT4) IS NULL or runtime = :runtime)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:title_search AS TSVECTOR) IS NULL or title_search = :title_search)
+  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT4) IS NULL or vote_count = :vote_count);
 `
 
 // language=postgresql
 var movieDeleteSql = `
 DELETE FROM public.movies
 WHERE TRUE
-  AND id = :id;
+  AND id = :id
+  AND budget = :budget
+  AND homepage = :homepage
+  AND keywords = :keywords
+  AND keywords_search = :keywords_search
+  AND original_language = :original_language
+  AND original_title = :original_title
+  AND overview = :overview
+  AND popularity = :popularity
+  AND release_date = :release_date
+  AND revenue = :revenue
+  AND runtime = :runtime
+  AND status = :status
+  AND tagline = :tagline
+  AND title = :title
+  AND title_search = :title_search
+  AND vote_average = :vote_average
+  AND vote_count = :vote_count;
 `

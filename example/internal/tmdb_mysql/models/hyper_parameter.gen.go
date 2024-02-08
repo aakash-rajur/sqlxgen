@@ -11,12 +11,12 @@ type HyperParameter struct {
 	Value        *string `db:"value" json:"value"`
 }
 
-func (hyperParameter HyperParameter) String() string {
+func (h *HyperParameter) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("FriendlyName: %v", *hyperParameter.FriendlyName),
-			fmt.Sprintf("Type: %v", *hyperParameter.Type),
-			fmt.Sprintf("Value: %v", *hyperParameter.Value),
+			fmt.Sprintf("FriendlyName: %v", *h.FriendlyName),
+			fmt.Sprintf("Type: %v", *h.Type),
+			fmt.Sprintf("Value: %v", *h.Value),
 		},
 		", ",
 	)
@@ -24,34 +24,34 @@ func (hyperParameter HyperParameter) String() string {
 	return fmt.Sprintf("HyperParameter{%s}", content)
 }
 
-func (_ HyperParameter) TableName() string {
+func (h *HyperParameter) TableName() string {
 	return "app.hyper_parameters"
 }
 
-func (_ HyperParameter) PrimaryKey() []string {
+func (h *HyperParameter) PrimaryKey() []string {
 	return []string{
 		"type",
 		"value",
 	}
 }
 
-func (_ HyperParameter) InsertQuery() string {
+func (h *HyperParameter) InsertQuery() string {
 	return hyperParameterInsertSql
 }
 
-func (_ HyperParameter) UpdateQuery() string {
+func (h *HyperParameter) UpdateQuery() string {
 	return hyperParameterUpdateSql
 }
 
-func (_ HyperParameter) FindQuery() string {
+func (h *HyperParameter) FindQuery() string {
 	return hyperParameterFindSql
 }
 
-func (_ HyperParameter) FindAllQuery() string {
+func (h *HyperParameter) FindAllQuery() string {
 	return hyperParameterFindAllSql
 }
 
-func (_ HyperParameter) DeleteQuery() string {
+func (h *HyperParameter) DeleteQuery() string {
 	return hyperParameterDeleteSql
 }
 
@@ -97,6 +97,7 @@ SELECT
   value
 FROM app.hyper_parameters
 WHERE TRUE
+  AND (:friendly_name IS NULL or friendly_name = :friendly_name)
   AND (:type IS NULL or type = :type)
   AND (:value IS NULL or value = :value)
 LIMIT 1;
@@ -110,6 +111,7 @@ SELECT
   value
 FROM app.hyper_parameters
 WHERE TRUE
+  AND (:friendly_name IS NULL or friendly_name = :friendly_name)
   AND (:type IS NULL or type = :type)
   AND (:value IS NULL or value = :value);
 `
@@ -118,6 +120,7 @@ WHERE TRUE
 var hyperParameterDeleteSql = `
 DELETE FROM app.hyper_parameters
 WHERE TRUE
+  AND friendly_name = :friendly_name
   AND type = :type
   AND value = :value;
 `

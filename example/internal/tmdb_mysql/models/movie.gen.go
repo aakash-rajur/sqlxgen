@@ -25,25 +25,25 @@ type Movie struct {
 	Id               *int64     `db:"id" json:"id"`
 }
 
-func (movie Movie) String() string {
+func (m *Movie) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Budget: %v", *movie.Budget),
-			fmt.Sprintf("Homepage: %v", *movie.Homepage),
-			fmt.Sprintf("Keywords: %v", *movie.Keywords),
-			fmt.Sprintf("OriginalLanguage: %v", *movie.OriginalLanguage),
-			fmt.Sprintf("OriginalTitle: %v", *movie.OriginalTitle),
-			fmt.Sprintf("Overview: %v", *movie.Overview),
-			fmt.Sprintf("Popularity: %v", *movie.Popularity),
-			fmt.Sprintf("ReleaseDate: %v", *movie.ReleaseDate),
-			fmt.Sprintf("Revenue: %v", *movie.Revenue),
-			fmt.Sprintf("Runtime: %v", *movie.Runtime),
-			fmt.Sprintf("Status: %v", *movie.Status),
-			fmt.Sprintf("Tagline: %v", *movie.Tagline),
-			fmt.Sprintf("Title: %v", *movie.Title),
-			fmt.Sprintf("VoteAverage: %v", *movie.VoteAverage),
-			fmt.Sprintf("VoteCount: %v", *movie.VoteCount),
-			fmt.Sprintf("Id: %v", *movie.Id),
+			fmt.Sprintf("Budget: %v", *m.Budget),
+			fmt.Sprintf("Homepage: %v", *m.Homepage),
+			fmt.Sprintf("Keywords: %v", *m.Keywords),
+			fmt.Sprintf("OriginalLanguage: %v", *m.OriginalLanguage),
+			fmt.Sprintf("OriginalTitle: %v", *m.OriginalTitle),
+			fmt.Sprintf("Overview: %v", *m.Overview),
+			fmt.Sprintf("Popularity: %v", *m.Popularity),
+			fmt.Sprintf("ReleaseDate: %v", *m.ReleaseDate),
+			fmt.Sprintf("Revenue: %v", *m.Revenue),
+			fmt.Sprintf("Runtime: %v", *m.Runtime),
+			fmt.Sprintf("Status: %v", *m.Status),
+			fmt.Sprintf("Tagline: %v", *m.Tagline),
+			fmt.Sprintf("Title: %v", *m.Title),
+			fmt.Sprintf("VoteAverage: %v", *m.VoteAverage),
+			fmt.Sprintf("VoteCount: %v", *m.VoteCount),
+			fmt.Sprintf("Id: %v", *m.Id),
 		},
 		", ",
 	)
@@ -51,33 +51,33 @@ func (movie Movie) String() string {
 	return fmt.Sprintf("Movie{%s}", content)
 }
 
-func (_ Movie) TableName() string {
+func (m *Movie) TableName() string {
 	return "app.movies"
 }
 
-func (_ Movie) PrimaryKey() []string {
+func (m *Movie) PrimaryKey() []string {
 	return []string{
 		"id",
 	}
 }
 
-func (_ Movie) InsertQuery() string {
+func (m *Movie) InsertQuery() string {
 	return movieInsertSql
 }
 
-func (_ Movie) UpdateQuery() string {
+func (m *Movie) UpdateQuery() string {
 	return movieUpdateSql
 }
 
-func (_ Movie) FindQuery() string {
+func (m *Movie) FindQuery() string {
 	return movieFindSql
 }
 
-func (_ Movie) FindAllQuery() string {
+func (m *Movie) FindAllQuery() string {
 	return movieFindAllSql
 }
 
-func (_ Movie) DeleteQuery() string {
+func (m *Movie) DeleteQuery() string {
 	return movieDeleteSql
 }
 
@@ -198,6 +198,21 @@ SELECT
   id
 FROM app.movies
 WHERE TRUE
+  AND (:budget IS NULL or budget = :budget)
+  AND (:homepage IS NULL or homepage = :homepage)
+  AND (:keywords IS NULL or keywords = :keywords)
+  AND (:original_language IS NULL or original_language = :original_language)
+  AND (:original_title IS NULL or original_title = :original_title)
+  AND (:overview IS NULL or overview = :overview)
+  AND (:popularity IS NULL or popularity = :popularity)
+  AND (:release_date IS NULL or release_date = :release_date)
+  AND (:revenue IS NULL or revenue = :revenue)
+  AND (:runtime IS NULL or runtime = :runtime)
+  AND (:status IS NULL or status = :status)
+  AND (:tagline IS NULL or tagline = :tagline)
+  AND (:title IS NULL or title = :title)
+  AND (:vote_average IS NULL or vote_average = :vote_average)
+  AND (:vote_count IS NULL or vote_count = :vote_count)
   AND (:id IS NULL or id = :id)
 LIMIT 1;
 `
@@ -223,6 +238,21 @@ SELECT
   id
 FROM app.movies
 WHERE TRUE
+  AND (:budget IS NULL or budget = :budget)
+  AND (:homepage IS NULL or homepage = :homepage)
+  AND (:keywords IS NULL or keywords = :keywords)
+  AND (:original_language IS NULL or original_language = :original_language)
+  AND (:original_title IS NULL or original_title = :original_title)
+  AND (:overview IS NULL or overview = :overview)
+  AND (:popularity IS NULL or popularity = :popularity)
+  AND (:release_date IS NULL or release_date = :release_date)
+  AND (:revenue IS NULL or revenue = :revenue)
+  AND (:runtime IS NULL or runtime = :runtime)
+  AND (:status IS NULL or status = :status)
+  AND (:tagline IS NULL or tagline = :tagline)
+  AND (:title IS NULL or title = :title)
+  AND (:vote_average IS NULL or vote_average = :vote_average)
+  AND (:vote_count IS NULL or vote_count = :vote_count)
   AND (:id IS NULL or id = :id);
 `
 
@@ -230,5 +260,20 @@ WHERE TRUE
 var movieDeleteSql = `
 DELETE FROM app.movies
 WHERE TRUE
+  AND budget = :budget
+  AND homepage = :homepage
+  AND keywords = :keywords
+  AND original_language = :original_language
+  AND original_title = :original_title
+  AND overview = :overview
+  AND popularity = :popularity
+  AND release_date = :release_date
+  AND revenue = :revenue
+  AND runtime = :runtime
+  AND status = :status
+  AND tagline = :tagline
+  AND title = :title
+  AND vote_average = :vote_average
+  AND vote_count = :vote_count
   AND id = :id;
 `
