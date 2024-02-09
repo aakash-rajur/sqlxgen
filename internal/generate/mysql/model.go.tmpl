@@ -116,7 +116,7 @@ FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
 {{- range $pkFields }}
   AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
-{{- end }};
+{{- end }}
 LIMIT 1;
 `
 
