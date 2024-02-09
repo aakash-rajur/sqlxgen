@@ -90,7 +90,7 @@ SELECT
 FROM public.movies_languages
 WHERE TRUE
   AND movie_id = :movie_id
-  AND language_id = :language_id;
+  AND language_id = :language_id
 LIMIT 1;
 `
 

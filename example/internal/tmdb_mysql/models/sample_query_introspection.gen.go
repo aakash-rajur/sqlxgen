@@ -15,15 +15,15 @@ type SampleQueryIntrospection struct {
 	TotalRecordsCount *int64     `db:"totalRecordsCount" json:"totalRecordsCount"`
 }
 
-func (sampleQueryIntrospection SampleQueryIntrospection) String() string {
+func (s *SampleQueryIntrospection) String() string {
 	content := strings.Join(
 		[]string{
-			fmt.Sprintf("Id: %v", *sampleQueryIntrospection.Id),
-			fmt.Sprintf("Popularity: %v", *sampleQueryIntrospection.Popularity),
-			fmt.Sprintf("ReleaseDate: %v", *sampleQueryIntrospection.ReleaseDate),
-			fmt.Sprintf("Status: %v", *sampleQueryIntrospection.Status),
-			fmt.Sprintf("Title: %v", *sampleQueryIntrospection.Title),
-			fmt.Sprintf("TotalRecordsCount: %v", *sampleQueryIntrospection.TotalRecordsCount),
+			fmt.Sprintf("Id: %v", *s.Id),
+			fmt.Sprintf("Popularity: %v", *s.Popularity),
+			fmt.Sprintf("ReleaseDate: %v", *s.ReleaseDate),
+			fmt.Sprintf("Status: %v", *s.Status),
+			fmt.Sprintf("Title: %v", *s.Title),
+			fmt.Sprintf("TotalRecordsCount: %v", *s.TotalRecordsCount),
 		},
 		", ",
 	)
@@ -31,11 +31,11 @@ func (sampleQueryIntrospection SampleQueryIntrospection) String() string {
 	return fmt.Sprintf("SampleQueryIntrospection{%s}", content)
 }
 
-func (_ SampleQueryIntrospection) TableName() string {
+func (s *SampleQueryIntrospection) TableName() string {
 	return "app.sample_query_introspection"
 }
 
-func (_ SampleQueryIntrospection) PrimaryKey() []string {
+func (s *SampleQueryIntrospection) PrimaryKey() []string {
 	return []string{
 		"id",
 		"popularity",
@@ -46,23 +46,23 @@ func (_ SampleQueryIntrospection) PrimaryKey() []string {
 	}
 }
 
-func (_ SampleQueryIntrospection) InsertQuery() string {
+func (s *SampleQueryIntrospection) InsertQuery() string {
 	return sampleQueryIntrospectionInsertSql
 }
 
-func (_ SampleQueryIntrospection) UpdateQuery() string {
+func (s *SampleQueryIntrospection) UpdateQuery() string {
 	return sampleQueryIntrospectionUpdateSql
 }
 
-func (_ SampleQueryIntrospection) FindQuery() string {
+func (s *SampleQueryIntrospection) FindQuery() string {
 	return sampleQueryIntrospectionFindSql
 }
 
-func (_ SampleQueryIntrospection) FindAllQuery() string {
+func (s *SampleQueryIntrospection) FindAllQuery() string {
 	return sampleQueryIntrospectionFindAllSql
 }
 
-func (_ SampleQueryIntrospection) DeleteQuery() string {
+func (s *SampleQueryIntrospection) DeleteQuery() string {
 	return sampleQueryIntrospectionDeleteSql
 }
 
@@ -130,12 +130,12 @@ SELECT
   totalRecordsCount
 FROM app.sample_query_introspection
 WHERE TRUE
-  AND (:id IS NULL or id = :id)
-  AND (:popularity IS NULL or popularity = :popularity)
-  AND (:releaseDate IS NULL or releaseDate = :releaseDate)
-  AND (:status IS NULL or status = :status)
-  AND (:title IS NULL or title = :title)
-  AND (:totalRecordsCount IS NULL or totalRecordsCount = :totalRecordsCount)
+  AND id = :id
+  AND popularity = :popularity
+  AND releaseDate = :releaseDate
+  AND status = :status
+  AND title = :title
+  AND totalRecordsCount = :totalRecordsCount;
 LIMIT 1;
 `
 

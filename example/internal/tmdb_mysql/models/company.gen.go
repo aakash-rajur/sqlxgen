@@ -87,8 +87,7 @@ SELECT
   id
 FROM app.companies
 WHERE TRUE
-  AND (:name IS NULL or name = :name)
-  AND (:id IS NULL or id = :id)
+  AND id = :id;
 LIMIT 1;
 `
 
@@ -107,6 +106,5 @@ WHERE TRUE
 var companyDeleteSql = `
 DELETE FROM app.companies
 WHERE TRUE
-  AND name = :name
   AND id = :id;
 `

@@ -90,7 +90,7 @@ SELECT
 FROM public.movies_countries
 WHERE TRUE
   AND movie_id = :movie_id
-  AND country_id = :country_id;
+  AND country_id = :country_id
 LIMIT 1;
 `
 

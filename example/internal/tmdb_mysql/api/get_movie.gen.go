@@ -3,9 +3,8 @@ package api
 import (
 	_ "embed"
 	"fmt"
-	"strings"
-
 	"github.com/aakash-rajur/example/internal/tmdb_mysql/store"
+	"strings"
 )
 
 type GetMovieArgs struct {

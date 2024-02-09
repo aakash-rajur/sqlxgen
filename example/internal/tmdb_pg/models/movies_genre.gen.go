@@ -90,7 +90,7 @@ SELECT
 FROM public.movies_genres
 WHERE TRUE
   AND movie_id = :movie_id
-  AND genre_id = :genre_id;
+  AND genre_id = :genre_id
 LIMIT 1;
 `
 

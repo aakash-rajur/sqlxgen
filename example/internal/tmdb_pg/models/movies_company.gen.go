@@ -90,7 +90,7 @@ SELECT
 FROM public.movies_companies
 WHERE TRUE
   AND movie_id = :movie_id
-  AND company_id = :company_id;
+  AND company_id = :company_id
 LIMIT 1;
 `
 

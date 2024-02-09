@@ -92,9 +92,7 @@ SELECT
   name_search
 FROM public.companies
 WHERE TRUE
-  AND (CAST(:id AS INT8) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+  AND id = :id
 LIMIT 1;
 `
 
@@ -115,7 +113,5 @@ WHERE TRUE
 var companyDeleteSql = `
 DELETE FROM public.companies
 WHERE TRUE
-  AND id = :id
-  AND name = :name
-  AND name_search = :name_search;
+  AND id = :id;
 `

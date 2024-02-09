@@ -97,9 +97,8 @@ SELECT
   value
 FROM app.hyper_parameters
 WHERE TRUE
-  AND (:friendly_name IS NULL or friendly_name = :friendly_name)
-  AND (:type IS NULL or type = :type)
-  AND (:value IS NULL or value = :value)
+  AND type = :type
+  AND value = :value;
 LIMIT 1;
 `
 
@@ -120,7 +119,6 @@ WHERE TRUE
 var hyperParameterDeleteSql = `
 DELETE FROM app.hyper_parameters
 WHERE TRUE
-  AND friendly_name = :friendly_name
   AND type = :type
   AND value = :value;
 `

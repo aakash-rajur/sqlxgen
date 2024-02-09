@@ -102,10 +102,8 @@ SELECT
   friendly_name_search
 FROM public.hyper_parameters
 WHERE TRUE
-  AND (CAST(:type AS TEXT) IS NULL or type = :type)
-  AND (CAST(:value AS TEXT) IS NULL or value = :value)
-  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
-  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search)
+  AND type = :type
+  AND value = :value
 LIMIT 1;
 `
 
@@ -129,7 +127,5 @@ var hyperParameterDeleteSql = `
 DELETE FROM public.hyper_parameters
 WHERE TRUE
   AND type = :type
-  AND value = :value
-  AND friendly_name = :friendly_name
-  AND friendly_name_search = :friendly_name_search;
+  AND value = :value;
 `

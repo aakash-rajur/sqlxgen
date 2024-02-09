@@ -113,7 +113,7 @@ WHERE TRUE
   AND casting = :casting
   AND crew = :crew
   AND movie_id = :movie_id
-  AND title = :title;
+  AND title = :title
 LIMIT 1;
 `
 

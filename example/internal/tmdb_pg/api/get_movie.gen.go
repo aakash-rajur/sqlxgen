@@ -3,11 +3,10 @@ package api
 import (
 	_ "embed"
 	"fmt"
-	"strings"
-	"time"
-
 	"github.com/aakash-rajur/example/internal/tmdb_pg/store"
 	"github.com/lib/pq"
+	"strings"
+	"time"
 )
 
 type GetMovieArgs struct {
