@@ -89,8 +89,8 @@ SELECT
   language_id
 FROM public.movies_languages
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND language_id = :language_id
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id)
 LIMIT 1;
 `
 

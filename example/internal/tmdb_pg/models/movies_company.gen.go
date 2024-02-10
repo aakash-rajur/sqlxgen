@@ -89,8 +89,8 @@ SELECT
   company_id
 FROM public.movies_companies
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND company_id = :company_id
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:company_id AS INT8) IS NULL or company_id = :company_id)
 LIMIT 1;
 `
 

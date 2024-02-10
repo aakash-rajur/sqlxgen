@@ -85,7 +85,8 @@ SELECT
   id
 FROM app.crew
 WHERE TRUE
-  AND id = :id;
+  AND (:name IS NULL or name = :name)
+  AND (:id IS NULL or id = :id)
 LIMIT 1;
 `
 
@@ -104,5 +105,6 @@ WHERE TRUE
 var crewDeleteSql = `
 DELETE FROM app.crew
 WHERE TRUE
+  AND name = :name
   AND id = :id;
 `

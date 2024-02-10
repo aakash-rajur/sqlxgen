@@ -89,8 +89,8 @@ SELECT
   genre_id
 FROM app.movies_genres
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND genre_id = :genre_id;
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:genre_id IS NULL or genre_id = :genre_id)
 LIMIT 1;
 `
 

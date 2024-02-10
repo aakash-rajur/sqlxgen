@@ -110,10 +110,10 @@ SELECT
   title
 FROM public.t_movies_credits
 WHERE TRUE
-  AND casting = :casting
-  AND crew = :crew
-  AND movie_id = :movie_id
-  AND title = :title
+  AND (CAST(:casting AS JSONB) IS NULL or casting = :casting)
+  AND (CAST(:crew AS JSONB) IS NULL or crew = :crew)
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
 LIMIT 1;
 `
 

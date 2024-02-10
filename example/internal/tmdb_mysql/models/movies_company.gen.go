@@ -89,8 +89,8 @@ SELECT
   company_id
 FROM app.movies_companies
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND company_id = :company_id;
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:company_id IS NULL or company_id = :company_id)
 LIMIT 1;
 `
 

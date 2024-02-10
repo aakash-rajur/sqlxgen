@@ -89,8 +89,8 @@ SELECT
   country_id
 FROM public.movies_countries
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND country_id = :country_id
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:country_id AS TEXT) IS NULL or country_id = :country_id)
 LIMIT 1;
 `
 

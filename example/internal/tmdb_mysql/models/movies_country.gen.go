@@ -89,8 +89,8 @@ SELECT
   country_id
 FROM app.movies_countries
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND country_id = :country_id;
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:country_id IS NULL or country_id = :country_id)
 LIMIT 1;
 `
 

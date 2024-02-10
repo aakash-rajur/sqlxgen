@@ -118,8 +118,8 @@ SELECT
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $pkFields }}
-  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- range $selectFields }}
+  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
 {{- end }}
 LIMIT 1;
 `

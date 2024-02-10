@@ -89,8 +89,8 @@ SELECT
   language_id
 FROM app.movies_languages
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND language_id = :language_id;
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:language_id IS NULL or language_id = :language_id)
 LIMIT 1;
 `
 

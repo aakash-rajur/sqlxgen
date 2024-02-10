@@ -89,8 +89,8 @@ SELECT
   genre_id
 FROM public.movies_genres
 WHERE TRUE
-  AND movie_id = :movie_id
-  AND genre_id = :genre_id
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
 LIMIT 1;
 `
 

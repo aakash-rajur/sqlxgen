@@ -114,8 +114,8 @@ SELECT
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $pkFields }}
-  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- range $selectFields }}
+  AND (:{{ .Column.ColumnName }} IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
 {{- end }}
 LIMIT 1;
 `

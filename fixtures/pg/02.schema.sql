@@ -174,7 +174,6 @@ CREATE TABLE public.hyper_parameters (
 -- Name: movies; Type: TABLE; Schema: public; Owner: -
 --
 
-
 CREATE TABLE public.movies (
     id integer NOT NULL,
     title text DEFAULT ''::text NOT NULL,
@@ -183,8 +182,6 @@ CREATE TABLE public.movies (
     overview text DEFAULT ''::text NOT NULL,
     synopsis varchar DEFAULT ''::text NOT NULL,
     summary varchar(50) DEFAULT ''::text NOT NULL,
-	search_vector tsvector NULL,
-	client_id varchar NULL,
 	-- metadata public.hstore NULL,
 	location_accuracy int4 NULL,
 	data_synced_at timestamp NOT NULL DEFAULT now(),
