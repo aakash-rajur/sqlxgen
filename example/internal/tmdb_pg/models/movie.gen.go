@@ -92,12 +92,8 @@ func (m *Movie) UpdateQuery() string {
 	return movieUpdateSql
 }
 
-func (m *Movie) FindFirstQuery() string {
-	return movieFindFirstSql
-}
-
-func (m *Movie) FindByPkQuery() string {
-	return movieFindByPkSql
+func (m *Movie) UpdateByPkQuery() string {
+	return movieUpdateByPkSql
 }
 
 func (m *Movie) CountQuery() string {
@@ -108,6 +104,14 @@ func (m *Movie) FindAllQuery() string {
 	return movieFindAllSql
 }
 
+func (m *Movie) FindFirstQuery() string {
+	return movieFindFirstSql
+}
+
+func (m *Movie) FindByPkQuery() string {
+	return movieFindByPkSql
+}
+
 func (m *Movie) DeleteByPkQuery() string {
 	return movieDeleteByPkSql
 }
@@ -115,6 +119,42 @@ func (m *Movie) DeleteByPkQuery() string {
 func (m *Movie) DeleteQuery() string {
 	return movieDeleteSql
 }
+
+// language=postgresql
+var movieAllFieldsWhere = `
+WHERE (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:budget AS INT8) IS NULL or budget = :budget)
+  AND (CAST(:client_id AS VARCHAR) IS NULL or client_id = :client_id)
+  AND (CAST(:completed_coordinates AS POINT) IS NULL or completed_coordinates = :completed_coordinates)
+  AND (CAST(:data_synced_at AS TIMESTAMP) IS NULL or data_synced_at = :data_synced_at)
+  AND (CAST(:distance_to_place AS NUMERIC) IS NULL or distance_to_place = :distance_to_place)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:is_completed AS BOOL) IS NULL or is_completed = :is_completed)
+  AND (CAST(:keywords AS TEXT) IS NULL or keywords = :keywords)
+  AND (CAST(:keywords_search AS TSVECTOR) IS NULL or keywords_search = :keywords_search)
+  AND (CAST(:location_accuracy AS INT4) IS NULL or location_accuracy = :location_accuracy)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS INT8) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS INT4) IS NULL or runtime = :runtime)
+  AND (CAST(:search_vector AS TSVECTOR) IS NULL or search_vector = :search_vector)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:summary AS VARCHAR) IS NULL or summary = :summary)
+  AND (CAST(:synopsis AS VARCHAR) IS NULL or synopsis = :synopsis)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:title_search AS TSVECTOR) IS NULL or title_search = :title_search)
+  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT4) IS NULL or vote_count = :vote_count)
+`
+
+// language=postgresql
+var moviePkFieldsWhere = `
+WHERE id = :id
+`
 
 // language=postgresql
 var movieInsertSql = `
@@ -201,7 +241,7 @@ RETURNING
 `
 
 // language=postgresql
-var movieUpdateSql = `
+var movieUpdateByPkSql = `
 UPDATE public.movies
 SET
   id = :id,
@@ -229,8 +269,7 @@ SET
   title = :title,
   vote_average = :vote_average,
   vote_count = :vote_count
-WHERE TRUE
-  AND id = :id
+` + moviePkFieldsWhere + `
 RETURNING
   id,
   budget,
@@ -262,46 +301,36 @@ RETURNING
 `
 
 // language=postgresql
-var movieAllFieldsWhere = `
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:budget AS INT8) IS NULL or budget = :budget)
-  AND (CAST(:client_id AS VARCHAR) IS NULL or client_id = :client_id)
-  AND (CAST(:completed_coordinates AS POINT) IS NULL or completed_coordinates = :completed_coordinates)
-  AND (CAST(:data_synced_at AS TIMESTAMP) IS NULL or data_synced_at = :data_synced_at)
-  AND (CAST(:distance_to_place AS NUMERIC) IS NULL or distance_to_place = :distance_to_place)
-  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
-  AND (CAST(:is_completed AS BOOL) IS NULL or is_completed = :is_completed)
-  AND (CAST(:keywords AS TEXT) IS NULL or keywords = :keywords)
-  AND (CAST(:keywords_search AS TSVECTOR) IS NULL or keywords_search = :keywords_search)
-  AND (CAST(:location_accuracy AS INT4) IS NULL or location_accuracy = :location_accuracy)
-  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
-  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
-  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
-  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
-  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
-  AND (CAST(:revenue AS INT8) IS NULL or revenue = :revenue)
-  AND (CAST(:runtime AS INT4) IS NULL or runtime = :runtime)
-  AND (CAST(:search_vector AS TSVECTOR) IS NULL or search_vector = :search_vector)
-  AND (CAST(:status AS TEXT) IS NULL or status = :status)
-  AND (CAST(:summary AS VARCHAR) IS NULL or summary = :summary)
-  AND (CAST(:synopsis AS VARCHAR) IS NULL or synopsis = :synopsis)
-  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
-  AND (CAST(:title AS TEXT) IS NULL or title = :title)
-  AND (CAST(:title_search AS TSVECTOR) IS NULL or title_search = :title_search)
-  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
-  AND (CAST(:vote_count AS INT4) IS NULL or vote_count = :vote_count)
-`
-
-// language=postgresql
-var moviePkFieldsWhere = `
-WHERE TRUE
-  AND id = :id
-`
-
-// language=postgresql
-var movieFindFirstSql = `
-SELECT
+var movieUpdateSql = `
+UPDATE public.movies
+SET
+  id = :id,
+  budget = :budget,
+  client_id = :client_id,
+  completed_coordinates = :completed_coordinates,
+  data_synced_at = :data_synced_at,
+  distance_to_place = :distance_to_place,
+  homepage = :homepage,
+  is_completed = :is_completed,
+  keywords = :keywords,
+  location_accuracy = :location_accuracy,
+  original_language = :original_language,
+  original_title = :original_title,
+  overview = :overview,
+  popularity = :popularity,
+  release_date = :release_date,
+  revenue = :revenue,
+  runtime = :runtime,
+  search_vector = :search_vector,
+  status = :status,
+  summary = :summary,
+  synopsis = :synopsis,
+  tagline = :tagline,
+  title = :title,
+  vote_average = :vote_average,
+  vote_count = :vote_count
+` + movieAllFieldsWhere + `
+RETURNING
   id,
   budget,
   client_id,
@@ -328,42 +357,8 @@ SELECT
   title,
   title_search,
   vote_average,
-  vote_count
-FROM public.movies
-` + movieAllFieldsWhere + " LIMIT 1;"
-
-// language=postgresql
-var movieFindByPkSql = `
-SELECT
-  id,
-  budget,
-  client_id,
-  completed_coordinates,
-  data_synced_at,
-  distance_to_place,
-  homepage,
-  is_completed,
-  keywords,
-  keywords_search,
-  location_accuracy,
-  original_language,
-  original_title,
-  overview,
-  popularity,
-  release_date,
-  revenue,
-  runtime,
-  search_vector,
-  status,
-  summary,
-  synopsis,
-  tagline,
-  title,
-  title_search,
-  vote_average,
-  vote_count
-FROM public.movies
-` + moviePkFieldsWhere + " LIMIT 1;"
+  vote_count;
+`
 
 // language=postgresql
 var movieCountSql = `
@@ -405,17 +400,53 @@ FROM public.movies
 ` + movieAllFieldsWhere + ";"
 
 // language=postgresql
+var movieFindFirstSql = strings.TrimRight(movieFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var movieFindByPkSql = `
+SELECT
+  id,
+  budget,
+  client_id,
+  completed_coordinates,
+  data_synced_at,
+  distance_to_place,
+  homepage,
+  is_completed,
+  keywords,
+  keywords_search,
+  location_accuracy,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  search_vector,
+  status,
+  summary,
+  synopsis,
+  tagline,
+  title,
+  title_search,
+  vote_average,
+  vote_count
+FROM public.movies
+` + moviePkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
 var movieDeleteByPkSql = `
 DELETE FROM public.movies
-WHERE TRUE
-  AND id = :id;
+WHERE id = :id;
 `
 
 // language=postgresql
 var movieDeleteSql = `
 DELETE FROM public.movies
-WHERE TRUE
-  AND id = :id
+WHERE id = :id
   AND budget = :budget
   AND client_id = :client_id
   AND completed_coordinates = :completed_coordinates

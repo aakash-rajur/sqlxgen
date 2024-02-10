@@ -41,12 +41,8 @@ func (m *MoviesCompany) UpdateQuery() string {
 	return moviesCompanyUpdateSql
 }
 
-func (m *MoviesCompany) FindFirstQuery() string {
-	return moviesCompanyFindFirstSql
-}
-
-func (m *MoviesCompany) FindByPkQuery() string {
-	return moviesCompanyFindByPkSql
+func (m *MoviesCompany) UpdateByPkQuery() string {
+	return moviesCompanyUpdateByPkSql
 }
 
 func (m *MoviesCompany) CountQuery() string {
@@ -57,6 +53,14 @@ func (m *MoviesCompany) FindAllQuery() string {
 	return moviesCompanyFindAllSql
 }
 
+func (m *MoviesCompany) FindFirstQuery() string {
+	return moviesCompanyFindFirstSql
+}
+
+func (m *MoviesCompany) FindByPkQuery() string {
+	return moviesCompanyFindByPkSql
+}
+
 func (m *MoviesCompany) DeleteByPkQuery() string {
 	return moviesCompanyDeleteByPkSql
 }
@@ -64,6 +68,18 @@ func (m *MoviesCompany) DeleteByPkQuery() string {
 func (m *MoviesCompany) DeleteQuery() string {
 	return moviesCompanyDeleteSql
 }
+
+// language=postgresql
+var moviesCompanyAllFieldsWhere = `
+WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:company_id AS INT8) IS NULL or company_id = :company_id)
+`
+
+// language=postgresql
+var moviesCompanyPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND company_id = :company_id
+`
 
 // language=postgresql
 var moviesCompanyInsertSql = `
@@ -81,48 +97,28 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCompanyUpdateSql = `
+var moviesCompanyUpdateByPkSql = `
 UPDATE public.movies_companies
 SET
   movie_id = :movie_id,
   company_id = :company_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND company_id = :company_id
+` + moviesCompanyPkFieldsWhere + `
 RETURNING
   movie_id,
   company_id;
 `
 
 // language=postgresql
-var moviesCompanyAllFieldsWhere = `
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:company_id AS INT8) IS NULL or company_id = :company_id)
-`
-
-// language=postgresql
-var moviesCompanyPkFieldsWhere = `
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND company_id = :company_id
-`
-
-// language=postgresql
-var moviesCompanyFindFirstSql = `
-SELECT
+var moviesCompanyUpdateSql = `
+UPDATE public.movies_companies
+SET
+  movie_id = :movie_id,
+  company_id = :company_id
+` + moviesCompanyAllFieldsWhere + `
+RETURNING
   movie_id,
-  company_id
-FROM public.movies_companies
-` + moviesCompanyAllFieldsWhere + " LIMIT 1;"
-
-// language=postgresql
-var moviesCompanyFindByPkSql = `
-SELECT
-  movie_id,
-  company_id
-FROM public.movies_companies
-` + moviesCompanyPkFieldsWhere + " LIMIT 1;"
+  company_id;
+`
 
 // language=postgresql
 var moviesCompanyCountSql = `
@@ -139,17 +135,28 @@ FROM public.movies_companies
 ` + moviesCompanyAllFieldsWhere + ";"
 
 // language=postgresql
+var moviesCompanyFindFirstSql = strings.TrimRight(moviesCompanyFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesCompanyFindByPkSql = `
+SELECT
+  movie_id,
+  company_id
+FROM public.movies_companies
+` + moviesCompanyPkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
 var moviesCompanyDeleteByPkSql = `
 DELETE FROM public.movies_companies
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND company_id = :company_id;
 `
 
 // language=postgresql
 var moviesCompanyDeleteSql = `
 DELETE FROM public.movies_companies
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND company_id = :company_id;
 `

@@ -45,12 +45,8 @@ func (m *MoviesCrew) UpdateQuery() string {
 	return moviesCrewUpdateSql
 }
 
-func (m *MoviesCrew) FindFirstQuery() string {
-	return moviesCrewFindFirstSql
-}
-
-func (m *MoviesCrew) FindByPkQuery() string {
-	return moviesCrewFindByPkSql
+func (m *MoviesCrew) UpdateByPkQuery() string {
+	return moviesCrewUpdateByPkSql
 }
 
 func (m *MoviesCrew) CountQuery() string {
@@ -61,6 +57,14 @@ func (m *MoviesCrew) FindAllQuery() string {
 	return moviesCrewFindAllSql
 }
 
+func (m *MoviesCrew) FindFirstQuery() string {
+	return moviesCrewFindFirstSql
+}
+
+func (m *MoviesCrew) FindByPkQuery() string {
+	return moviesCrewFindByPkSql
+}
+
 func (m *MoviesCrew) DeleteByPkQuery() string {
 	return moviesCrewDeleteByPkSql
 }
@@ -68,6 +72,20 @@ func (m *MoviesCrew) DeleteByPkQuery() string {
 func (m *MoviesCrew) DeleteQuery() string {
 	return moviesCrewDeleteSql
 }
+
+// language=postgresql
+var moviesCrewAllFieldsWhere = `
+WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:crew_id AS INT8) IS NULL or crew_id = :crew_id)
+  AND (CAST(:department_id AS TEXT) IS NULL or department_id = :department_id)
+  AND (CAST(:job_id AS TEXT) IS NULL or job_id = :job_id)
+`
+
+// language=postgresql
+var moviesCrewPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND crew_id = :crew_id
+`
 
 // language=postgresql
 var moviesCrewInsertSql = `
@@ -91,16 +109,14 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCrewUpdateSql = `
+var moviesCrewUpdateByPkSql = `
 UPDATE public.movies_crew
 SET
   movie_id = :movie_id,
   crew_id = :crew_id,
   department_id = :department_id,
   job_id = :job_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND crew_id = :crew_id
+` + moviesCrewPkFieldsWhere + `
 RETURNING
   movie_id,
   crew_id,
@@ -109,40 +125,20 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCrewAllFieldsWhere = `
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:crew_id AS INT8) IS NULL or crew_id = :crew_id)
-  AND (CAST(:department_id AS TEXT) IS NULL or department_id = :department_id)
-  AND (CAST(:job_id AS TEXT) IS NULL or job_id = :job_id)
-`
-
-// language=postgresql
-var moviesCrewPkFieldsWhere = `
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND crew_id = :crew_id
-`
-
-// language=postgresql
-var moviesCrewFindFirstSql = `
-SELECT
+var moviesCrewUpdateSql = `
+UPDATE public.movies_crew
+SET
+  movie_id = :movie_id,
+  crew_id = :crew_id,
+  department_id = :department_id,
+  job_id = :job_id
+` + moviesCrewAllFieldsWhere + `
+RETURNING
   movie_id,
   crew_id,
   department_id,
-  job_id
-FROM public.movies_crew
-` + moviesCrewAllFieldsWhere + " LIMIT 1;"
-
-// language=postgresql
-var moviesCrewFindByPkSql = `
-SELECT
-  movie_id,
-  crew_id,
-  department_id,
-  job_id
-FROM public.movies_crew
-` + moviesCrewPkFieldsWhere + " LIMIT 1;"
+  job_id;
+`
 
 // language=postgresql
 var moviesCrewCountSql = `
@@ -161,18 +157,31 @@ FROM public.movies_crew
 ` + moviesCrewAllFieldsWhere + ";"
 
 // language=postgresql
+var moviesCrewFindFirstSql = strings.TrimRight(moviesCrewFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesCrewFindByPkSql = `
+SELECT
+  movie_id,
+  crew_id,
+  department_id,
+  job_id
+FROM public.movies_crew
+` + moviesCrewPkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
 var moviesCrewDeleteByPkSql = `
 DELETE FROM public.movies_crew
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND crew_id = :crew_id;
 `
 
 // language=postgresql
 var moviesCrewDeleteSql = `
 DELETE FROM public.movies_crew
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND crew_id = :crew_id
   AND department_id = :department_id
   AND job_id = :job_id;
