@@ -260,21 +260,6 @@ WHERE TRUE
 var movieDeleteSql = `
 DELETE FROM app.movies
 WHERE TRUE
-  AND budget = :budget
-  AND homepage = :homepage
-  AND keywords = :keywords
-  AND original_language = :original_language
-  AND original_title = :original_title
-  AND overview = :overview
-  AND popularity = :popularity
-  AND release_date = :release_date
-  AND revenue = :revenue
-  AND runtime = :runtime
-  AND status = :status
-  AND tagline = :tagline
-  AND title = :title
-  AND vote_average = :vote_average
-  AND vote_count = :vote_count
   AND id = :id;
 `
 

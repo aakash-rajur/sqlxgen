@@ -59,12 +59,24 @@ func ({{ $receiverName }} *{{ .PascalName }}) UpdateQuery() string {
   return {{ .CamelName }}UpdateSql
 }
 
-func ({{ $receiverName }} *{{ .PascalName }}) FindQuery() string {
-  return {{ .CamelName }}FindSql
+func ({{ $receiverName }} *{{ .PascalName }}) FindFirstQuery() string {
+  return {{ .CamelName }}FindFirstSql
+}
+
+func ({{ $receiverName }} *{{ .PascalName }}) FindByPkQuery() string {
+  return {{ .CamelName }}FindByPkSql
+}
+
+func ({{ $receiverName }} *{{ .PascalName }}) CountQuery() string {
+  return {{ .CamelName }}CountSql
 }
 
 func ({{ $receiverName }} *{{ .PascalName }}) FindAllQuery() string {
   return {{ .CamelName }}FindAllSql
+}
+
+func ({{ $receiverName }} *{{ .PascalName }}) DeleteByPkQuery() string {
+  return {{ .CamelName }}DeleteByPkSql
 }
 
 func ({{ $receiverName }} *{{ .PascalName }}) DeleteQuery() string {
@@ -111,18 +123,45 @@ RETURNING
 `
 
 // language=postgresql
-var {{ .CamelName }}FindSql = `
+var {{ .CamelName }}AllFieldsWhere = `
+WHERE TRUE
+{{- range $selectFields }}
+  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+{{- end }}
+`
+
+// language=postgresql
+var {{ .CamelName }}PkFieldsWhere = `
+WHERE TRUE
+{{- range $pkFields }}
+  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- end }}
+`
+
+// language=postgresql
+var {{ .CamelName }}FindFirstSql = `
 SELECT
 {{- range $i, $f := $selectFields }}
   {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
-WHERE TRUE
-{{- range $selectFields }}
-  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+` + {{ .CamelName }}AllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var {{ .CamelName }}FindByPkSql = `
+SELECT
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
 {{- end }}
-LIMIT 1;
-`
+FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+` + {{ .CamelName }}PkFieldsWhere + " LIMIT 1;"
+
+
+// language=postgresql
+var {{ .CamelName }}CountSql = `
+SELECT count(*) as count
+FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+` + {{ .CamelName }}AllFieldsWhere + ";"
 
 // language=postgresql
 var {{ .CamelName }}FindAllSql = `
@@ -131,9 +170,14 @@ SELECT
   {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+` + {{ .CamelName }}AllFieldsWhere + ";"
+
+// language=postgresql
+var {{ .CamelName }}DeleteByPkSql = `
+DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $selectFields }}
-  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+{{- range $pkFields }}
+  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
 
@@ -141,8 +185,9 @@ WHERE TRUE
 var {{ .CamelName }}DeleteSql = `
 DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $pkFields }}
-  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- range $i, $selectFields }}
+  {{ if not (isFirst $i) }}AND{{ end }} {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
+
 {{- end }}

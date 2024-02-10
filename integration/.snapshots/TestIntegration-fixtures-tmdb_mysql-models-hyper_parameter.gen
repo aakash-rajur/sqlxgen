@@ -120,7 +120,6 @@ WHERE TRUE
 var hyperParameterDeleteSql = `
 DELETE FROM app.hyper_parameters
 WHERE TRUE
-  AND friendly_name = :friendly_name
   AND type = :type
   AND value = :value;
 `

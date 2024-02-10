@@ -41,12 +41,24 @@ func (m *MoviesGenre) UpdateQuery() string {
 	return moviesGenreUpdateSql
 }
 
-func (m *MoviesGenre) FindQuery() string {
-	return moviesGenreFindSql
+func (m *MoviesGenre) FindFirstQuery() string {
+	return moviesGenreFindFirstSql
+}
+
+func (m *MoviesGenre) FindByPkQuery() string {
+	return moviesGenreFindByPkSql
+}
+
+func (m *MoviesGenre) CountQuery() string {
+	return moviesGenreCountSql
 }
 
 func (m *MoviesGenre) FindAllQuery() string {
 	return moviesGenreFindAllSql
+}
+
+func (m *MoviesGenre) DeleteByPkQuery() string {
+	return moviesGenreDeleteByPkSql
 }
 
 func (m *MoviesGenre) DeleteQuery() string {
@@ -83,16 +95,40 @@ RETURNING
 `
 
 // language=postgresql
-var moviesGenreFindSql = `
+var moviesGenreAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
+`
+
+// language=postgresql
+var moviesGenrePkFieldsWhere = `
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND genre_id = :genre_id
+`
+
+// language=postgresql
+var moviesGenreFindFirstSql = `
 SELECT
   movie_id,
   genre_id
 FROM public.movies_genres
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
-LIMIT 1;
-`
+` + moviesGenreAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesGenreFindByPkSql = `
+SELECT
+  movie_id,
+  genre_id
+FROM public.movies_genres
+` + moviesGenrePkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesGenreCountSql = `
+SELECT count(*) as count
+FROM public.movies_genres
+` + moviesGenreAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesGenreFindAllSql = `
@@ -100,9 +136,14 @@ SELECT
   movie_id,
   genre_id
 FROM public.movies_genres
+` + moviesGenreAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesGenreDeleteByPkSql = `
+DELETE FROM public.movies_genres
 WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id);
+  AND movie_id = :movie_id
+  AND genre_id = :genre_id;
 `
 
 // language=postgresql

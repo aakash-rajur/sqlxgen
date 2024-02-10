@@ -105,6 +105,5 @@ WHERE TRUE
 var crewDeleteSql = `
 DELETE FROM app.crew
 WHERE TRUE
-  AND name = :name
   AND id = :id;
 `

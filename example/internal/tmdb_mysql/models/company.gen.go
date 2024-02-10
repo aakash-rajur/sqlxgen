@@ -107,6 +107,5 @@ WHERE TRUE
 var companyDeleteSql = `
 DELETE FROM app.companies
 WHERE TRUE
-  AND name = :name
   AND id = :id;
 `

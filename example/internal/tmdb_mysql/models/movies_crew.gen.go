@@ -131,8 +131,6 @@ WHERE TRUE
 var moviesCrewDeleteSql = `
 DELETE FROM app.movies_crew
 WHERE TRUE
-  AND department_id = :department_id
-  AND job_id = :job_id
   AND movie_id = :movie_id
   AND crew_id = :crew_id;
 `

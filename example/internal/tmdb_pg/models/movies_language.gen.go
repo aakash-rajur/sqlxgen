@@ -41,12 +41,24 @@ func (m *MoviesLanguage) UpdateQuery() string {
 	return moviesLanguageUpdateSql
 }
 
-func (m *MoviesLanguage) FindQuery() string {
-	return moviesLanguageFindSql
+func (m *MoviesLanguage) FindFirstQuery() string {
+	return moviesLanguageFindFirstSql
+}
+
+func (m *MoviesLanguage) FindByPkQuery() string {
+	return moviesLanguageFindByPkSql
+}
+
+func (m *MoviesLanguage) CountQuery() string {
+	return moviesLanguageCountSql
 }
 
 func (m *MoviesLanguage) FindAllQuery() string {
 	return moviesLanguageFindAllSql
+}
+
+func (m *MoviesLanguage) DeleteByPkQuery() string {
+	return moviesLanguageDeleteByPkSql
 }
 
 func (m *MoviesLanguage) DeleteQuery() string {
@@ -83,16 +95,40 @@ RETURNING
 `
 
 // language=postgresql
-var moviesLanguageFindSql = `
+var moviesLanguageAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id)
+`
+
+// language=postgresql
+var moviesLanguagePkFieldsWhere = `
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND language_id = :language_id
+`
+
+// language=postgresql
+var moviesLanguageFindFirstSql = `
 SELECT
   movie_id,
   language_id
 FROM public.movies_languages
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id)
-LIMIT 1;
-`
+` + moviesLanguageAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesLanguageFindByPkSql = `
+SELECT
+  movie_id,
+  language_id
+FROM public.movies_languages
+` + moviesLanguagePkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesLanguageCountSql = `
+SELECT count(*) as count
+FROM public.movies_languages
+` + moviesLanguageAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesLanguageFindAllSql = `
@@ -100,9 +136,14 @@ SELECT
   movie_id,
   language_id
 FROM public.movies_languages
+` + moviesLanguageAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesLanguageDeleteByPkSql = `
+DELETE FROM public.movies_languages
 WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id);
+  AND movie_id = :movie_id
+  AND language_id = :language_id;
 `
 
 // language=postgresql

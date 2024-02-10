@@ -105,6 +105,5 @@ WHERE TRUE
 var actorDeleteSql = `
 DELETE FROM app.actors
 WHERE TRUE
-  AND name = :name
   AND id = :id;
 `

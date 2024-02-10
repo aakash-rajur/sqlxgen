@@ -47,12 +47,24 @@ func (m *MoviesActor) UpdateQuery() string {
 	return moviesActorUpdateSql
 }
 
-func (m *MoviesActor) FindQuery() string {
-	return moviesActorFindSql
+func (m *MoviesActor) FindFirstQuery() string {
+	return moviesActorFindFirstSql
+}
+
+func (m *MoviesActor) FindByPkQuery() string {
+	return moviesActorFindByPkSql
+}
+
+func (m *MoviesActor) CountQuery() string {
+	return moviesActorCountSql
 }
 
 func (m *MoviesActor) FindAllQuery() string {
 	return moviesActorFindAllSql
+}
+
+func (m *MoviesActor) DeleteByPkQuery() string {
+	return moviesActorDeleteByPkSql
 }
 
 func (m *MoviesActor) DeleteQuery() string {
@@ -101,7 +113,24 @@ RETURNING
 `
 
 // language=postgresql
-var moviesActorFindSql = `
+var moviesActorAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
+  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
+  AND (CAST(:character AS TEXT) IS NULL or character = :character)
+  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search)
+`
+
+// language=postgresql
+var moviesActorPkFieldsWhere = `
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND actor_id = :actor_id
+`
+
+// language=postgresql
+var moviesActorFindFirstSql = `
 SELECT
   movie_id,
   actor_id,
@@ -109,14 +138,24 @@ SELECT
   character,
   character_search
 FROM public.movies_actors
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
-  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
-  AND (CAST(:character AS TEXT) IS NULL or character = :character)
-  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search)
-LIMIT 1;
-`
+` + moviesActorAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesActorFindByPkSql = `
+SELECT
+  movie_id,
+  actor_id,
+  cast_order,
+  character,
+  character_search
+FROM public.movies_actors
+` + moviesActorPkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesActorCountSql = `
+SELECT count(*) as count
+FROM public.movies_actors
+` + moviesActorAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesActorFindAllSql = `
@@ -127,12 +166,14 @@ SELECT
   character,
   character_search
 FROM public.movies_actors
+` + moviesActorAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesActorDeleteByPkSql = `
+DELETE FROM public.movies_actors
 WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
-  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
-  AND (CAST(:character AS TEXT) IS NULL or character = :character)
-  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search);
+  AND movie_id = :movie_id
+  AND actor_id = :actor_id;
 `
 
 // language=postgresql

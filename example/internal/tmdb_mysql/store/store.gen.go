@@ -14,6 +14,15 @@ import (
 
 // orm
 
+func GetTypeName[T any](instance T) string {
+	t := reflect.TypeOf(instance)
+	typeName := t.Name()
+	if t.Kind() == reflect.Pointer {
+		typeName = t.Elem().Name()
+	}
+	return typeName
+}
+
 func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 	inserts := make([]T, 0)
 
@@ -27,7 +36,7 @@ func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 		hasNext := rows.Next()
 
 		if !hasNext {
-			return nil, fmt.Errorf("unable to insert %s", instance)
+			return nil, fmt.Errorf("unable to insert %s", GetTypeName(instance))
 		}
 
 		inserted := new(P)
@@ -63,7 +72,7 @@ func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
 		hasNext := rows.Next()
 
 		if !hasNext {
-			return nil, fmt.Errorf("unable to update %s", instance)
+			return nil, fmt.Errorf("unable to update %s", GetTypeName(instance))
 		}
 
 		updated := new(P)
@@ -89,7 +98,7 @@ func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
 func Find[T model[P], P any](db Database, instance T) (T, error) {
 	result := new(P)
 
-	rows, err := db.NamedQuery(instance.FindQuery(), instance)
+	rows, err := db.NamedQuery(instance.FindFirstQuery(), instance)
 
 	if err != nil {
 		return result, err
@@ -102,15 +111,7 @@ func Find[T model[P], P any](db Database, instance T) (T, error) {
 	hasNext := rows.Next()
 
 	if !hasNext {
-		t := reflect.TypeOf(instance)
-
-		typeName := t.Name()
-
-		if t.Kind() == reflect.Pointer {
-			typeName = t.Elem().Name()
-		}
-
-		msg := fmt.Sprintf("'%s' not found", typeName)
+		msg := fmt.Sprintf("'%s' not found", GetTypeName(instance))
 
 		return result, fmt.Errorf(msg, ErrNotFound)
 	}
@@ -122,6 +123,18 @@ func Find[T model[P], P any](db Database, instance T) (T, error) {
 	}
 
 	return result, nil
+}
+
+func Count[T model[P], P any](db Database, instance T) (*int64, error) {
+	var count int64
+
+	err := db.QueryRow(instance.CountQuery()).Scan(&count)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &count, nil
 }
 
 func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
@@ -152,32 +165,59 @@ func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
 	return result, nil
 }
 
-func Delete[T model[P], P any](db Database, instance T) error {
-	_, err := db.NamedExec(instance.DeleteQuery(), instance)
+func DeleteByPk[T model[P], P any](db Database, instance T) error {
 
-	return err
+	result, err := db.NamedExec(instance.DeleteByPkQuery(), instance)
+	if err != nil {
+		return err
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAff != 1 {
+		return fmt.Errorf("unable to delete %s", instance)
+	}
+	return nil
+}
+
+func Delete[T model[P], P any](db Database, instance T) (*int64, error) {
+
+	result, err := db.NamedExec(instance.DeleteQuery(), instance)
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+
+	return &rowsAff, nil
 }
 
 type model[P any] interface {
 	*P
 
 	TableName() string
-
 	PrimaryKey() []string
 
 	InsertQuery() string
-
 	UpdateQuery() string
+	CountQuery() string
 
-	FindQuery() string
-
+	FindFirstQuery() string
+	FindByPkQuery() string
 	FindAllQuery() string
 
+	DeleteByPkQuery() string
 	DeleteQuery() string
 }
 
-// custom sql query
-
+// Custom sql query used like:
+//
+//	func (args *CatalogQryArgs) Query(db store.Database) ([]*CatalogQryResult, error) {
+//		return store.Query[*CatalogQryResult](db, args)
+//	}
 func Query[R result[pR], Q queryable[pQ], pR, pQ any](db Database, args Q) ([]R, error) {
 	re, err := regexp.Compile(`-{2,}\s*([\w\W\s\S]*?)(\n|\z)`)
 
@@ -236,6 +276,8 @@ type Database interface {
 	NamedExec(query string, arg interface{}) (sql.Result, error)
 
 	NamedQuery(query string, arg interface{}) (*sqlx.Rows, error)
+
+	QueryRow(query string, args ...interface{}) *sql.Row
 }
 
 type JsonObject map[string]interface{}

@@ -69,6 +69,9 @@ func (m model) generate(
 		"isLast": func(index int, array interface{}) bool {
 			return index == reflect.ValueOf(array).Len()-1
 		},
+		"isFirst": func(index int) bool {
+			return index == 0
+		},
 		"ToUpper": strings.ToUpper,
 		"ToJson": func(v interface{}) string {
 			b, _ := json.Marshal(v)

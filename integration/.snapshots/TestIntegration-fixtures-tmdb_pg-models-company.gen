@@ -42,12 +42,24 @@ func (c *Company) UpdateQuery() string {
 	return companyUpdateSql
 }
 
-func (c *Company) FindQuery() string {
-	return companyFindSql
+func (c *Company) FindFirstQuery() string {
+	return companyFindFirstSql
+}
+
+func (c *Company) FindByPkQuery() string {
+	return companyFindByPkSql
+}
+
+func (c *Company) CountQuery() string {
+	return companyCountSql
 }
 
 func (c *Company) FindAllQuery() string {
 	return companyFindAllSql
+}
+
+func (c *Company) DeleteByPkQuery() string {
+	return companyDeleteByPkSql
 }
 
 func (c *Company) DeleteQuery() string {
@@ -85,18 +97,42 @@ RETURNING
 `
 
 // language=postgresql
-var companyFindSql = `
+var companyAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:id AS INT8) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+`
+
+// language=postgresql
+var companyPkFieldsWhere = `
+WHERE TRUE
+  AND id = :id
+`
+
+// language=postgresql
+var companyFindFirstSql = `
 SELECT
   id,
   name,
   name_search
 FROM public.companies
-WHERE TRUE
-  AND (CAST(:id AS INT8) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
-LIMIT 1;
-`
+` + companyAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var companyFindByPkSql = `
+SELECT
+  id,
+  name,
+  name_search
+FROM public.companies
+` + companyPkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var companyCountSql = `
+SELECT count(*) as count
+FROM public.companies
+` + companyAllFieldsWhere + ";"
 
 // language=postgresql
 var companyFindAllSql = `
@@ -105,10 +141,13 @@ SELECT
   name,
   name_search
 FROM public.companies
+` + companyAllFieldsWhere + ";"
+
+// language=postgresql
+var companyDeleteByPkSql = `
+DELETE FROM public.companies
 WHERE TRUE
-  AND (CAST(:id AS INT8) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
+  AND id = :id;
 `
 
 // language=postgresql

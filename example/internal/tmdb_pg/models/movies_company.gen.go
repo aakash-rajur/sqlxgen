@@ -41,12 +41,24 @@ func (m *MoviesCompany) UpdateQuery() string {
 	return moviesCompanyUpdateSql
 }
 
-func (m *MoviesCompany) FindQuery() string {
-	return moviesCompanyFindSql
+func (m *MoviesCompany) FindFirstQuery() string {
+	return moviesCompanyFindFirstSql
+}
+
+func (m *MoviesCompany) FindByPkQuery() string {
+	return moviesCompanyFindByPkSql
+}
+
+func (m *MoviesCompany) CountQuery() string {
+	return moviesCompanyCountSql
 }
 
 func (m *MoviesCompany) FindAllQuery() string {
 	return moviesCompanyFindAllSql
+}
+
+func (m *MoviesCompany) DeleteByPkQuery() string {
+	return moviesCompanyDeleteByPkSql
 }
 
 func (m *MoviesCompany) DeleteQuery() string {
@@ -83,16 +95,40 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCompanyFindSql = `
+var moviesCompanyAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:company_id AS INT8) IS NULL or company_id = :company_id)
+`
+
+// language=postgresql
+var moviesCompanyPkFieldsWhere = `
+WHERE TRUE
+  AND movie_id = :movie_id
+  AND company_id = :company_id
+`
+
+// language=postgresql
+var moviesCompanyFindFirstSql = `
 SELECT
   movie_id,
   company_id
 FROM public.movies_companies
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:company_id AS INT8) IS NULL or company_id = :company_id)
-LIMIT 1;
-`
+` + moviesCompanyAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesCompanyFindByPkSql = `
+SELECT
+  movie_id,
+  company_id
+FROM public.movies_companies
+` + moviesCompanyPkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var moviesCompanyCountSql = `
+SELECT count(*) as count
+FROM public.movies_companies
+` + moviesCompanyAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesCompanyFindAllSql = `
@@ -100,9 +136,14 @@ SELECT
   movie_id,
   company_id
 FROM public.movies_companies
+` + moviesCompanyAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesCompanyDeleteByPkSql = `
+DELETE FROM public.movies_companies
 WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:company_id AS INT8) IS NULL or company_id = :company_id);
+  AND movie_id = :movie_id
+  AND company_id = :company_id;
 `
 
 // language=postgresql

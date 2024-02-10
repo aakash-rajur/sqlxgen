@@ -131,8 +131,6 @@ WHERE TRUE
 var moviesActorDeleteSql = `
 DELETE FROM app.movies_actors
 WHERE TRUE
-  AND cast = :cast
-  AND cast_order = :cast_order
   AND movie_id = :movie_id
   AND actor_id = :actor_id;
 `
