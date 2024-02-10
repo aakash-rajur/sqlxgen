@@ -40,17 +40,44 @@ func (c *Company) UpdateQuery() string {
 	return companyUpdateSql
 }
 
-func (c *Company) FindQuery() string {
-	return companyFindSql
+func (c *Company) UpdateByPkQuery() string {
+	return companyUpdateByPkSql
+}
+
+func (c *Company) CountQuery() string {
+	return companyCountSql
 }
 
 func (c *Company) FindAllQuery() string {
 	return companyFindAllSql
 }
 
+func (c *Company) FindFirstQuery() string {
+	return companyFindFirstSql
+}
+
+func (c *Company) FindByPkQuery() string {
+	return companyFindByPkSql
+}
+
+func (c *Company) DeleteByPkQuery() string {
+	return companyDeleteByPkSql
+}
+
 func (c *Company) DeleteQuery() string {
 	return companyDeleteSql
 }
+
+// language=mysql
+var companyAllFieldsWhere = `
+WHERE (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:id AS BIGINT) IS NULL or id = :id)
+`
+
+// language=mysql
+var companyPkFieldsWhere = `
+WHERE id = :id
+`
 
 // language=mysql
 var companyInsertSql = `
@@ -68,29 +95,34 @@ RETURNING
 `
 
 // language=mysql
-var companyUpdateSql = `
+var companyUpdateByPkSql = `
 UPDATE app.companies
 SET
   name = :name,
   id = :id
-WHERE TRUE
-  AND id = :id
+` + companyPkFieldsWhere + `
 RETURNING
   name,
   id;
 `
 
 // language=mysql
-var companyFindSql = `
-SELECT
+var companyUpdateSql = `
+UPDATE app.companies
+SET
+  name = :name,
+  id = :id
+` + companyAllFieldsWhere + `
+RETURNING
   name,
-  id
-FROM app.companies
-WHERE TRUE
-  AND (:name IS NULL or name = :name)
-  AND (:id IS NULL or id = :id)
-LIMIT 1;
+  id;
 `
+
+// language=mysql
+var companyCountSql = `
+SELECT count(*) as count
+FROM app.companies
+` + companyAllFieldsWhere + ";"
 
 // language=mysql
 var companyFindAllSql = `
@@ -98,15 +130,30 @@ SELECT
   name,
   id
 FROM app.companies
-WHERE TRUE
-  AND (:name IS NULL or name = :name)
-  AND (:id IS NULL or id = :id);
+` + companyAllFieldsWhere + ";"
+
+// language=mysql
+var companyFindFirstSql = strings.TrimRight(companyFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var companyFindByPkSql = `
+SELECT
+  name,
+  id
+FROM app.companies
+` + companyPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var companyDeleteByPkSql = `
+DELETE FROM app.companies
+WHERE id = :id;
 `
 
 // language=mysql
 var companyDeleteSql = `
 DELETE FROM app.companies
-WHERE TRUE
-  AND name = :name
+WHERE name = :name
   AND id = :id;
 `

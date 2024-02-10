@@ -41,17 +41,45 @@ func (m *MoviesGenre) UpdateQuery() string {
 	return moviesGenreUpdateSql
 }
 
-func (m *MoviesGenre) FindQuery() string {
-	return moviesGenreFindSql
+func (m *MoviesGenre) UpdateByPkQuery() string {
+	return moviesGenreUpdateByPkSql
+}
+
+func (m *MoviesGenre) CountQuery() string {
+	return moviesGenreCountSql
 }
 
 func (m *MoviesGenre) FindAllQuery() string {
 	return moviesGenreFindAllSql
 }
 
+func (m *MoviesGenre) FindFirstQuery() string {
+	return moviesGenreFindFirstSql
+}
+
+func (m *MoviesGenre) FindByPkQuery() string {
+	return moviesGenreFindByPkSql
+}
+
+func (m *MoviesGenre) DeleteByPkQuery() string {
+	return moviesGenreDeleteByPkSql
+}
+
 func (m *MoviesGenre) DeleteQuery() string {
 	return moviesGenreDeleteSql
 }
+
+// language=postgresql
+var moviesGenreAllFieldsWhere = `
+WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
+`
+
+// language=postgresql
+var moviesGenrePkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND genre_id = :genre_id
+`
 
 // language=postgresql
 var moviesGenreInsertSql = `
@@ -69,30 +97,34 @@ RETURNING
 `
 
 // language=postgresql
-var moviesGenreUpdateSql = `
+var moviesGenreUpdateByPkSql = `
 UPDATE public.movies_genres
 SET
   movie_id = :movie_id,
   genre_id = :genre_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND genre_id = :genre_id
+` + moviesGenrePkFieldsWhere + `
 RETURNING
   movie_id,
   genre_id;
 `
 
 // language=postgresql
-var moviesGenreFindSql = `
-SELECT
+var moviesGenreUpdateSql = `
+UPDATE public.movies_genres
+SET
+  movie_id = :movie_id,
+  genre_id = :genre_id
+` + moviesGenreAllFieldsWhere + `
+RETURNING
   movie_id,
-  genre_id
-FROM public.movies_genres
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
-LIMIT 1;
+  genre_id;
 `
+
+// language=postgresql
+var moviesGenreCountSql = `
+SELECT count(*) as count
+FROM public.movies_genres
+` + moviesGenreAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesGenreFindAllSql = `
@@ -100,15 +132,31 @@ SELECT
   movie_id,
   genre_id
 FROM public.movies_genres
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id);
+` + moviesGenreAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesGenreFindFirstSql = strings.TrimRight(moviesGenreFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesGenreFindByPkSql = `
+SELECT
+  movie_id,
+  genre_id
+FROM public.movies_genres
+` + moviesGenrePkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesGenreDeleteByPkSql = `
+DELETE FROM public.movies_genres
+WHERE movie_id = :movie_id
+  AND genre_id = :genre_id;
 `
 
 // language=postgresql
 var moviesGenreDeleteSql = `
 DELETE FROM public.movies_genres
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND genre_id = :genre_id;
 `

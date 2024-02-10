@@ -40,17 +40,44 @@ func (a *Actor) UpdateQuery() string {
 	return actorUpdateSql
 }
 
-func (a *Actor) FindQuery() string {
-	return actorFindSql
+func (a *Actor) UpdateByPkQuery() string {
+	return actorUpdateByPkSql
+}
+
+func (a *Actor) CountQuery() string {
+	return actorCountSql
 }
 
 func (a *Actor) FindAllQuery() string {
 	return actorFindAllSql
 }
 
+func (a *Actor) FindFirstQuery() string {
+	return actorFindFirstSql
+}
+
+func (a *Actor) FindByPkQuery() string {
+	return actorFindByPkSql
+}
+
+func (a *Actor) DeleteByPkQuery() string {
+	return actorDeleteByPkSql
+}
+
 func (a *Actor) DeleteQuery() string {
 	return actorDeleteSql
 }
+
+// language=mysql
+var actorAllFieldsWhere = `
+WHERE (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:id AS BIGINT) IS NULL or id = :id)
+`
+
+// language=mysql
+var actorPkFieldsWhere = `
+WHERE id = :id
+`
 
 // language=mysql
 var actorInsertSql = `
@@ -66,29 +93,34 @@ RETURNING
 `
 
 // language=mysql
-var actorUpdateSql = `
+var actorUpdateByPkSql = `
 UPDATE app.actors
 SET
   name = :name,
   id = :id
-WHERE TRUE
-  AND id = :id
+` + actorPkFieldsWhere + `
 RETURNING
   name,
   id;
 `
 
 // language=mysql
-var actorFindSql = `
-SELECT
+var actorUpdateSql = `
+UPDATE app.actors
+SET
+  name = :name,
+  id = :id
+` + actorAllFieldsWhere + `
+RETURNING
   name,
-  id
-FROM app.actors
-WHERE TRUE
-  AND (:name IS NULL or name = :name)
-  AND (:id IS NULL or id = :id)
-LIMIT 1;
+  id;
 `
+
+// language=mysql
+var actorCountSql = `
+SELECT count(*) as count
+FROM app.actors
+` + actorAllFieldsWhere + ";"
 
 // language=mysql
 var actorFindAllSql = `
@@ -96,15 +128,30 @@ SELECT
   name,
   id
 FROM app.actors
-WHERE TRUE
-  AND (:name IS NULL or name = :name)
-  AND (:id IS NULL or id = :id);
+` + actorAllFieldsWhere + ";"
+
+// language=mysql
+var actorFindFirstSql = strings.TrimRight(actorFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var actorFindByPkSql = `
+SELECT
+  name,
+  id
+FROM app.actors
+` + actorPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var actorDeleteByPkSql = `
+DELETE FROM app.actors
+WHERE id = :id;
 `
 
 // language=mysql
 var actorDeleteSql = `
 DELETE FROM app.actors
-WHERE TRUE
-  AND name = :name
+WHERE name = :name
   AND id = :id;
 `

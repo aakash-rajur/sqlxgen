@@ -42,17 +42,45 @@ func (c *Crew) UpdateQuery() string {
 	return crewUpdateSql
 }
 
-func (c *Crew) FindQuery() string {
-	return crewFindSql
+func (c *Crew) UpdateByPkQuery() string {
+	return crewUpdateByPkSql
+}
+
+func (c *Crew) CountQuery() string {
+	return crewCountSql
 }
 
 func (c *Crew) FindAllQuery() string {
 	return crewFindAllSql
 }
 
+func (c *Crew) FindFirstQuery() string {
+	return crewFindFirstSql
+}
+
+func (c *Crew) FindByPkQuery() string {
+	return crewFindByPkSql
+}
+
+func (c *Crew) DeleteByPkQuery() string {
+	return crewDeleteByPkSql
+}
+
 func (c *Crew) DeleteQuery() string {
 	return crewDeleteSql
 }
+
+// language=postgresql
+var crewAllFieldsWhere = `
+WHERE (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+`
+
+// language=postgresql
+var crewPkFieldsWhere = `
+WHERE id = :id
+`
 
 // language=postgresql
 var crewInsertSql = `
@@ -69,13 +97,12 @@ RETURNING
 `
 
 // language=postgresql
-var crewUpdateSql = `
+var crewUpdateByPkSql = `
 UPDATE public.crew
 SET
   id = :id,
   name = :name
-WHERE TRUE
-  AND id = :id
+` + crewPkFieldsWhere + `
 RETURNING
   id,
   name,
@@ -83,18 +110,23 @@ RETURNING
 `
 
 // language=postgresql
-var crewFindSql = `
-SELECT
+var crewUpdateSql = `
+UPDATE public.crew
+SET
+  id = :id,
+  name = :name
+` + crewAllFieldsWhere + `
+RETURNING
   id,
   name,
-  name_search
-FROM public.crew
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
-LIMIT 1;
+  name_search;
 `
+
+// language=postgresql
+var crewCountSql = `
+SELECT count(*) as count
+FROM public.crew
+` + crewAllFieldsWhere + ";"
 
 // language=postgresql
 var crewFindAllSql = `
@@ -103,17 +135,32 @@ SELECT
   name,
   name_search
 FROM public.crew
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
+` + crewAllFieldsWhere + ";"
+
+// language=postgresql
+var crewFindFirstSql = strings.TrimRight(crewFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var crewFindByPkSql = `
+SELECT
+  id,
+  name,
+  name_search
+FROM public.crew
+` + crewPkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
+var crewDeleteByPkSql = `
+DELETE FROM public.crew
+WHERE id = :id;
 `
 
 // language=postgresql
 var crewDeleteSql = `
 DELETE FROM public.crew
-WHERE TRUE
-  AND id = :id
+WHERE id = :id
   AND name = :name
   AND name_search = :name_search;
 `

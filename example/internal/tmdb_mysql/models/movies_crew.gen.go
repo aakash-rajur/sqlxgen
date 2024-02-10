@@ -45,17 +45,47 @@ func (m *MoviesCrew) UpdateQuery() string {
 	return moviesCrewUpdateSql
 }
 
-func (m *MoviesCrew) FindQuery() string {
-	return moviesCrewFindSql
+func (m *MoviesCrew) UpdateByPkQuery() string {
+	return moviesCrewUpdateByPkSql
+}
+
+func (m *MoviesCrew) CountQuery() string {
+	return moviesCrewCountSql
 }
 
 func (m *MoviesCrew) FindAllQuery() string {
 	return moviesCrewFindAllSql
 }
 
+func (m *MoviesCrew) FindFirstQuery() string {
+	return moviesCrewFindFirstSql
+}
+
+func (m *MoviesCrew) FindByPkQuery() string {
+	return moviesCrewFindByPkSql
+}
+
+func (m *MoviesCrew) DeleteByPkQuery() string {
+	return moviesCrewDeleteByPkSql
+}
+
 func (m *MoviesCrew) DeleteQuery() string {
 	return moviesCrewDeleteSql
 }
+
+// language=mysql
+var moviesCrewAllFieldsWhere = `
+WHERE (CAST(:department_id AS TEXT) IS NULL or department_id = :department_id)
+  AND (CAST(:job_id AS TEXT) IS NULL or job_id = :job_id)
+  AND (CAST(:movie_id AS BIGINT) IS NULL or movie_id = :movie_id)
+  AND (CAST(:crew_id AS BIGINT) IS NULL or crew_id = :crew_id)
+`
+
+// language=mysql
+var moviesCrewPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND crew_id = :crew_id
+`
 
 // language=mysql
 var moviesCrewInsertSql = `
@@ -79,16 +109,14 @@ RETURNING
 `
 
 // language=mysql
-var moviesCrewUpdateSql = `
+var moviesCrewUpdateByPkSql = `
 UPDATE app.movies_crew
 SET
   department_id = :department_id,
   job_id = :job_id,
   movie_id = :movie_id,
   crew_id = :crew_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND crew_id = :crew_id
+` + moviesCrewPkFieldsWhere + `
 RETURNING
   department_id,
   job_id,
@@ -97,20 +125,26 @@ RETURNING
 `
 
 // language=mysql
-var moviesCrewFindSql = `
-SELECT
+var moviesCrewUpdateSql = `
+UPDATE app.movies_crew
+SET
+  department_id = :department_id,
+  job_id = :job_id,
+  movie_id = :movie_id,
+  crew_id = :crew_id
+` + moviesCrewAllFieldsWhere + `
+RETURNING
   department_id,
   job_id,
   movie_id,
-  crew_id
-FROM app.movies_crew
-WHERE TRUE
-  AND (:department_id IS NULL or department_id = :department_id)
-  AND (:job_id IS NULL or job_id = :job_id)
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:crew_id IS NULL or crew_id = :crew_id)
-LIMIT 1;
+  crew_id;
 `
+
+// language=mysql
+var moviesCrewCountSql = `
+SELECT count(*) as count
+FROM app.movies_crew
+` + moviesCrewAllFieldsWhere + ";"
 
 // language=mysql
 var moviesCrewFindAllSql = `
@@ -120,18 +154,34 @@ SELECT
   movie_id,
   crew_id
 FROM app.movies_crew
-WHERE TRUE
-  AND (:department_id IS NULL or department_id = :department_id)
-  AND (:job_id IS NULL or job_id = :job_id)
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:crew_id IS NULL or crew_id = :crew_id);
+` + moviesCrewAllFieldsWhere + ";"
+
+// language=mysql
+var moviesCrewFindFirstSql = strings.TrimRight(moviesCrewFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var moviesCrewFindByPkSql = `
+SELECT
+  department_id,
+  job_id,
+  movie_id,
+  crew_id
+FROM app.movies_crew
+` + moviesCrewPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var moviesCrewDeleteByPkSql = `
+DELETE FROM app.movies_crew
+WHERE movie_id = :movie_id
+  AND crew_id = :crew_id;
 `
 
 // language=mysql
 var moviesCrewDeleteSql = `
 DELETE FROM app.movies_crew
-WHERE TRUE
-  AND department_id = :department_id
+WHERE department_id = :department_id
   AND job_id = :job_id
   AND movie_id = :movie_id
   AND crew_id = :crew_id;

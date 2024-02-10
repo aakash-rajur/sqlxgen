@@ -8,11 +8,31 @@ import (
   "fmt"
   "reflect"
   "regexp"
+  "strings"
 
   "github.com/jmoiron/sqlx"
 )
 
 // orm
+
+func GetTypeName[T any](instance T) string {
+	t := reflect.TypeOf(instance)
+	typeName := t.Name()
+	if t.Kind() == reflect.Pointer {
+		typeName = t.Elem().Name()
+	}
+	return typeName
+}
+
+func InsertOne[T model[P], P any](db Database, instance T) (T, error) {
+  inserted, err := Insert[T](db, instance)
+
+  if err != nil {
+    return nil, err
+  }
+
+  return inserted[0], nil
+}
 
 func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 	inserts := make([]T, 0)
@@ -27,7 +47,7 @@ func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
     hasNext := rows.Next()
 
     if !hasNext {
-      return nil, fmt.Errorf("unable to insert %s", instance)
+      return nil, fmt.Errorf("unable to insert %s", GetTypeName(instance))
     }
 
 		inserted := new(P)
@@ -50,6 +70,28 @@ func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 	return inserts, nil
 }
 
+
+// TODO: implement bulk insert
+// func InsertBulk[T model[P], P any](db Database, instances ...T) (int64, error) {}
+
+func UpdateOne[T model[P], P any](db Database, instance T) (T, error) {
+
+  count, err := Count[T](db, instance)
+  if err != nil {
+    return nil, err
+  }
+  if  *count != 1 {
+    return nil, fmt.Errorf("update-one %s would have matched %d rows", GetTypeName(instance), *count)
+  }
+
+  updates, err := Update[T](db, instance)
+
+  if err != nil {
+    return nil, err
+  }
+  return updates[0], nil
+}
+
 func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
   updates := make([]T, 0)
 
@@ -63,7 +105,7 @@ func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
     hasNext := rows.Next()
 
 		if !hasNext {
-      return nil, fmt.Errorf("unable to update %s", instance)
+      return nil, fmt.Errorf("unable to update %s", GetTypeName(instance))
     }
 
 		updated := new(P)
@@ -86,10 +128,22 @@ func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
 	return updates, nil
 }
 
-func Find[T model[P], P any](db Database, instance T) (T, error) {
+func Count[T model[P], P any](db Database, instance T) (*int64, error) {
+  var count int64
+
+  err := db.QueryRow(instance.CountQuery()).Scan(&count)
+
+  if err != nil {
+    return nil, err
+  }
+
+  return &count, nil
+}
+
+func findSingle[T model[P], P any](db Database, instance T, sqlQuery string) (T, error) {
   result := new(P)
 
-  rows, err := db.NamedQuery(instance.FindQuery(), instance)
+  rows, err := db.NamedQuery(sqlQuery, instance)
 
   if err != nil {
     return result, err
@@ -102,15 +156,7 @@ func Find[T model[P], P any](db Database, instance T) (T, error) {
   hasNext := rows.Next()
 
 	if !hasNext {
-		t := reflect.TypeOf(instance)
-
-		typeName := t.Name()
-
-		if t.Kind() == reflect.Pointer {
-			typeName = t.Elem().Name()
-    }
-
-		msg := fmt.Sprintf("'%s' not found", typeName)
+		msg := fmt.Sprintf("'%s' not found", GetTypeName(instance))
 
 		return result, fmt.Errorf(msg, ErrNotFound)
   }
@@ -124,8 +170,8 @@ func Find[T model[P], P any](db Database, instance T) (T, error) {
   return result, nil
 }
 
-func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
-  rows, err := db.NamedQuery(instance.FindAllQuery(), instance)
+func findMany[T model[P], P any](db Database, instance T, sqlQuery string) ([]T, error) {
+  rows, err := db.NamedQuery(sqlQuery, instance)
 
   if err != nil {
     return nil, err
@@ -152,32 +198,108 @@ func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
   return result, nil
 }
 
-func Delete[T model[P], P any](db Database, instance T) error {
-  _, err := db.NamedExec(instance.DeleteQuery(), instance)
+func Find[T model[P], P any](db Database, instance T) (T, error) {
+  // ** Deprecated: 
+  //    Use FindFirst or FindOne depending on your expectation if > 1 rows match criteria.
+  return FindFirst(db, instance)
+}
+
+// Find limit 1
+func FindFirst[T model[P], P any](db Database, instance T) (T, error) {
+  return findSingle(db, instance, instance.FindFirstQuery())
+}
+
+// Find and return 1, err if > 1
+func FindOne[T model[P], P any](db Database, instance T) (T, error) {
+  limitedQuery := strings.TrimRight(instance.FindAllQuery(), ";") + " LIMIT 2;"
+
+  result, err := findMany(db, instance, limitedQuery)
+  if err != nil {
+    return nil, err
+  }
+  if len(result) > 1 {
+    return nil, ErrFoundMultiple
+  }
+  return result[0], nil
+}
+
+func FindByPk[T model[P], P any](db Database, instance T) (T, error) {
+  return findSingle(db, instance, instance.FindByPkQuery())
+}
+
+func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
+  return findMany(db, instance, instance.FindAllQuery())
+}
+
+// Delete by Pk, err if not found
+func DeleteByPk[T model[P], P any](db Database, instance T) (error) {
+
+	result, err := db.NamedExec(instance.DeleteByPkQuery(), instance)
+	if err != nil {
+		return err
+	}
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAff != 1 {
+		return fmt.Errorf("unable to delete %s", instance)
+	}
+	return nil
+}
+
+func DeleteOne[T model[P], P any](db Database, instance T) (error) {
+  count, err := Count[T](db, instance)
+  if err != nil {
+    return err
+  }
+  if  *count != 1 {
+    return fmt.Errorf("delete-one %s would have matched %d rows", GetTypeName(instance), *count)
+  }
+
+  _, err = Delete[T](db, instance)
 
   return err
 }
+
+func Delete[T model[P], P any](db Database, instance T) (*int64, error) {
+
+  result, err := db.NamedExec(instance.DeleteQuery(), instance)
+
+	rowsAff, err := result.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+
+	return &rowsAff, nil
+}
+
 
 type model[P any] interface {
 	*P
 
 	TableName() string
-
   PrimaryKey() []string
 
   InsertQuery() string
-
   UpdateQuery() string
+  UpdateByPkQuery() string
 
-  FindQuery() string
-
+  CountQuery() string
+  FindFirstQuery() string
+  FindByPkQuery() string
   FindAllQuery() string
 
+  DeleteByPkQuery() string
   DeleteQuery() string
 }
 
-// custom sql query
-
+// Custom sql query used like:
+//   func (args *CatalogQryArgs) Query(db store.Database) ([]*CatalogQryResult, error) {
+//   	return store.Query[*CatalogQryResult](db, args)
+//   }
 func Query[R result[pR], Q queryable[pQ], pR, pQ any](db Database, args Q) ([]R, error) {
   re, err := regexp.Compile(`-{2,}\s*([\w\W\s\S]*?)(\n|\z)`)
 
@@ -236,6 +358,8 @@ type Database interface {
   NamedExec(query string, arg interface{}) (sql.Result, error)
 
   NamedQuery(query string, arg interface{}) (*sqlx.Rows, error)
+
+	QueryRow(query string, args ...interface{}) *sql.Row
 }
 
 type JsonObject map[string]interface{}
@@ -285,3 +409,4 @@ func (j *JsonArray) Value() (driver.Value, error) {
 // errors
 
 var ErrNotFound = errors.New("entity not found")
+var ErrFoundMultiple = errors.New("multiple matching entities")

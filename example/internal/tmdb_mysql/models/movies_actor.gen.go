@@ -45,17 +45,47 @@ func (m *MoviesActor) UpdateQuery() string {
 	return moviesActorUpdateSql
 }
 
-func (m *MoviesActor) FindQuery() string {
-	return moviesActorFindSql
+func (m *MoviesActor) UpdateByPkQuery() string {
+	return moviesActorUpdateByPkSql
+}
+
+func (m *MoviesActor) CountQuery() string {
+	return moviesActorCountSql
 }
 
 func (m *MoviesActor) FindAllQuery() string {
 	return moviesActorFindAllSql
 }
 
+func (m *MoviesActor) FindFirstQuery() string {
+	return moviesActorFindFirstSql
+}
+
+func (m *MoviesActor) FindByPkQuery() string {
+	return moviesActorFindByPkSql
+}
+
+func (m *MoviesActor) DeleteByPkQuery() string {
+	return moviesActorDeleteByPkSql
+}
+
 func (m *MoviesActor) DeleteQuery() string {
 	return moviesActorDeleteSql
 }
+
+// language=mysql
+var moviesActorAllFieldsWhere = `
+WHERE (CAST(:cast AS TEXT) IS NULL or cast = :cast)
+  AND (CAST(:cast_order AS INT) IS NULL or cast_order = :cast_order)
+  AND (CAST(:movie_id AS BIGINT) IS NULL or movie_id = :movie_id)
+  AND (CAST(:actor_id AS BIGINT) IS NULL or actor_id = :actor_id)
+`
+
+// language=mysql
+var moviesActorPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND actor_id = :actor_id
+`
 
 // language=mysql
 var moviesActorInsertSql = `
@@ -79,16 +109,14 @@ RETURNING
 `
 
 // language=mysql
-var moviesActorUpdateSql = `
+var moviesActorUpdateByPkSql = `
 UPDATE app.movies_actors
 SET
   cast = :cast,
   cast_order = :cast_order,
   movie_id = :movie_id,
   actor_id = :actor_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND actor_id = :actor_id
+` + moviesActorPkFieldsWhere + `
 RETURNING
   cast,
   cast_order,
@@ -97,20 +125,26 @@ RETURNING
 `
 
 // language=mysql
-var moviesActorFindSql = `
-SELECT
+var moviesActorUpdateSql = `
+UPDATE app.movies_actors
+SET
+  cast = :cast,
+  cast_order = :cast_order,
+  movie_id = :movie_id,
+  actor_id = :actor_id
+` + moviesActorAllFieldsWhere + `
+RETURNING
   cast,
   cast_order,
   movie_id,
-  actor_id
-FROM app.movies_actors
-WHERE TRUE
-  AND (:cast IS NULL or cast = :cast)
-  AND (:cast_order IS NULL or cast_order = :cast_order)
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:actor_id IS NULL or actor_id = :actor_id)
-LIMIT 1;
+  actor_id;
 `
+
+// language=mysql
+var moviesActorCountSql = `
+SELECT count(*) as count
+FROM app.movies_actors
+` + moviesActorAllFieldsWhere + ";"
 
 // language=mysql
 var moviesActorFindAllSql = `
@@ -120,18 +154,34 @@ SELECT
   movie_id,
   actor_id
 FROM app.movies_actors
-WHERE TRUE
-  AND (:cast IS NULL or cast = :cast)
-  AND (:cast_order IS NULL or cast_order = :cast_order)
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:actor_id IS NULL or actor_id = :actor_id);
+` + moviesActorAllFieldsWhere + ";"
+
+// language=mysql
+var moviesActorFindFirstSql = strings.TrimRight(moviesActorFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var moviesActorFindByPkSql = `
+SELECT
+  cast,
+  cast_order,
+  movie_id,
+  actor_id
+FROM app.movies_actors
+` + moviesActorPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var moviesActorDeleteByPkSql = `
+DELETE FROM app.movies_actors
+WHERE movie_id = :movie_id
+  AND actor_id = :actor_id;
 `
 
 // language=mysql
 var moviesActorDeleteSql = `
 DELETE FROM app.movies_actors
-WHERE TRUE
-  AND cast = :cast
+WHERE cast = :cast
   AND cast_order = :cast_order
   AND movie_id = :movie_id
   AND actor_id = :actor_id;

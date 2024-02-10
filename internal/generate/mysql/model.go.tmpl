@@ -26,7 +26,11 @@ func ({{ $receiverName }} *{{ .PascalName }}) String() string {
   content := strings.Join(
     []string{
       {{- range .Fields }}
+        {{- if eq .Column.Type "interface{}" "point"  "array" "geography" "hstore" }}
+        // fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $receiverName }}.{{ .Name }}),
+        {{- else }}
         fmt.Sprintf("{{ .Name }}: %v", {{ if .Type.IsPointer }}*{{ end }}{{ $receiverName }}.{{ .Name }}),
+        {{- end }}
       {{- end }}
       },
       ", ",
@@ -55,17 +59,47 @@ func ({{ $receiverName }} *{{ .PascalName }}) UpdateQuery() string {
   return {{ .CamelName }}UpdateSql
 }
 
-func ({{ $receiverName }} *{{ .PascalName }}) FindQuery() string {
-  return {{ .CamelName }}FindSql
+func ({{ $receiverName }} *{{ .PascalName }}) UpdateByPkQuery() string {
+  return {{ .CamelName }}UpdateByPkSql
+}
+
+func ({{ $receiverName }} *{{ .PascalName }}) CountQuery() string {
+  return {{ .CamelName }}CountSql
 }
 
 func ({{ $receiverName }} *{{ .PascalName }}) FindAllQuery() string {
   return {{ .CamelName }}FindAllSql
 }
 
+func ({{ $receiverName }} *{{ .PascalName }}) FindFirstQuery() string {
+  return {{ .CamelName }}FindFirstSql
+}
+
+func ({{ $receiverName }} *{{ .PascalName }}) FindByPkQuery() string {
+  return {{ .CamelName }}FindByPkSql
+}
+
+func ({{ $receiverName }} *{{ .PascalName }}) DeleteByPkQuery() string {
+  return {{ .CamelName }}DeleteByPkSql
+}
+
 func ({{ $receiverName }} *{{ .PascalName }}) DeleteQuery() string {
   return {{ .CamelName }}DeleteSql
 }
+
+// language=mysql
+var {{ .CamelName }}AllFieldsWhere = `
+{{- range $i, $f := $selectFields }}
+{{ if (isFirst $i) }}WHERE{{ else }}  AND{{ end }} (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+{{- end }}
+`
+
+// language=mysql
+var {{ .CamelName }}PkFieldsWhere = `
+{{- range $i, $f := $pkFields }}
+{{ if (isFirst $i) }}WHERE{{ else }}  AND{{ end }} {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- end }}
+`
 
 // language=mysql
 var {{ .CamelName }}InsertSql = `
@@ -90,16 +124,13 @@ RETURNING
 `
 
 // language=mysql
-var {{ .CamelName }}UpdateSql = `
+var {{ .CamelName }}UpdateByPkSql = `
 UPDATE {{ .Table.SchemaName }}.{{ .Table.TableName }}
 SET
 {{- range $i, $f := $updateFields }}
   {{ $f.Column.ColumnName }} = :{{ $f.Column.ColumnName }}{{ if not (isLast $i $updateFields) }},{{ end }}
 {{- end }}
-WHERE TRUE
-{{- range .PkFields }}
-  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
-{{- end }}
+` + {{ .CamelName }}PkFieldsWhere + `
 RETURNING
 {{- range $i, $f := $selectFields }}
   {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
@@ -107,38 +138,62 @@ RETURNING
 `
 
 // language=mysql
-var {{ .CamelName }}FindSql = `
-SELECT
-{{- range $i, $f := .Fields }}
-  {{ $f.Column.ColumnName }}{{ if not (isLast $i $fields) }},{{ end }}
+var {{ .CamelName }}UpdateSql = `
+UPDATE {{ .Table.SchemaName }}.{{ .Table.TableName }}
+SET
+{{- range $i, $f := $updateFields }}
+  {{ $f.Column.ColumnName }} = :{{ $f.Column.ColumnName }}{{ if not (isLast $i $updateFields) }},{{ end }}
 {{- end }}
-FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
-WHERE TRUE
-{{- range $selectFields }}
-  AND (:{{ .Column.ColumnName }} IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
-{{- end }}
-LIMIT 1;
+` + {{ .CamelName }}AllFieldsWhere + `
+RETURNING
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
+{{- end }};
 `
+
+// language=mysql
+var {{ .CamelName }}CountSql = `
+SELECT count(*) as count
+FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+` + {{ .CamelName }}AllFieldsWhere + ";"
 
 // language=mysql
 var {{ .CamelName }}FindAllSql = `
 SELECT
-{{- range $i, $f := .Fields }}
-  {{ $f.Column.ColumnName }}{{ if not (isLast $i $fields) }},{{ end }}
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
 {{- end }}
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
-WHERE TRUE
-{{- range $selectFields }}
-  AND (:{{ .Column.ColumnName }} IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
+` + {{ .CamelName }}AllFieldsWhere + ";"
+
+// language=mysql
+var {{ .CamelName }}FindFirstSql = strings.TrimRight({{ .CamelName }}FindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var {{ .CamelName }}FindByPkSql = `
+SELECT
+{{- range $i, $f := $selectFields }}
+  {{ $f.Column.ColumnName }}{{ if not (isLast $i $selectFields) }},{{ end }}
+{{- end }}
+FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+` + {{ .CamelName }}PkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var {{ .CamelName }}DeleteByPkSql = `
+DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+{{- range $i, $f := $pkFields }}
+{{ if (isFirst $i) }}WHERE{{ else }}  AND{{ end }} {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
 
 // language=mysql
 var {{ .CamelName }}DeleteSql = `
 DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
-WHERE TRUE
-{{- range $selectFields }}
-  AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- range $i, $f := $selectFields }}
+{{ if (isFirst $i) }}WHERE{{ else }}  AND{{ end }} {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
+
 {{- end }}

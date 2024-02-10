@@ -26,7 +26,7 @@ type Package struct {
 func (p Package) Generate() error {
 	slog.Debug("generating store package")
 
-	tmpl, err := template.New("store").Parse(storeTemplate)
+	tmpl, err := template.New(p.PackageName).Parse(storeTemplate)
 
 	if err != nil {
 		return errorx.IllegalFormat.Wrap(err, "unable to parse store template")

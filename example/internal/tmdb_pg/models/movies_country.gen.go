@@ -41,17 +41,45 @@ func (m *MoviesCountry) UpdateQuery() string {
 	return moviesCountryUpdateSql
 }
 
-func (m *MoviesCountry) FindQuery() string {
-	return moviesCountryFindSql
+func (m *MoviesCountry) UpdateByPkQuery() string {
+	return moviesCountryUpdateByPkSql
+}
+
+func (m *MoviesCountry) CountQuery() string {
+	return moviesCountryCountSql
 }
 
 func (m *MoviesCountry) FindAllQuery() string {
 	return moviesCountryFindAllSql
 }
 
+func (m *MoviesCountry) FindFirstQuery() string {
+	return moviesCountryFindFirstSql
+}
+
+func (m *MoviesCountry) FindByPkQuery() string {
+	return moviesCountryFindByPkSql
+}
+
+func (m *MoviesCountry) DeleteByPkQuery() string {
+	return moviesCountryDeleteByPkSql
+}
+
 func (m *MoviesCountry) DeleteQuery() string {
 	return moviesCountryDeleteSql
 }
+
+// language=postgresql
+var moviesCountryAllFieldsWhere = `
+WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:country_id AS TEXT) IS NULL or country_id = :country_id)
+`
+
+// language=postgresql
+var moviesCountryPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND country_id = :country_id
+`
 
 // language=postgresql
 var moviesCountryInsertSql = `
@@ -69,30 +97,34 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCountryUpdateSql = `
+var moviesCountryUpdateByPkSql = `
 UPDATE public.movies_countries
 SET
   movie_id = :movie_id,
   country_id = :country_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND country_id = :country_id
+` + moviesCountryPkFieldsWhere + `
 RETURNING
   movie_id,
   country_id;
 `
 
 // language=postgresql
-var moviesCountryFindSql = `
-SELECT
+var moviesCountryUpdateSql = `
+UPDATE public.movies_countries
+SET
+  movie_id = :movie_id,
+  country_id = :country_id
+` + moviesCountryAllFieldsWhere + `
+RETURNING
   movie_id,
-  country_id
-FROM public.movies_countries
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:country_id AS TEXT) IS NULL or country_id = :country_id)
-LIMIT 1;
+  country_id;
 `
+
+// language=postgresql
+var moviesCountryCountSql = `
+SELECT count(*) as count
+FROM public.movies_countries
+` + moviesCountryAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesCountryFindAllSql = `
@@ -100,15 +132,31 @@ SELECT
   movie_id,
   country_id
 FROM public.movies_countries
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:country_id AS TEXT) IS NULL or country_id = :country_id);
+` + moviesCountryAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesCountryFindFirstSql = strings.TrimRight(moviesCountryFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesCountryFindByPkSql = `
+SELECT
+  movie_id,
+  country_id
+FROM public.movies_countries
+` + moviesCountryPkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesCountryDeleteByPkSql = `
+DELETE FROM public.movies_countries
+WHERE movie_id = :movie_id
+  AND country_id = :country_id;
 `
 
 // language=postgresql
 var moviesCountryDeleteSql = `
 DELETE FROM public.movies_countries
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND country_id = :country_id;
 `

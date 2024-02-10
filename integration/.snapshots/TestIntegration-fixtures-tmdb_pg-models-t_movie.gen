@@ -78,12 +78,24 @@ func (t *TMovie) UpdateQuery() string {
 	return tMovieUpdateSql
 }
 
-func (t *TMovie) FindQuery() string {
-	return tMovieFindSql
+func (t *TMovie) FindFirstQuery() string {
+	return tMovieFindFirstSql
+}
+
+func (t *TMovie) FindByPkQuery() string {
+	return tMovieFindByPkSql
+}
+
+func (t *TMovie) CountQuery() string {
+	return tMovieCountSql
 }
 
 func (t *TMovie) FindAllQuery() string {
 	return tMovieFindAllSql
+}
+
+func (t *TMovie) DeleteByPkQuery() string {
+	return tMovieDeleteByPkSql
 }
 
 func (t *TMovie) DeleteQuery() string {
@@ -209,7 +221,38 @@ RETURNING
 `
 
 // language=postgresql
-var tMovieFindSql = `
+var tMovieAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:id AS INT8) IS NULL or id = :id)
+  AND (CAST(:budget AS FLOAT8) IS NULL or budget = :budget)
+  AND (CAST(:genre AS JSONB) IS NULL or genre = :genre)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:keywords AS JSONB) IS NULL or keywords = :keywords)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
+  AND (CAST(:production_companies AS JSONB) IS NULL or production_companies = :production_companies)
+  AND (CAST(:production_countries AS JSONB) IS NULL or production_countries = :production_countries)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS FLOAT8) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS FLOAT8) IS NULL or runtime = :runtime)
+  AND (CAST(:spoken_languages AS JSONB) IS NULL or spoken_languages = :spoken_languages)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT8) IS NULL or vote_count = :vote_count)
+`
+
+// language=postgresql
+var tMoviePkFieldsWhere = `
+WHERE TRUE
+  AND id = :id
+`
+
+// language=postgresql
+var tMovieFindFirstSql = `
 SELECT
   id,
   budget,
@@ -232,29 +275,39 @@ SELECT
   vote_average,
   vote_count
 FROM public.t_movies
-WHERE TRUE
-  AND (CAST(:id AS INT8) IS NULL or id = :id)
-  AND (CAST(:budget AS FLOAT8) IS NULL or budget = :budget)
-  AND (CAST(:genre AS JSONB) IS NULL or genre = :genre)
-  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
-  AND (CAST(:keywords AS JSONB) IS NULL or keywords = :keywords)
-  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
-  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
-  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
-  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
-  AND (CAST(:production_companies AS JSONB) IS NULL or production_companies = :production_companies)
-  AND (CAST(:production_countries AS JSONB) IS NULL or production_countries = :production_countries)
-  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
-  AND (CAST(:revenue AS FLOAT8) IS NULL or revenue = :revenue)
-  AND (CAST(:runtime AS FLOAT8) IS NULL or runtime = :runtime)
-  AND (CAST(:spoken_languages AS JSONB) IS NULL or spoken_languages = :spoken_languages)
-  AND (CAST(:status AS TEXT) IS NULL or status = :status)
-  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
-  AND (CAST(:title AS TEXT) IS NULL or title = :title)
-  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
-  AND (CAST(:vote_count AS INT8) IS NULL or vote_count = :vote_count)
-LIMIT 1;
-`
+` + tMovieAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var tMovieFindByPkSql = `
+SELECT
+  id,
+  budget,
+  genre,
+  homepage,
+  keywords,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  production_companies,
+  production_countries,
+  release_date,
+  revenue,
+  runtime,
+  spoken_languages,
+  status,
+  tagline,
+  title,
+  vote_average,
+  vote_count
+FROM public.t_movies
+` + tMoviePkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var tMovieCountSql = `
+SELECT count(*) as count
+FROM public.t_movies
+` + tMovieAllFieldsWhere + ";"
 
 // language=postgresql
 var tMovieFindAllSql = `
@@ -280,27 +333,13 @@ SELECT
   vote_average,
   vote_count
 FROM public.t_movies
+` + tMovieAllFieldsWhere + ";"
+
+// language=postgresql
+var tMovieDeleteByPkSql = `
+DELETE FROM public.t_movies
 WHERE TRUE
-  AND (CAST(:id AS INT8) IS NULL or id = :id)
-  AND (CAST(:budget AS FLOAT8) IS NULL or budget = :budget)
-  AND (CAST(:genre AS JSONB) IS NULL or genre = :genre)
-  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
-  AND (CAST(:keywords AS JSONB) IS NULL or keywords = :keywords)
-  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
-  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
-  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
-  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
-  AND (CAST(:production_companies AS JSONB) IS NULL or production_companies = :production_companies)
-  AND (CAST(:production_countries AS JSONB) IS NULL or production_countries = :production_countries)
-  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
-  AND (CAST(:revenue AS FLOAT8) IS NULL or revenue = :revenue)
-  AND (CAST(:runtime AS FLOAT8) IS NULL or runtime = :runtime)
-  AND (CAST(:spoken_languages AS JSONB) IS NULL or spoken_languages = :spoken_languages)
-  AND (CAST(:status AS TEXT) IS NULL or status = :status)
-  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
-  AND (CAST(:title AS TEXT) IS NULL or title = :title)
-  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
-  AND (CAST(:vote_count AS INT8) IS NULL or vote_count = :vote_count);
+  AND id = :id;
 `
 
 // language=postgresql

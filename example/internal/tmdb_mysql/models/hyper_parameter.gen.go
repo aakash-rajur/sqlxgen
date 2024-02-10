@@ -43,17 +43,46 @@ func (h *HyperParameter) UpdateQuery() string {
 	return hyperParameterUpdateSql
 }
 
-func (h *HyperParameter) FindQuery() string {
-	return hyperParameterFindSql
+func (h *HyperParameter) UpdateByPkQuery() string {
+	return hyperParameterUpdateByPkSql
+}
+
+func (h *HyperParameter) CountQuery() string {
+	return hyperParameterCountSql
 }
 
 func (h *HyperParameter) FindAllQuery() string {
 	return hyperParameterFindAllSql
 }
 
+func (h *HyperParameter) FindFirstQuery() string {
+	return hyperParameterFindFirstSql
+}
+
+func (h *HyperParameter) FindByPkQuery() string {
+	return hyperParameterFindByPkSql
+}
+
+func (h *HyperParameter) DeleteByPkQuery() string {
+	return hyperParameterDeleteByPkSql
+}
+
 func (h *HyperParameter) DeleteQuery() string {
 	return hyperParameterDeleteSql
 }
+
+// language=mysql
+var hyperParameterAllFieldsWhere = `
+WHERE (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
+  AND (CAST(:type AS TEXT) IS NULL or type = :type)
+  AND (CAST(:value AS TEXT) IS NULL or value = :value)
+`
+
+// language=mysql
+var hyperParameterPkFieldsWhere = `
+WHERE type = :type
+  AND value = :value
+`
 
 // language=mysql
 var hyperParameterInsertSql = `
@@ -74,15 +103,13 @@ RETURNING
 `
 
 // language=mysql
-var hyperParameterUpdateSql = `
+var hyperParameterUpdateByPkSql = `
 UPDATE app.hyper_parameters
 SET
   friendly_name = :friendly_name,
   type = :type,
   value = :value
-WHERE TRUE
-  AND type = :type
-  AND value = :value
+` + hyperParameterPkFieldsWhere + `
 RETURNING
   friendly_name,
   type,
@@ -90,18 +117,24 @@ RETURNING
 `
 
 // language=mysql
-var hyperParameterFindSql = `
-SELECT
+var hyperParameterUpdateSql = `
+UPDATE app.hyper_parameters
+SET
+  friendly_name = :friendly_name,
+  type = :type,
+  value = :value
+` + hyperParameterAllFieldsWhere + `
+RETURNING
   friendly_name,
   type,
-  value
-FROM app.hyper_parameters
-WHERE TRUE
-  AND (:friendly_name IS NULL or friendly_name = :friendly_name)
-  AND (:type IS NULL or type = :type)
-  AND (:value IS NULL or value = :value)
-LIMIT 1;
+  value;
 `
+
+// language=mysql
+var hyperParameterCountSql = `
+SELECT count(*) as count
+FROM app.hyper_parameters
+` + hyperParameterAllFieldsWhere + ";"
 
 // language=mysql
 var hyperParameterFindAllSql = `
@@ -110,17 +143,33 @@ SELECT
   type,
   value
 FROM app.hyper_parameters
-WHERE TRUE
-  AND (:friendly_name IS NULL or friendly_name = :friendly_name)
-  AND (:type IS NULL or type = :type)
-  AND (:value IS NULL or value = :value);
+` + hyperParameterAllFieldsWhere + ";"
+
+// language=mysql
+var hyperParameterFindFirstSql = strings.TrimRight(hyperParameterFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var hyperParameterFindByPkSql = `
+SELECT
+  friendly_name,
+  type,
+  value
+FROM app.hyper_parameters
+` + hyperParameterPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var hyperParameterDeleteByPkSql = `
+DELETE FROM app.hyper_parameters
+WHERE type = :type
+  AND value = :value;
 `
 
 // language=mysql
 var hyperParameterDeleteSql = `
 DELETE FROM app.hyper_parameters
-WHERE TRUE
-  AND friendly_name = :friendly_name
+WHERE friendly_name = :friendly_name
   AND type = :type
   AND value = :value;
 `

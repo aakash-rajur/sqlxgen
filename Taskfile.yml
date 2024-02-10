@@ -46,6 +46,10 @@ tasks:
     desc: "Run integration tests"
     cmds:
       - go test -v ./integration/...
+  test.snapshot:
+    desc: "Refresh the test snapshots"
+    cmds:
+      - UPDATE_SNAPSHOTS=true go test ./internal/...
   tmdb.pg:
     desc: "Postgres database for TMDB"
     status:

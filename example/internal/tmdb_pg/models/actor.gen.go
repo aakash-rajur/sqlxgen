@@ -42,17 +42,45 @@ func (a *Actor) UpdateQuery() string {
 	return actorUpdateSql
 }
 
-func (a *Actor) FindQuery() string {
-	return actorFindSql
+func (a *Actor) UpdateByPkQuery() string {
+	return actorUpdateByPkSql
+}
+
+func (a *Actor) CountQuery() string {
+	return actorCountSql
 }
 
 func (a *Actor) FindAllQuery() string {
 	return actorFindAllSql
 }
 
+func (a *Actor) FindFirstQuery() string {
+	return actorFindFirstSql
+}
+
+func (a *Actor) FindByPkQuery() string {
+	return actorFindByPkSql
+}
+
+func (a *Actor) DeleteByPkQuery() string {
+	return actorDeleteByPkSql
+}
+
 func (a *Actor) DeleteQuery() string {
 	return actorDeleteSql
 }
+
+// language=postgresql
+var actorAllFieldsWhere = `
+WHERE (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+`
+
+// language=postgresql
+var actorPkFieldsWhere = `
+WHERE id = :id
+`
 
 // language=postgresql
 var actorInsertSql = `
@@ -69,13 +97,12 @@ RETURNING
 `
 
 // language=postgresql
-var actorUpdateSql = `
+var actorUpdateByPkSql = `
 UPDATE public.actors
 SET
   id = :id,
   name = :name
-WHERE TRUE
-  AND id = :id
+` + actorPkFieldsWhere + `
 RETURNING
   id,
   name,
@@ -83,18 +110,23 @@ RETURNING
 `
 
 // language=postgresql
-var actorFindSql = `
-SELECT
+var actorUpdateSql = `
+UPDATE public.actors
+SET
+  id = :id,
+  name = :name
+` + actorAllFieldsWhere + `
+RETURNING
   id,
   name,
-  name_search
-FROM public.actors
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
-LIMIT 1;
+  name_search;
 `
+
+// language=postgresql
+var actorCountSql = `
+SELECT count(*) as count
+FROM public.actors
+` + actorAllFieldsWhere + ";"
 
 // language=postgresql
 var actorFindAllSql = `
@@ -103,17 +135,32 @@ SELECT
   name,
   name_search
 FROM public.actors
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
+` + actorAllFieldsWhere + ";"
+
+// language=postgresql
+var actorFindFirstSql = strings.TrimRight(actorFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var actorFindByPkSql = `
+SELECT
+  id,
+  name,
+  name_search
+FROM public.actors
+` + actorPkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
+var actorDeleteByPkSql = `
+DELETE FROM public.actors
+WHERE id = :id;
 `
 
 // language=postgresql
 var actorDeleteSql = `
 DELETE FROM public.actors
-WHERE TRUE
-  AND id = :id
+WHERE id = :id
   AND name = :name
   AND name_search = :name_search;
 `

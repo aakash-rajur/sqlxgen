@@ -42,12 +42,24 @@ func (a *Actor) UpdateQuery() string {
 	return actorUpdateSql
 }
 
-func (a *Actor) FindQuery() string {
-	return actorFindSql
+func (a *Actor) FindFirstQuery() string {
+	return actorFindFirstSql
+}
+
+func (a *Actor) FindByPkQuery() string {
+	return actorFindByPkSql
+}
+
+func (a *Actor) CountQuery() string {
+	return actorCountSql
 }
 
 func (a *Actor) FindAllQuery() string {
 	return actorFindAllSql
+}
+
+func (a *Actor) DeleteByPkQuery() string {
+	return actorDeleteByPkSql
 }
 
 func (a *Actor) DeleteQuery() string {
@@ -83,18 +95,42 @@ RETURNING
 `
 
 // language=postgresql
-var actorFindSql = `
+var actorAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+`
+
+// language=postgresql
+var actorPkFieldsWhere = `
+WHERE TRUE
+  AND id = :id
+`
+
+// language=postgresql
+var actorFindFirstSql = `
 SELECT
   id,
   name,
   name_search
 FROM public.actors
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
-LIMIT 1;
-`
+` + actorAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var actorFindByPkSql = `
+SELECT
+  id,
+  name,
+  name_search
+FROM public.actors
+` + actorPkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var actorCountSql = `
+SELECT count(*) as count
+FROM public.actors
+` + actorAllFieldsWhere + ";"
 
 // language=postgresql
 var actorFindAllSql = `
@@ -103,10 +139,13 @@ SELECT
   name,
   name_search
 FROM public.actors
+` + actorAllFieldsWhere + ";"
+
+// language=postgresql
+var actorDeleteByPkSql = `
+DELETE FROM public.actors
 WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
+  AND id = :id;
 `
 
 // language=postgresql

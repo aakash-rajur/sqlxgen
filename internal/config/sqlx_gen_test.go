@@ -534,7 +534,7 @@ configs:
         path: gen/mysql/models
 `
 
-	filepath := path.Join(workDir, "sqlxgen.yaml")
+	filepath := path.Join(workDir, "sqlxgen.yml")
 
 	return os.WriteFile(filepath, []byte(content), 0644)
 }

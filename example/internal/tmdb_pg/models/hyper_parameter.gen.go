@@ -45,17 +45,47 @@ func (h *HyperParameter) UpdateQuery() string {
 	return hyperParameterUpdateSql
 }
 
-func (h *HyperParameter) FindQuery() string {
-	return hyperParameterFindSql
+func (h *HyperParameter) UpdateByPkQuery() string {
+	return hyperParameterUpdateByPkSql
+}
+
+func (h *HyperParameter) CountQuery() string {
+	return hyperParameterCountSql
 }
 
 func (h *HyperParameter) FindAllQuery() string {
 	return hyperParameterFindAllSql
 }
 
+func (h *HyperParameter) FindFirstQuery() string {
+	return hyperParameterFindFirstSql
+}
+
+func (h *HyperParameter) FindByPkQuery() string {
+	return hyperParameterFindByPkSql
+}
+
+func (h *HyperParameter) DeleteByPkQuery() string {
+	return hyperParameterDeleteByPkSql
+}
+
 func (h *HyperParameter) DeleteQuery() string {
 	return hyperParameterDeleteSql
 }
+
+// language=postgresql
+var hyperParameterAllFieldsWhere = `
+WHERE (CAST(:type AS TEXT) IS NULL or type = :type)
+  AND (CAST(:value AS TEXT) IS NULL or value = :value)
+  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
+  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search)
+`
+
+// language=postgresql
+var hyperParameterPkFieldsWhere = `
+WHERE type = :type
+  AND value = :value
+`
 
 // language=postgresql
 var hyperParameterInsertSql = `
@@ -77,15 +107,13 @@ RETURNING
 `
 
 // language=postgresql
-var hyperParameterUpdateSql = `
+var hyperParameterUpdateByPkSql = `
 UPDATE public.hyper_parameters
 SET
   type = :type,
   value = :value,
   friendly_name = :friendly_name
-WHERE TRUE
-  AND type = :type
-  AND value = :value
+` + hyperParameterPkFieldsWhere + `
 RETURNING
   type,
   value,
@@ -94,20 +122,25 @@ RETURNING
 `
 
 // language=postgresql
-var hyperParameterFindSql = `
-SELECT
+var hyperParameterUpdateSql = `
+UPDATE public.hyper_parameters
+SET
+  type = :type,
+  value = :value,
+  friendly_name = :friendly_name
+` + hyperParameterAllFieldsWhere + `
+RETURNING
   type,
   value,
   friendly_name,
-  friendly_name_search
-FROM public.hyper_parameters
-WHERE TRUE
-  AND (CAST(:type AS TEXT) IS NULL or type = :type)
-  AND (CAST(:value AS TEXT) IS NULL or value = :value)
-  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
-  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search)
-LIMIT 1;
+  friendly_name_search;
 `
+
+// language=postgresql
+var hyperParameterCountSql = `
+SELECT count(*) as count
+FROM public.hyper_parameters
+` + hyperParameterAllFieldsWhere + ";"
 
 // language=postgresql
 var hyperParameterFindAllSql = `
@@ -117,18 +150,34 @@ SELECT
   friendly_name,
   friendly_name_search
 FROM public.hyper_parameters
-WHERE TRUE
-  AND (CAST(:type AS TEXT) IS NULL or type = :type)
-  AND (CAST(:value AS TEXT) IS NULL or value = :value)
-  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
-  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search);
+` + hyperParameterAllFieldsWhere + ";"
+
+// language=postgresql
+var hyperParameterFindFirstSql = strings.TrimRight(hyperParameterFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var hyperParameterFindByPkSql = `
+SELECT
+  type,
+  value,
+  friendly_name,
+  friendly_name_search
+FROM public.hyper_parameters
+` + hyperParameterPkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
+var hyperParameterDeleteByPkSql = `
+DELETE FROM public.hyper_parameters
+WHERE type = :type
+  AND value = :value;
 `
 
 // language=postgresql
 var hyperParameterDeleteSql = `
 DELETE FROM public.hyper_parameters
-WHERE TRUE
-  AND type = :type
+WHERE type = :type
   AND value = :value
   AND friendly_name = :friendly_name
   AND friendly_name_search = :friendly_name_search;

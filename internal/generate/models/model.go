@@ -69,6 +69,9 @@ func (m model) generate(
 		"isLast": func(index int, array interface{}) bool {
 			return index == reflect.ValueOf(array).Len()-1
 		},
+		"isFirst": func(index int) bool {
+			return index == 0
+		},
 		"ToUpper": strings.ToUpper,
 		"ToJson": func(v interface{}) string {
 			b, _ := json.Marshal(v)
@@ -174,6 +177,7 @@ func newModel(
 	}
 
 	if len(pkFields) == 0 {
+		slog.Warn("no primary key found for table", "table", table.TableName)
 		pkFields = array.Filter(
 			fields,
 			func(each types.Field, index int) bool {

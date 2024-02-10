@@ -69,17 +69,58 @@ func (m *Movie) UpdateQuery() string {
 	return movieUpdateSql
 }
 
-func (m *Movie) FindQuery() string {
-	return movieFindSql
+func (m *Movie) UpdateByPkQuery() string {
+	return movieUpdateByPkSql
+}
+
+func (m *Movie) CountQuery() string {
+	return movieCountSql
 }
 
 func (m *Movie) FindAllQuery() string {
 	return movieFindAllSql
 }
 
+func (m *Movie) FindFirstQuery() string {
+	return movieFindFirstSql
+}
+
+func (m *Movie) FindByPkQuery() string {
+	return movieFindByPkSql
+}
+
+func (m *Movie) DeleteByPkQuery() string {
+	return movieDeleteByPkSql
+}
+
 func (m *Movie) DeleteQuery() string {
 	return movieDeleteSql
 }
+
+// language=mysql
+var movieAllFieldsWhere = `
+WHERE (CAST(:budget AS BIGINT) IS NULL or budget = :budget)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:keywords AS TEXT) IS NULL or keywords = :keywords)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT) IS NULL or popularity = :popularity)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS BIGINT) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS INT) IS NULL or runtime = :runtime)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:vote_average AS FLOAT) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT) IS NULL or vote_count = :vote_count)
+  AND (CAST(:id AS BIGINT) IS NULL or id = :id)
+`
+
+// language=mysql
+var moviePkFieldsWhere = `
+WHERE id = :id
+`
 
 // language=mysql
 var movieInsertSql = `
@@ -137,7 +178,7 @@ RETURNING
 `
 
 // language=mysql
-var movieUpdateSql = `
+var movieUpdateByPkSql = `
 UPDATE app.movies
 SET
   budget = :budget,
@@ -156,8 +197,7 @@ SET
   vote_average = :vote_average,
   vote_count = :vote_count,
   id = :id
-WHERE TRUE
-  AND id = :id
+` + moviePkFieldsWhere + `
 RETURNING
   budget,
   homepage,
@@ -178,8 +218,27 @@ RETURNING
 `
 
 // language=mysql
-var movieFindSql = `
-SELECT
+var movieUpdateSql = `
+UPDATE app.movies
+SET
+  budget = :budget,
+  homepage = :homepage,
+  keywords = :keywords,
+  original_language = :original_language,
+  original_title = :original_title,
+  overview = :overview,
+  popularity = :popularity,
+  release_date = :release_date,
+  revenue = :revenue,
+  runtime = :runtime,
+  status = :status,
+  tagline = :tagline,
+  title = :title,
+  vote_average = :vote_average,
+  vote_count = :vote_count,
+  id = :id
+` + movieAllFieldsWhere + `
+RETURNING
   budget,
   homepage,
   keywords,
@@ -195,27 +254,14 @@ SELECT
   title,
   vote_average,
   vote_count,
-  id
-FROM app.movies
-WHERE TRUE
-  AND (:budget IS NULL or budget = :budget)
-  AND (:homepage IS NULL or homepage = :homepage)
-  AND (:keywords IS NULL or keywords = :keywords)
-  AND (:original_language IS NULL or original_language = :original_language)
-  AND (:original_title IS NULL or original_title = :original_title)
-  AND (:overview IS NULL or overview = :overview)
-  AND (:popularity IS NULL or popularity = :popularity)
-  AND (:release_date IS NULL or release_date = :release_date)
-  AND (:revenue IS NULL or revenue = :revenue)
-  AND (:runtime IS NULL or runtime = :runtime)
-  AND (:status IS NULL or status = :status)
-  AND (:tagline IS NULL or tagline = :tagline)
-  AND (:title IS NULL or title = :title)
-  AND (:vote_average IS NULL or vote_average = :vote_average)
-  AND (:vote_count IS NULL or vote_count = :vote_count)
-  AND (:id IS NULL or id = :id)
-LIMIT 1;
+  id;
 `
+
+// language=mysql
+var movieCountSql = `
+SELECT count(*) as count
+FROM app.movies
+` + movieAllFieldsWhere + ";"
 
 // language=mysql
 var movieFindAllSql = `
@@ -237,30 +283,45 @@ SELECT
   vote_count,
   id
 FROM app.movies
-WHERE TRUE
-  AND (:budget IS NULL or budget = :budget)
-  AND (:homepage IS NULL or homepage = :homepage)
-  AND (:keywords IS NULL or keywords = :keywords)
-  AND (:original_language IS NULL or original_language = :original_language)
-  AND (:original_title IS NULL or original_title = :original_title)
-  AND (:overview IS NULL or overview = :overview)
-  AND (:popularity IS NULL or popularity = :popularity)
-  AND (:release_date IS NULL or release_date = :release_date)
-  AND (:revenue IS NULL or revenue = :revenue)
-  AND (:runtime IS NULL or runtime = :runtime)
-  AND (:status IS NULL or status = :status)
-  AND (:tagline IS NULL or tagline = :tagline)
-  AND (:title IS NULL or title = :title)
-  AND (:vote_average IS NULL or vote_average = :vote_average)
-  AND (:vote_count IS NULL or vote_count = :vote_count)
-  AND (:id IS NULL or id = :id);
+` + movieAllFieldsWhere + ";"
+
+// language=mysql
+var movieFindFirstSql = strings.TrimRight(movieFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var movieFindByPkSql = `
+SELECT
+  budget,
+  homepage,
+  keywords,
+  original_language,
+  original_title,
+  overview,
+  popularity,
+  release_date,
+  revenue,
+  runtime,
+  status,
+  tagline,
+  title,
+  vote_average,
+  vote_count,
+  id
+FROM app.movies
+` + moviePkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var movieDeleteByPkSql = `
+DELETE FROM app.movies
+WHERE id = :id;
 `
 
 // language=mysql
 var movieDeleteSql = `
 DELETE FROM app.movies
-WHERE TRUE
-  AND budget = :budget
+WHERE budget = :budget
   AND homepage = :homepage
   AND keywords = :keywords
   AND original_language = :original_language

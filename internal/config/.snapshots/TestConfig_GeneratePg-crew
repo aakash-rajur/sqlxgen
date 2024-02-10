@@ -42,12 +42,24 @@ func (c *Crew) UpdateQuery() string {
 	return crewUpdateSql
 }
 
-func (c *Crew) FindQuery() string {
-	return crewFindSql
+func (c *Crew) FindFirstQuery() string {
+	return crewFindFirstSql
+}
+
+func (c *Crew) FindByPkQuery() string {
+	return crewFindByPkSql
+}
+
+func (c *Crew) CountQuery() string {
+	return crewCountSql
 }
 
 func (c *Crew) FindAllQuery() string {
 	return crewFindAllSql
+}
+
+func (c *Crew) DeleteByPkQuery() string {
+	return crewDeleteByPkSql
 }
 
 func (c *Crew) DeleteQuery() string {
@@ -83,18 +95,42 @@ RETURNING
 `
 
 // language=postgresql
-var crewFindSql = `
+var crewAllFieldsWhere = `
+WHERE TRUE
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+`
+
+// language=postgresql
+var crewPkFieldsWhere = `
+WHERE TRUE
+  AND id = :id
+`
+
+// language=postgresql
+var crewFindFirstSql = `
 SELECT
   id,
   name,
   name_search
 FROM public.crew
-WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
-LIMIT 1;
-`
+` + crewAllFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var crewFindByPkSql = `
+SELECT
+  id,
+  name,
+  name_search
+FROM public.crew
+` + crewPkFieldsWhere + " LIMIT 1;"
+
+// language=postgresql
+var crewCountSql = `
+SELECT count(*) as count
+FROM public.crew
+` + crewAllFieldsWhere + ";"
 
 // language=postgresql
 var crewFindAllSql = `
@@ -103,10 +139,13 @@ SELECT
   name,
   name_search
 FROM public.crew
+` + crewAllFieldsWhere + ";"
+
+// language=postgresql
+var crewDeleteByPkSql = `
+DELETE FROM public.crew
 WHERE TRUE
-  AND (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
+  AND id = :id;
 `
 
 // language=postgresql

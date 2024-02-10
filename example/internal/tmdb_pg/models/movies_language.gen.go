@@ -41,17 +41,45 @@ func (m *MoviesLanguage) UpdateQuery() string {
 	return moviesLanguageUpdateSql
 }
 
-func (m *MoviesLanguage) FindQuery() string {
-	return moviesLanguageFindSql
+func (m *MoviesLanguage) UpdateByPkQuery() string {
+	return moviesLanguageUpdateByPkSql
+}
+
+func (m *MoviesLanguage) CountQuery() string {
+	return moviesLanguageCountSql
 }
 
 func (m *MoviesLanguage) FindAllQuery() string {
 	return moviesLanguageFindAllSql
 }
 
+func (m *MoviesLanguage) FindFirstQuery() string {
+	return moviesLanguageFindFirstSql
+}
+
+func (m *MoviesLanguage) FindByPkQuery() string {
+	return moviesLanguageFindByPkSql
+}
+
+func (m *MoviesLanguage) DeleteByPkQuery() string {
+	return moviesLanguageDeleteByPkSql
+}
+
 func (m *MoviesLanguage) DeleteQuery() string {
 	return moviesLanguageDeleteSql
 }
+
+// language=postgresql
+var moviesLanguageAllFieldsWhere = `
+WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id)
+`
+
+// language=postgresql
+var moviesLanguagePkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND language_id = :language_id
+`
 
 // language=postgresql
 var moviesLanguageInsertSql = `
@@ -69,30 +97,34 @@ RETURNING
 `
 
 // language=postgresql
-var moviesLanguageUpdateSql = `
+var moviesLanguageUpdateByPkSql = `
 UPDATE public.movies_languages
 SET
   movie_id = :movie_id,
   language_id = :language_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND language_id = :language_id
+` + moviesLanguagePkFieldsWhere + `
 RETURNING
   movie_id,
   language_id;
 `
 
 // language=postgresql
-var moviesLanguageFindSql = `
-SELECT
+var moviesLanguageUpdateSql = `
+UPDATE public.movies_languages
+SET
+  movie_id = :movie_id,
+  language_id = :language_id
+` + moviesLanguageAllFieldsWhere + `
+RETURNING
   movie_id,
-  language_id
-FROM public.movies_languages
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id)
-LIMIT 1;
+  language_id;
 `
+
+// language=postgresql
+var moviesLanguageCountSql = `
+SELECT count(*) as count
+FROM public.movies_languages
+` + moviesLanguageAllFieldsWhere + ";"
 
 // language=postgresql
 var moviesLanguageFindAllSql = `
@@ -100,15 +132,31 @@ SELECT
   movie_id,
   language_id
 FROM public.movies_languages
-WHERE TRUE
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id);
+` + moviesLanguageAllFieldsWhere + ";"
+
+// language=postgresql
+var moviesLanguageFindFirstSql = strings.TrimRight(moviesLanguageFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesLanguageFindByPkSql = `
+SELECT
+  movie_id,
+  language_id
+FROM public.movies_languages
+` + moviesLanguagePkFieldsWhere + `
+LIMIT 1;`
+
+// language=postgresql
+var moviesLanguageDeleteByPkSql = `
+DELETE FROM public.movies_languages
+WHERE movie_id = :movie_id
+  AND language_id = :language_id;
 `
 
 // language=postgresql
 var moviesLanguageDeleteSql = `
 DELETE FROM public.movies_languages
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND language_id = :language_id;
 `
