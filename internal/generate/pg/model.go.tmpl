@@ -141,7 +141,7 @@ WHERE TRUE
 var {{ .CamelName }}DeleteSql = `
 DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
-{{- range $pkFields }}
+{{- range $selectFields }}
   AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
 {{- end }};
 `
