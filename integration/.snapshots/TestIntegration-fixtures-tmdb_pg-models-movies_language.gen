@@ -53,6 +53,10 @@ func (m *MoviesLanguage) DeleteQuery() string {
 	return moviesLanguageDeleteSql
 }
 
+func (m *MoviesLanguage) DeleteManyQuery() string {
+	return moviesLanguageDeleteManySql
+}
+
 // language=postgresql
 var moviesLanguageInsertSql = `
 INSERT INTO public.movies_languages(
@@ -111,5 +115,13 @@ DELETE FROM public.movies_languages
 WHERE TRUE
   AND movie_id = :movie_id
   AND language_id = :language_id;
+`
+
+// language=postgresql
+var moviesLanguageDeleteManySql = `
+DELETE FROM public.movies_languages
+WHERE TRUE
+  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+  AND (CAST(:language_id AS TEXT) IS NULL or language_id = :language_id);
 `
 

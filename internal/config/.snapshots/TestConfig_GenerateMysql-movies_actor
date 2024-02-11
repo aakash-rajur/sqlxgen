@@ -57,6 +57,10 @@ func (m *MoviesActor) DeleteQuery() string {
 	return moviesActorDeleteSql
 }
 
+func (m *MoviesActor) DeleteManyQuery() string {
+	return moviesActorDeleteManySql
+}
+
 // language=mysql
 var moviesActorInsertSql = `
 INSERT INTO app.movies_actors(
@@ -135,5 +139,15 @@ WHERE TRUE
   AND cast_order = :cast_order
   AND movie_id = :movie_id
   AND actor_id = :actor_id;
+`
+
+// language=mysql
+var moviesActorDeleteManySql = `
+DELETE FROM app.movies_actors
+WHERE TRUE
+  AND (:cast IS NULL or cast = :cast)
+  AND (:cast_order IS NULL or cast_order = :cast_order)
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:actor_id IS NULL or actor_id = :actor_id);
 `
 
