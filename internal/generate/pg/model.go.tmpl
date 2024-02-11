@@ -71,6 +71,10 @@ func ({{ $receiverName }} *{{ .PascalName }}) DeleteQuery() string {
   return {{ .CamelName }}DeleteSql
 }
 
+func ({{ $receiverName }} *{{ .PascalName }}) DeleteManyQuery() string {
+  return {{ .CamelName }}DeleteManySql
+}
+
 // language=postgresql
 var {{ .CamelName }}InsertSql = `
 INSERT INTO {{ .Table.SchemaName }}.{{ .Table.TableName }}(
@@ -143,6 +147,15 @@ DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 WHERE TRUE
 {{- range $selectFields }}
   AND {{ .Column.ColumnName }} = :{{ .Column.ColumnName }}
+{{- end }};
+`
+
+// language=postgresql
+var {{ .CamelName }}DeleteManySql = `
+DELETE FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
+WHERE TRUE
+{{- range $selectFields }}
+  AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
 {{- end }};
 `
 {{- end }}

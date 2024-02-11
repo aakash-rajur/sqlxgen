@@ -174,7 +174,8 @@ func newModel(
 	}
 
 	if len(pkFields) == 0 {
-		slog.Warn("no primary key found for table", "table", table.TableName)
+		slog.Warn("no primary key found", "table", table.TableName)
+
 		pkFields = array.Filter(
 			fields,
 			func(each types.Field, index int) bool {
