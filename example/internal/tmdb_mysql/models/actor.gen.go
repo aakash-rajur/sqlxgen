@@ -52,6 +52,10 @@ func (a *Actor) DeleteQuery() string {
 	return actorDeleteSql
 }
 
+func (a *Actor) DeleteManyQuery() string {
+	return actorDeleteManySql
+}
+
 // language=mysql
 var actorInsertSql = `
 INSERT INTO app.actors(
@@ -107,4 +111,12 @@ DELETE FROM app.actors
 WHERE TRUE
   AND name = :name
   AND id = :id;
+`
+
+// language=mysql
+var actorDeleteManySql = `
+DELETE FROM app.actors
+WHERE TRUE
+  AND (:name IS NULL or name = :name)
+  AND (:id IS NULL or id = :id);
 `

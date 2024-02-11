@@ -57,6 +57,10 @@ func (m *MoviesCrew) DeleteQuery() string {
 	return moviesCrewDeleteSql
 }
 
+func (m *MoviesCrew) DeleteManyQuery() string {
+	return moviesCrewDeleteManySql
+}
+
 // language=mysql
 var moviesCrewInsertSql = `
 INSERT INTO app.movies_crew(
@@ -135,4 +139,14 @@ WHERE TRUE
   AND job_id = :job_id
   AND movie_id = :movie_id
   AND crew_id = :crew_id;
+`
+
+// language=mysql
+var moviesCrewDeleteManySql = `
+DELETE FROM app.movies_crew
+WHERE TRUE
+  AND (:department_id IS NULL or department_id = :department_id)
+  AND (:job_id IS NULL or job_id = :job_id)
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:crew_id IS NULL or crew_id = :crew_id);
 `

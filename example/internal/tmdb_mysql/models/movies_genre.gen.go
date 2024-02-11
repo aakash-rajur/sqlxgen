@@ -53,6 +53,10 @@ func (m *MoviesGenre) DeleteQuery() string {
 	return moviesGenreDeleteSql
 }
 
+func (m *MoviesGenre) DeleteManyQuery() string {
+	return moviesGenreDeleteManySql
+}
+
 // language=mysql
 var moviesGenreInsertSql = `
 INSERT INTO app.movies_genres(
@@ -111,4 +115,12 @@ DELETE FROM app.movies_genres
 WHERE TRUE
   AND movie_id = :movie_id
   AND genre_id = :genre_id;
+`
+
+// language=mysql
+var moviesGenreDeleteManySql = `
+DELETE FROM app.movies_genres
+WHERE TRUE
+  AND (:movie_id IS NULL or movie_id = :movie_id)
+  AND (:genre_id IS NULL or genre_id = :genre_id);
 `

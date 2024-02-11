@@ -52,6 +52,10 @@ func (c *Company) DeleteQuery() string {
 	return companyDeleteSql
 }
 
+func (c *Company) DeleteManyQuery() string {
+	return companyDeleteManySql
+}
+
 // language=mysql
 var companyInsertSql = `
 INSERT INTO app.companies(
@@ -109,4 +113,12 @@ DELETE FROM app.companies
 WHERE TRUE
   AND name = :name
   AND id = :id;
+`
+
+// language=mysql
+var companyDeleteManySql = `
+DELETE FROM app.companies
+WHERE TRUE
+  AND (:name IS NULL or name = :name)
+  AND (:id IS NULL or id = :id);
 `

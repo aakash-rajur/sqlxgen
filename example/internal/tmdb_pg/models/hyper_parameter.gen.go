@@ -57,6 +57,10 @@ func (h *HyperParameter) DeleteQuery() string {
 	return hyperParameterDeleteSql
 }
 
+func (h *HyperParameter) DeleteManyQuery() string {
+	return hyperParameterDeleteManySql
+}
+
 // language=postgresql
 var hyperParameterInsertSql = `
 INSERT INTO public.hyper_parameters(
@@ -132,4 +136,14 @@ WHERE TRUE
   AND value = :value
   AND friendly_name = :friendly_name
   AND friendly_name_search = :friendly_name_search;
+`
+
+// language=postgresql
+var hyperParameterDeleteManySql = `
+DELETE FROM public.hyper_parameters
+WHERE TRUE
+  AND (CAST(:type AS TEXT) IS NULL or type = :type)
+  AND (CAST(:value AS TEXT) IS NULL or value = :value)
+  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
+  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search);
 `

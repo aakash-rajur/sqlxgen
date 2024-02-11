@@ -54,6 +54,10 @@ func (c *Company) DeleteQuery() string {
 	return companyDeleteSql
 }
 
+func (c *Company) DeleteManyQuery() string {
+	return companyDeleteManySql
+}
+
 // language=postgresql
 var companyInsertSql = `
 INSERT INTO public.companies(
@@ -118,4 +122,13 @@ WHERE TRUE
   AND id = :id
   AND name = :name
   AND name_search = :name_search;
+`
+
+// language=postgresql
+var companyDeleteManySql = `
+DELETE FROM public.companies
+WHERE TRUE
+  AND (CAST(:id AS INT8) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
 `

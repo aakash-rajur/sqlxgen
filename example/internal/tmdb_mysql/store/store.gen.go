@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"reflect"
 	"regexp"
 
@@ -152,10 +153,56 @@ func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
 	return result, nil
 }
 
-func Delete[T model[P], P any](db Database, instance T) error {
-	_, err := db.NamedExec(instance.DeleteQuery(), instance)
+func Delete[T model[P], P any](db Database, instances ...T) (int64, error) {
+	deleteCount := int64(0)
 
-	return err
+	for _, instance := range instances {
+		result, err := db.NamedExec(instance.DeleteQuery(), instance)
+
+		if err != nil {
+			slog.Error("unable to get affected row count", "instance", instance)
+
+			continue
+		}
+
+		affected, err := result.RowsAffected()
+
+		if err != nil {
+			slog.Error("unable to get rows affected by instance %s", instance)
+
+			continue
+		}
+
+		deleteCount += affected
+	}
+
+	return deleteCount, nil
+}
+
+func DeleteMany[T model[P], P any](db Database, instances ...T) (int64, error) {
+	deleteCount := int64(0)
+
+	for _, instance := range instances {
+		result, err := db.NamedExec(instance.DeleteManyQuery(), instance)
+
+		if err != nil {
+			slog.Error("unable to get affected row count", "instance", instance)
+
+			continue
+		}
+
+		affected, err := result.RowsAffected()
+
+		if err != nil {
+			slog.Error("unable to get rows affected by instance %s", instance)
+
+			continue
+		}
+
+		deleteCount += affected
+	}
+
+	return deleteCount, nil
 }
 
 type model[P any] interface {
@@ -174,6 +221,8 @@ type model[P any] interface {
 	FindAllQuery() string
 
 	DeleteQuery() string
+
+	DeleteManyQuery() string
 }
 
 // custom sql query

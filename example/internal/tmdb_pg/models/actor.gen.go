@@ -54,6 +54,10 @@ func (a *Actor) DeleteQuery() string {
 	return actorDeleteSql
 }
 
+func (a *Actor) DeleteManyQuery() string {
+	return actorDeleteManySql
+}
+
 // language=postgresql
 var actorInsertSql = `
 INSERT INTO public.actors(
@@ -116,4 +120,13 @@ WHERE TRUE
   AND id = :id
   AND name = :name
   AND name_search = :name_search;
+`
+
+// language=postgresql
+var actorDeleteManySql = `
+DELETE FROM public.actors
+WHERE TRUE
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:name AS TEXT) IS NULL or name = :name)
+  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search);
 `

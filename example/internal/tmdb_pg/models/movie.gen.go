@@ -86,6 +86,10 @@ func (m *Movie) DeleteQuery() string {
 	return movieDeleteSql
 }
 
+func (m *Movie) DeleteManyQuery() string {
+	return movieDeleteManySql
+}
+
 // language=postgresql
 var movieInsertSql = `
 INSERT INTO public.movies(
@@ -295,4 +299,28 @@ WHERE TRUE
   AND title_search = :title_search
   AND vote_average = :vote_average
   AND vote_count = :vote_count;
+`
+
+// language=postgresql
+var movieDeleteManySql = `
+DELETE FROM public.movies
+WHERE TRUE
+  AND (CAST(:id AS INT4) IS NULL or id = :id)
+  AND (CAST(:budget AS INT8) IS NULL or budget = :budget)
+  AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
+  AND (CAST(:keywords AS TEXT) IS NULL or keywords = :keywords)
+  AND (CAST(:keywords_search AS TSVECTOR) IS NULL or keywords_search = :keywords_search)
+  AND (CAST(:original_language AS TEXT) IS NULL or original_language = :original_language)
+  AND (CAST(:original_title AS TEXT) IS NULL or original_title = :original_title)
+  AND (CAST(:overview AS TEXT) IS NULL or overview = :overview)
+  AND (CAST(:popularity AS FLOAT8) IS NULL or popularity = :popularity)
+  AND (CAST(:release_date AS DATE) IS NULL or release_date = :release_date)
+  AND (CAST(:revenue AS INT8) IS NULL or revenue = :revenue)
+  AND (CAST(:runtime AS INT4) IS NULL or runtime = :runtime)
+  AND (CAST(:status AS TEXT) IS NULL or status = :status)
+  AND (CAST(:tagline AS TEXT) IS NULL or tagline = :tagline)
+  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+  AND (CAST(:title_search AS TSVECTOR) IS NULL or title_search = :title_search)
+  AND (CAST(:vote_average AS FLOAT8) IS NULL or vote_average = :vote_average)
+  AND (CAST(:vote_count AS INT4) IS NULL or vote_count = :vote_count);
 `
