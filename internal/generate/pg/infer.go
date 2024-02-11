@@ -1,6 +1,10 @@
 package go_type
 
 import (
+	"fmt"
+	"log/slog"
+	"path/filepath"
+
 	"github.com/aakash-rajur/sqlxgen/internal/generate/types"
 	"github.com/aakash-rajur/sqlxgen/internal/introspect"
 )
@@ -86,14 +90,16 @@ func fromSingle(storePackageDir string, column introspect.Column) (types.GoType,
 
 		goType.Import = "encoding/json"
 
+		_, storePkg := filepath.Split(storePackageDir)
+
 		if column.JsonType == "array" {
-			goType.GoType = "*store.JsonArray"
+			goType.GoType = fmt.Sprintf("*%s.JsonArray", storePkg)
 
 			goType.Import = storePackageDir
 		}
 
 		if column.JsonType == "object" {
-			goType.GoType = "*store.JsonObject"
+			goType.GoType = fmt.Sprintf("*%s.JsonObject", storePkg)
 
 			goType.Import = storePackageDir
 		}
@@ -112,7 +118,7 @@ func fromSingle(storePackageDir string, column introspect.Column) (types.GoType,
 
 		return goType, nil
 
-	case "text", "string", "citext", "name", "bpchar", "tsquery", "pg_catalog.varchar", "pg_catalog.bpchar", "pg_catalog.tsquery":
+	case "text", "string", "citext", "name", "bpchar", "tsquery", "varchar", "pg_catalog.varchar", "pg_catalog.bpchar", "pg_catalog.tsquery":
 		goType.GoType = "*string"
 
 		return goType, nil
@@ -153,6 +159,8 @@ func fromSingle(storePackageDir string, column introspect.Column) (types.GoType,
 
 	case "void", "pg_catalog.void":
 		return goType, nil
+	default:
+		slog.Warn("Unknown column type, using interface{} as default", column.ColumnName, column.Type)
 	}
 
 	return goType, nil
