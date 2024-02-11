@@ -12,6 +12,12 @@
 2. Run your query without selecting any rows to generate model code for the output and input structs.
 3. support for postgres and mysql databases.
 
+## Intent
+1. provide the smallest surface area for code generation that accomplishes the following:
+   1. generate crud operations for tables.
+   2. generate query model code.
+2. database first and sql first approach. 
+
 ## Installation
 ### homebrew
 ```bash
