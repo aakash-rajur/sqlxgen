@@ -142,6 +142,7 @@ following query generates [get_actor.gen.go](example/internal/tmdb_pg/api/get_ac
       writing queries, which is not sql. Fine in most cases but if i want to run that query in my database client, 
       i have to rewrite it.
    4. does not generate crud operations for my tables.
+4. [sqlboiler](https://github.com/volatiletech/sqlboiler)
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
@@ -156,3 +157,4 @@ Please feel free to [open an issue](https://github.com/aakash-rajur/sqlxgen/issu
 1. [TMDB](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
 2. [sqlc](https://github.com/sqlc-dev/sqlc)
 3. [sqlx](https://github.com/jmoiron/sqlx)
+4. [sqlboiler](https://github.com/volatiletech/sqlboiler)
