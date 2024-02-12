@@ -17,4 +17,4 @@ func main() {
 	utils.ExitWithError(err)
 }
 
-var Version = "dev"
+var Version = "dev-modified"

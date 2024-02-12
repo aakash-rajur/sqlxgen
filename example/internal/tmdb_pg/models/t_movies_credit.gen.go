@@ -44,8 +44,8 @@ func (t *TMoviesCredit) InsertQuery() string {
 	return tMoviesCreditInsertSql
 }
 
-func (t *TMoviesCredit) UpdateQuery() string {
-	return tMoviesCreditUpdateSql
+func (t *TMoviesCredit) UpdateAllQuery() string {
+	return tMoviesCreditUpdateAllSql
 }
 
 func (t *TMoviesCredit) UpdateByPkQuery() string {
@@ -72,8 +72,8 @@ func (t *TMoviesCredit) DeleteByPkQuery() string {
 	return tMoviesCreditDeleteByPkSql
 }
 
-func (t *TMoviesCredit) DeleteQuery() string {
-	return tMoviesCreditDeleteSql
+func (t *TMoviesCredit) DeleteAllQuery() string {
+	return tMoviesCreditDeleteAllSql
 }
 
 // language=postgresql
@@ -131,7 +131,7 @@ RETURNING
 `
 
 // language=postgresql
-var tMoviesCreditUpdateSql = `
+var tMoviesCreditUpdateAllSql = `
 UPDATE public.t_movies_credits
 SET
   casting = :casting,
@@ -187,7 +187,7 @@ WHERE casting = :casting
 `
 
 // language=postgresql
-var tMoviesCreditDeleteSql = `
+var tMoviesCreditDeleteAllSql = `
 DELETE FROM public.t_movies_credits
 WHERE casting = :casting
   AND crew = :crew

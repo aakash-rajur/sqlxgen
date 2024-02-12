@@ -41,8 +41,8 @@ func (h *HyperParameter) InsertQuery() string {
 	return hyperParameterInsertSql
 }
 
-func (h *HyperParameter) UpdateQuery() string {
-	return hyperParameterUpdateSql
+func (h *HyperParameter) UpdateAllQuery() string {
+	return hyperParameterUpdateAllSql
 }
 
 func (h *HyperParameter) UpdateByPkQuery() string {
@@ -69,8 +69,8 @@ func (h *HyperParameter) DeleteByPkQuery() string {
 	return hyperParameterDeleteByPkSql
 }
 
-func (h *HyperParameter) DeleteQuery() string {
-	return hyperParameterDeleteSql
+func (h *HyperParameter) DeleteAllQuery() string {
+	return hyperParameterDeleteAllSql
 }
 
 // language=postgresql
@@ -123,7 +123,7 @@ RETURNING
 `
 
 // language=postgresql
-var hyperParameterUpdateSql = `
+var hyperParameterUpdateAllSql = `
 UPDATE public.hyper_parameters
 SET
   type = :type,
@@ -176,7 +176,7 @@ WHERE type = :type
 `
 
 // language=postgresql
-var hyperParameterDeleteSql = `
+var hyperParameterDeleteAllSql = `
 DELETE FROM public.hyper_parameters
 WHERE type = :type
   AND value = :value

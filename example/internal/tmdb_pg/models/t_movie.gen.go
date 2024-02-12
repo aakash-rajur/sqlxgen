@@ -74,8 +74,8 @@ func (t *TMovie) InsertQuery() string {
 	return tMovieInsertSql
 }
 
-func (t *TMovie) UpdateQuery() string {
-	return tMovieUpdateSql
+func (t *TMovie) UpdateAllQuery() string {
+	return tMovieUpdateAllSql
 }
 
 func (t *TMovie) UpdateByPkQuery() string {
@@ -102,8 +102,8 @@ func (t *TMovie) DeleteByPkQuery() string {
 	return tMovieDeleteByPkSql
 }
 
-func (t *TMovie) DeleteQuery() string {
-	return tMovieDeleteSql
+func (t *TMovie) DeleteAllQuery() string {
+	return tMovieDeleteAllSql
 }
 
 // language=postgresql
@@ -254,7 +254,7 @@ RETURNING
 `
 
 // language=postgresql
-var tMovieUpdateSql = `
+var tMovieUpdateAllSql = `
 UPDATE public.t_movies
 SET
   id = :id,
@@ -371,7 +371,7 @@ WHERE id = :id;
 `
 
 // language=postgresql
-var tMovieDeleteSql = `
+var tMovieDeleteAllSql = `
 DELETE FROM public.t_movies
 WHERE id = :id
   AND budget = :budget

@@ -38,8 +38,8 @@ func (c *Crew) InsertQuery() string {
 	return crewInsertSql
 }
 
-func (c *Crew) UpdateQuery() string {
-	return crewUpdateSql
+func (c *Crew) UpdateAllQuery() string {
+	return crewUpdateAllSql
 }
 
 func (c *Crew) UpdateByPkQuery() string {
@@ -66,8 +66,8 @@ func (c *Crew) DeleteByPkQuery() string {
 	return crewDeleteByPkSql
 }
 
-func (c *Crew) DeleteQuery() string {
-	return crewDeleteSql
+func (c *Crew) DeleteAllQuery() string {
+	return crewDeleteAllSql
 }
 
 // language=postgresql
@@ -111,7 +111,7 @@ RETURNING
 `
 
 // language=postgresql
-var crewUpdateSql = `
+var crewUpdateAllSql = `
 UPDATE public.crew
 SET
   id = :id,
@@ -159,7 +159,7 @@ WHERE id = :id;
 `
 
 // language=postgresql
-var crewDeleteSql = `
+var crewDeleteAllSql = `
 DELETE FROM public.crew
 WHERE id = :id
   AND name = :name

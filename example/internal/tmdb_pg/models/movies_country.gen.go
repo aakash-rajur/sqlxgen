@@ -37,8 +37,8 @@ func (m *MoviesCountry) InsertQuery() string {
 	return moviesCountryInsertSql
 }
 
-func (m *MoviesCountry) UpdateQuery() string {
-	return moviesCountryUpdateSql
+func (m *MoviesCountry) UpdateAllQuery() string {
+	return moviesCountryUpdateAllSql
 }
 
 func (m *MoviesCountry) UpdateByPkQuery() string {
@@ -65,8 +65,8 @@ func (m *MoviesCountry) DeleteByPkQuery() string {
 	return moviesCountryDeleteByPkSql
 }
 
-func (m *MoviesCountry) DeleteQuery() string {
-	return moviesCountryDeleteSql
+func (m *MoviesCountry) DeleteAllQuery() string {
+	return moviesCountryDeleteAllSql
 }
 
 // language=postgresql
@@ -110,7 +110,7 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCountryUpdateSql = `
+var moviesCountryUpdateAllSql = `
 UPDATE public.movies_countries
 SET
   movie_id = :movie_id,
@@ -156,7 +156,7 @@ WHERE movie_id = :movie_id
 `
 
 // language=postgresql
-var moviesCountryDeleteSql = `
+var moviesCountryDeleteAllSql = `
 DELETE FROM public.movies_countries
 WHERE movie_id = :movie_id
   AND country_id = :country_id;

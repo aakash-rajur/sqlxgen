@@ -88,8 +88,8 @@ func (m *Movie) InsertQuery() string {
 	return movieInsertSql
 }
 
-func (m *Movie) UpdateQuery() string {
-	return movieUpdateSql
+func (m *Movie) UpdateAllQuery() string {
+	return movieUpdateAllSql
 }
 
 func (m *Movie) UpdateByPkQuery() string {
@@ -116,8 +116,8 @@ func (m *Movie) DeleteByPkQuery() string {
 	return movieDeleteByPkSql
 }
 
-func (m *Movie) DeleteQuery() string {
-	return movieDeleteSql
+func (m *Movie) DeleteAllQuery() string {
+	return movieDeleteAllSql
 }
 
 // language=postgresql
@@ -302,7 +302,7 @@ RETURNING
 `
 
 // language=postgresql
-var movieUpdateSql = `
+var movieUpdateAllSql = `
 UPDATE public.movies
 SET
   id = :id,
@@ -445,7 +445,7 @@ WHERE id = :id;
 `
 
 // language=postgresql
-var movieDeleteSql = `
+var movieDeleteAllSql = `
 DELETE FROM public.movies
 WHERE id = :id
   AND budget = :budget

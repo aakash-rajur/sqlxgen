@@ -38,8 +38,8 @@ func (a *Actor) InsertQuery() string {
 	return actorInsertSql
 }
 
-func (a *Actor) UpdateQuery() string {
-	return actorUpdateSql
+func (a *Actor) UpdateAllQuery() string {
+	return actorUpdateAllSql
 }
 
 func (a *Actor) UpdateByPkQuery() string {
@@ -66,8 +66,8 @@ func (a *Actor) DeleteByPkQuery() string {
 	return actorDeleteByPkSql
 }
 
-func (a *Actor) DeleteQuery() string {
-	return actorDeleteSql
+func (a *Actor) DeleteAllQuery() string {
+	return actorDeleteAllSql
 }
 
 // language=postgresql
@@ -111,7 +111,7 @@ RETURNING
 `
 
 // language=postgresql
-var actorUpdateSql = `
+var actorUpdateAllSql = `
 UPDATE public.actors
 SET
   id = :id,
@@ -159,7 +159,7 @@ WHERE id = :id;
 `
 
 // language=postgresql
-var actorDeleteSql = `
+var actorDeleteAllSql = `
 DELETE FROM public.actors
 WHERE id = :id
   AND name = :name

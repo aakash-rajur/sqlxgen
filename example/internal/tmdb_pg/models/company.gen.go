@@ -38,8 +38,8 @@ func (c *Company) InsertQuery() string {
 	return companyInsertSql
 }
 
-func (c *Company) UpdateQuery() string {
-	return companyUpdateSql
+func (c *Company) UpdateAllQuery() string {
+	return companyUpdateAllSql
 }
 
 func (c *Company) UpdateByPkQuery() string {
@@ -66,8 +66,8 @@ func (c *Company) DeleteByPkQuery() string {
 	return companyDeleteByPkSql
 }
 
-func (c *Company) DeleteQuery() string {
-	return companyDeleteSql
+func (c *Company) DeleteAllQuery() string {
+	return companyDeleteAllSql
 }
 
 // language=postgresql
@@ -113,7 +113,7 @@ RETURNING
 `
 
 // language=postgresql
-var companyUpdateSql = `
+var companyUpdateAllSql = `
 UPDATE public.companies
 SET
   id = :id,
@@ -161,7 +161,7 @@ WHERE id = :id;
 `
 
 // language=postgresql
-var companyDeleteSql = `
+var companyDeleteAllSql = `
 DELETE FROM public.companies
 WHERE id = :id
   AND name = :name

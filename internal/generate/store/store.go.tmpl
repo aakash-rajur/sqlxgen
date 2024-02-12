@@ -39,7 +39,8 @@ func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 	inserts := make([]T, 0)
 
 	for _, instance := range instances {
-    rows, err := db.NamedQuery(instance.InsertQuery(), instance)
+     insertSql := instance.InsertQuery()
+    rows, err := db.NamedQuery(insertSql, instance)
 
 		if err != nil {
 			return nil, err
@@ -71,9 +72,33 @@ func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 	return inserts, nil
 }
 
+func UpdateByPk[T model[P], P any](db Database, instance T) (T, error) {
 
-// TODO: implement bulk insert
-// func InsertBulk[T model[P], P any](db Database, instances ...T) (int64, error) {}
+	updateSql := instance.UpdateByPkQuery()
+	rows, err := db.NamedQuery(updateSql, instance)
+
+	if err != nil {
+		return nil, err
+	}
+
+	hasNext := rows.Next()
+	if !hasNext {
+		return nil, fmt.Errorf("unable to update %s", GetTypeName(instance))
+	}
+
+	updated := new(P)
+	err = rows.StructScan(updated)
+	if err != nil {
+		return nil, err
+	}
+
+	err = rows.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	return updated, nil
+}
 
 func UpdateOne[T model[P], P any](db Database, instance T) (T, error) {
 
@@ -85,7 +110,7 @@ func UpdateOne[T model[P], P any](db Database, instance T) (T, error) {
     return nil, fmt.Errorf("update-one %s would have matched %d rows", GetTypeName(instance), *count)
   }
 
-  updates, err := Update[T](db, instance)
+  updates, err := UpdateMany[T](db, instance)
 
   if err != nil {
     return nil, err
@@ -93,11 +118,12 @@ func UpdateOne[T model[P], P any](db Database, instance T) (T, error) {
   return updates[0], nil
 }
 
-func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
+func UpdateMany[T model[P], P any](db Database, instances ...T) ([]T, error) {
   updates := make([]T, 0)
 
 	for _, instance := range instances {
-    rows, err := db.NamedQuery(instance.UpdateQuery(), instance)
+    updateSql := instance.UpdateAllQuery()
+    rows, err := db.NamedQuery(updateSql, instance)
 
 		if err != nil {
 			return nil, err
@@ -190,6 +216,50 @@ func findSingle[T model[P], P any](db Database, instance T, sqlQuery string) (T,
   return result, nil
 }
 
+type QueryOptions struct {
+	SelectList *[]string
+	Paginator  *Paginator
+	OrderBy    *string
+}
+
+type Paginator struct {
+	Page     int
+	PageSize int
+}
+
+func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
+	return FindPage[T](db, instance, nil)
+}
+
+func FindPage[T model[P], P any](db Database, instance T, queryOpts *QueryOptions) ([]T, error) {
+
+	findAllSql := instance.FindAllQuery()
+	if queryOpts != nil {
+		if queryOpts.SelectList != nil && len(*queryOpts.SelectList) > 0 {
+			selectList := *queryOpts.SelectList
+			fromSql := fmt.Sprintf("FROM %s", instance.TableName())
+			whereSql := strings.Split(findAllSql, fromSql)[1]
+			findAllSql = fmt.Sprintf("SELECT %s %s %s", strings.Join(selectList, ", "), fromSql, whereSql)
+		}
+		if queryOpts.Paginator != nil {
+			pager := *queryOpts.Paginator
+			findAllSql = strings.TrimRight(findAllSql, "\r\n;")
+			if queryOpts.OrderBy != nil {
+				findAllSql += fmt.Sprintf(" ORDER BY %s", *queryOpts.OrderBy)
+			}
+			if pager.PageSize != 0 {
+				findAllSql += fmt.Sprintf(" LIMIT %d OFFSET %d", pager.PageSize, (pager.Page-1)*pager.PageSize)
+			}
+			findAllSql += ";"
+		} else {
+			if queryOpts.OrderBy != nil {
+				findAllSql += fmt.Sprintf(" ORDER BY %s", *queryOpts.OrderBy)
+			}
+		}
+	}
+  return findMany[T](db, instance, findAllSql)
+}
+
 func findMany[T model[P], P any](db Database, instance T, sqlQuery string) ([]T, error) {
   rows, err := db.NamedQuery(sqlQuery, instance)
 
@@ -233,7 +303,7 @@ func FindFirst[T model[P], P any](db Database, instance T) (T, error) {
 func FindOne[T model[P], P any](db Database, instance T) (T, error) {
   limitedQuery := strings.TrimRight(instance.FindAllQuery(), ";") + " LIMIT 2;"
 
-  result, err := findMany(db, instance, limitedQuery)
+  result, err := findMany[T](db, instance, limitedQuery)
   if err != nil {
     return nil, err
   }
@@ -245,10 +315,6 @@ func FindOne[T model[P], P any](db Database, instance T) (T, error) {
 
 func FindByPk[T model[P], P any](db Database, instance T) (T, error) {
   return findSingle(db, instance, instance.FindByPkQuery())
-}
-
-func FindMany[T model[P], P any](db Database, instance T) ([]T, error) {
-  return findMany(db, instance, instance.FindAllQuery())
 }
 
 // Delete by Pk, err if not found
@@ -279,14 +345,14 @@ func DeleteOne[T model[P], P any](db Database, instance T) (error) {
     return fmt.Errorf("delete-one %s would have matched %d rows", GetTypeName(instance), *count)
   }
 
-  _, err = Delete[T](db, instance)
+  _, err = DeleteAll[T](db, instance)
 
   return err
 }
 
-func Delete[T model[P], P any](db Database, instance T) (*int64, error) {
+func DeleteAll[T model[P], P any](db Database, instance T) (*int64, error) {
 
-  result, err := db.NamedExec(instance.DeleteQuery(), instance)
+  result, err := db.NamedExec(instance.DeleteAllQuery(), instance)
 
 	rowsAff, err := result.RowsAffected()
 	if err != nil {
@@ -304,7 +370,7 @@ type model[P any] interface {
   PrimaryKey() []string
 
   InsertQuery() string
-  UpdateQuery() string
+  UpdateAllQuery() string
   UpdateByPkQuery() string
 
   CountQuery() string
@@ -313,7 +379,7 @@ type model[P any] interface {
   FindAllQuery() string
 
   DeleteByPkQuery() string
-  DeleteQuery() string
+  DeleteAllQuery() string
 }
 
 // Custom sql query used like:
@@ -378,8 +444,6 @@ type Database interface {
   NamedExec(query string, arg interface{}) (sql.Result, error)
 
   NamedQuery(query string, arg interface{}) (*sqlx.Rows, error)
-
-	QueryRow(query string, args ...interface{}) *sql.Row
 }
 
 type JsonObject map[string]interface{}
@@ -476,7 +540,8 @@ func BulkInsert[T model[P], P any](db *sqlx.DB, ctx context.Context, itemsToSave
 
 		// Using an anonymous function to ensure that the rows are closed as we go!
 		err := func() error {
-			rows, err := sqlx.NamedQueryContext(ctx, tx, firstItem.InsertQuery(), itemsToSave[i:end])
+      firstItemSql := firstItem.InsertQuery()
+			rows, err := sqlx.NamedQueryContext(ctx, tx, firstItemSql, itemsToSave[i:end])
 			if err != nil {
 				tx.Rollback()
 				return err
