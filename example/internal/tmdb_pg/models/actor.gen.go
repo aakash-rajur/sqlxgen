@@ -47,7 +47,7 @@ func (a *Actor) UpdateByPkQuery() string {
 }
 
 func (a *Actor) CountQuery() string {
-	return actorCountSql
+	return actorModelCountSql
 }
 
 func (a *Actor) FindAllQuery() string {
@@ -124,7 +124,7 @@ RETURNING
 `
 
 // language=postgresql
-var actorCountSql = `
+var actorModelCountSql = `
 SELECT count(*) as count
 FROM public.actors
 ` + actorAllFieldsWhere + ";"

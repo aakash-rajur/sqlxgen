@@ -64,7 +64,7 @@ func ({{ $receiverName }} *{{ .PascalName }}) UpdateByPkQuery() string {
 }
 
 func ({{ $receiverName }} *{{ .PascalName }}) CountQuery() string {
-  return {{ .CamelName }}CountSql
+  return {{ .CamelName }}ModelCountSql
 }
 
 func ({{ $receiverName }} *{{ .PascalName }}) FindAllQuery() string {
@@ -157,7 +157,7 @@ RETURNING
 `
 
 // language=postgresql
-var {{ .CamelName }}CountSql = `
+var {{ .CamelName }}ModelCountSql = `
 SELECT count(*) as count
 FROM {{ .Table.SchemaName }}.{{ .Table.TableName }}
 ` + {{ .CamelName }}AllFieldsWhere + ";"

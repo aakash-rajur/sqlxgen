@@ -53,7 +53,7 @@ func (t *TMoviesCredit) UpdateByPkQuery() string {
 }
 
 func (t *TMoviesCredit) CountQuery() string {
-	return tMoviesCreditCountSql
+	return tMoviesCreditModelCountSql
 }
 
 func (t *TMoviesCredit) FindAllQuery() string {
@@ -147,7 +147,7 @@ RETURNING
 `
 
 // language=postgresql
-var tMoviesCreditCountSql = `
+var tMoviesCreditModelCountSql = `
 SELECT count(*) as count
 FROM public.t_movies_credits
 ` + tMoviesCreditAllFieldsWhere + ";"

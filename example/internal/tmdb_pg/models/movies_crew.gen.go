@@ -50,7 +50,7 @@ func (m *MoviesCrew) UpdateByPkQuery() string {
 }
 
 func (m *MoviesCrew) CountQuery() string {
-	return moviesCrewCountSql
+	return moviesCrewModelCountSql
 }
 
 func (m *MoviesCrew) FindAllQuery() string {
@@ -142,7 +142,7 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCrewCountSql = `
+var moviesCrewModelCountSql = `
 SELECT count(*) as count
 FROM public.movies_crew
 ` + moviesCrewAllFieldsWhere + ";"

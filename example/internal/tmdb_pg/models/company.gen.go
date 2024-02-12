@@ -47,7 +47,7 @@ func (c *Company) UpdateByPkQuery() string {
 }
 
 func (c *Company) CountQuery() string {
-	return companyCountSql
+	return companyModelCountSql
 }
 
 func (c *Company) FindAllQuery() string {
@@ -126,7 +126,7 @@ RETURNING
 `
 
 // language=postgresql
-var companyCountSql = `
+var companyModelCountSql = `
 SELECT count(*) as count
 FROM public.companies
 ` + companyAllFieldsWhere + ";"

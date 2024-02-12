@@ -47,7 +47,7 @@ func (c *Crew) UpdateByPkQuery() string {
 }
 
 func (c *Crew) CountQuery() string {
-	return crewCountSql
+	return crewModelCountSql
 }
 
 func (c *Crew) FindAllQuery() string {
@@ -124,7 +124,7 @@ RETURNING
 `
 
 // language=postgresql
-var crewCountSql = `
+var crewModelCountSql = `
 SELECT count(*) as count
 FROM public.crew
 ` + crewAllFieldsWhere + ";"

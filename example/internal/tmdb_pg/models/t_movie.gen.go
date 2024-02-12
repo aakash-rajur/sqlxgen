@@ -83,7 +83,7 @@ func (t *TMovie) UpdateByPkQuery() string {
 }
 
 func (t *TMovie) CountQuery() string {
-	return tMovieCountSql
+	return tMovieModelCountSql
 }
 
 func (t *TMovie) FindAllQuery() string {
@@ -302,7 +302,7 @@ RETURNING
 `
 
 // language=postgresql
-var tMovieCountSql = `
+var tMovieModelCountSql = `
 SELECT count(*) as count
 FROM public.t_movies
 ` + tMovieAllFieldsWhere + ";"

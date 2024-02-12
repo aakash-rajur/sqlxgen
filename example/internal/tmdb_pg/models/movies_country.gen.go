@@ -46,7 +46,7 @@ func (m *MoviesCountry) UpdateByPkQuery() string {
 }
 
 func (m *MoviesCountry) CountQuery() string {
-	return moviesCountryCountSql
+	return moviesCountryModelCountSql
 }
 
 func (m *MoviesCountry) FindAllQuery() string {
@@ -122,7 +122,7 @@ RETURNING
 `
 
 // language=postgresql
-var moviesCountryCountSql = `
+var moviesCountryModelCountSql = `
 SELECT count(*) as count
 FROM public.movies_countries
 ` + moviesCountryAllFieldsWhere + ";"

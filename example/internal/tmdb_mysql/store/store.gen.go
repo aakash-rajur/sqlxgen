@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
@@ -126,20 +127,6 @@ func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
 
 	return updates, nil
 }
-
-/*
-func Count[T model[P], P any](db Database, instance T) (*int64, error) {
-  var count int64
-
-  err := db.QueryRow(instance.CountQuery()).Scan(&count)
-
-  if err != nil {
-    return nil, err
-  }
-
-  return &count, nil
-}
-*/
 
 func Count[T model[P], P any](db Database, instance T) (*int64, error) {
 	type CountResult struct {
@@ -438,7 +425,89 @@ func (j *JsonArray) Value() (driver.Value, error) {
 	return json.Marshal(j)
 }
 
+func countFields(v any) int {
+	return rvCountFields(reflect.ValueOf(v))
+}
+
+func rvCountFields(rv reflect.Value) (count int) {
+
+	if rv.Kind() != reflect.Struct {
+		return
+	}
+
+	fs := rv.NumField()
+	count += fs
+
+	for i := 0; i < fs; i++ {
+		f := rv.Field(i)
+		if rv.Type().Field(i).Anonymous {
+			count-- // don't count embedded structs (listed as anonymous fields) as a field
+		}
+
+		// recurse each field to see if that field is also an embedded struct
+		count += rvCountFields(f)
+	}
+
+	return
+}
+
+func BulkInsert[T model[P], P any](db *sqlx.DB, ctx context.Context, itemsToSave ...T) ([]*P, error) {
+	tx, err := db.BeginTxx(ctx, &sql.TxOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	pgMaxParameterCount := 500 // TODO: offer as an option
+
+	// we need to batch the inserts so num `items` * `item` struct field
+	// count is less than postgres MaxParameterCount - this is conservative
+	firstItem := itemsToSave[0]
+	itemPropertyCount := countFields(*firstItem)
+
+	maxBatch := pgMaxParameterCount / itemPropertyCount
+	items := make([]*P, 0, len(itemsToSave))
+	for i := 0; i < len(itemsToSave); i += maxBatch {
+		end := i + maxBatch
+
+		if end > len(itemsToSave) {
+			end = len(itemsToSave)
+		}
+
+		// Using an anonymous function to ensure that the rows are closed as we go!
+		err := func() error {
+			rows, err := sqlx.NamedQueryContext(ctx, tx, firstItem.InsertQuery(), itemsToSave[i:end])
+			if err != nil {
+				tx.Rollback()
+				return err
+			}
+			defer rows.Close()
+
+			insertedRowIdx := 0
+			batchItems := make([]*P, len(itemsToSave[i:end]))
+			for rows.Next() {
+				newItem := new(P)
+				if err := rows.StructScan(newItem); err != nil {
+					tx.Rollback()
+					return err
+				}
+				batchItems[insertedRowIdx] = newItem
+				insertedRowIdx++
+			}
+			items = append(items, batchItems...)
+			return nil
+		}()
+		if err != nil {
+			return nil, err
+		}
+	}
+	tx.Commit()
+
+	return items, nil
+}
+
+// *************************
 // errors
+// *************************
 
 var ErrNotFound = errors.New("entity not found")
 var ErrFoundMultiple = errors.New("multiple matching entities")

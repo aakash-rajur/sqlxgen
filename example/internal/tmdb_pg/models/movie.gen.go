@@ -97,7 +97,7 @@ func (m *Movie) UpdateByPkQuery() string {
 }
 
 func (m *Movie) CountQuery() string {
-	return movieCountSql
+	return movieModelCountSql
 }
 
 func (m *Movie) FindAllQuery() string {
@@ -126,7 +126,7 @@ WHERE TRUE
     AND (CAST(:id AS INT4) IS NULL or id = :id)
     AND (CAST(:budget AS INT8) IS NULL or budget = :budget)
     AND (CAST(:client_id AS VARCHAR) IS NULL or client_id = :client_id)
-    -- completed_coordinates / POINT is not supported
+    -- completed_coordinates / POINT is not supported here
     AND (CAST(:data_synced_at AS TIMESTAMP) IS NULL or data_synced_at = :data_synced_at)
     AND (CAST(:distance_to_place AS NUMERIC) IS NULL or distance_to_place = :distance_to_place)
     AND (CAST(:homepage AS TEXT) IS NULL or homepage = :homepage)
@@ -362,7 +362,7 @@ RETURNING
 `
 
 // language=postgresql
-var movieCountSql = `
+var movieModelCountSql = `
 SELECT count(*) as count
 FROM public.movies
 ` + movieAllFieldsWhere + ";"

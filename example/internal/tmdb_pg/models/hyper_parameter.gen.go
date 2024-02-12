@@ -50,7 +50,7 @@ func (h *HyperParameter) UpdateByPkQuery() string {
 }
 
 func (h *HyperParameter) CountQuery() string {
-	return hyperParameterCountSql
+	return hyperParameterModelCountSql
 }
 
 func (h *HyperParameter) FindAllQuery() string {
@@ -138,7 +138,7 @@ RETURNING
 `
 
 // language=postgresql
-var hyperParameterCountSql = `
+var hyperParameterModelCountSql = `
 SELECT count(*) as count
 FROM public.hyper_parameters
 ` + hyperParameterAllFieldsWhere + ";"
