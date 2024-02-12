@@ -78,10 +78,11 @@ func (t *TMoviesCredit) DeleteQuery() string {
 
 // language=postgresql
 var tMoviesCreditAllFieldsWhere = `
-WHERE (CAST(:casting AS JSONB) IS NULL or casting = :casting)
-  AND (CAST(:crew AS JSONB) IS NULL or crew = :crew)
-  AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:title AS TEXT) IS NULL or title = :title)
+WHERE TRUE
+    AND (CAST(:casting AS JSONB) IS NULL or casting = :casting)
+    AND (CAST(:crew AS JSONB) IS NULL or crew = :crew)
+    AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+    AND (CAST(:title AS TEXT) IS NULL or title = :title)
 `
 
 // language=postgresql

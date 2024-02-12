@@ -77,11 +77,12 @@ func (m *MoviesActor) DeleteQuery() string {
 
 // language=postgresql
 var moviesActorAllFieldsWhere = `
-WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
-  AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
-  AND (CAST(:character AS TEXT) IS NULL or character = :character)
-  AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search)
+WHERE TRUE
+    AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+    AND (CAST(:actor_id AS INT8) IS NULL or actor_id = :actor_id)
+    AND (CAST(:cast_order AS INT4) IS NULL or cast_order = :cast_order)
+    AND (CAST(:character AS TEXT) IS NULL or character = :character)
+    AND (CAST(:character_search AS TSVECTOR) IS NULL or character_search = :character_search)
 `
 
 // language=postgresql

@@ -75,10 +75,11 @@ func (h *HyperParameter) DeleteQuery() string {
 
 // language=postgresql
 var hyperParameterAllFieldsWhere = `
-WHERE (CAST(:type AS TEXT) IS NULL or type = :type)
-  AND (CAST(:value AS TEXT) IS NULL or value = :value)
-  AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
-  AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search)
+WHERE TRUE
+    AND (CAST(:type AS TEXT) IS NULL or type = :type)
+    AND (CAST(:value AS TEXT) IS NULL or value = :value)
+    AND (CAST(:friendly_name AS TEXT) IS NULL or friendly_name = :friendly_name)
+    AND (CAST(:friendly_name_search AS TSVECTOR) IS NULL or friendly_name_search = :friendly_name_search)
 `
 
 // language=postgresql

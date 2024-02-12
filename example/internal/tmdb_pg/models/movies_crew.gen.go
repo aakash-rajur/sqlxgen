@@ -75,10 +75,11 @@ func (m *MoviesCrew) DeleteQuery() string {
 
 // language=postgresql
 var moviesCrewAllFieldsWhere = `
-WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:crew_id AS INT8) IS NULL or crew_id = :crew_id)
-  AND (CAST(:department_id AS TEXT) IS NULL or department_id = :department_id)
-  AND (CAST(:job_id AS TEXT) IS NULL or job_id = :job_id)
+WHERE TRUE
+    AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+    AND (CAST(:crew_id AS INT8) IS NULL or crew_id = :crew_id)
+    AND (CAST(:department_id AS TEXT) IS NULL or department_id = :department_id)
+    AND (CAST(:job_id AS TEXT) IS NULL or job_id = :job_id)
 `
 
 // language=postgresql

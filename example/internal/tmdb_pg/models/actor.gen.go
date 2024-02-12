@@ -72,9 +72,10 @@ func (a *Actor) DeleteQuery() string {
 
 // language=postgresql
 var actorAllFieldsWhere = `
-WHERE (CAST(:id AS INT4) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+WHERE TRUE
+    AND (CAST(:id AS INT4) IS NULL or id = :id)
+    AND (CAST(:name AS TEXT) IS NULL or name = :name)
+    AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
 `
 
 // language=postgresql

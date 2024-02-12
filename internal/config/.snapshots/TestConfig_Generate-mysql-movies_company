@@ -41,17 +41,45 @@ func (m *MoviesCompany) UpdateQuery() string {
 	return moviesCompanyUpdateSql
 }
 
-func (m *MoviesCompany) FindQuery() string {
-	return moviesCompanyFindSql
+func (m *MoviesCompany) UpdateByPkQuery() string {
+	return moviesCompanyUpdateByPkSql
+}
+
+func (m *MoviesCompany) CountQuery() string {
+	return moviesCompanyCountSql
 }
 
 func (m *MoviesCompany) FindAllQuery() string {
 	return moviesCompanyFindAllSql
 }
 
+func (m *MoviesCompany) FindFirstQuery() string {
+	return moviesCompanyFindFirstSql
+}
+
+func (m *MoviesCompany) FindByPkQuery() string {
+	return moviesCompanyFindByPkSql
+}
+
+func (m *MoviesCompany) DeleteByPkQuery() string {
+	return moviesCompanyDeleteByPkSql
+}
+
 func (m *MoviesCompany) DeleteQuery() string {
 	return moviesCompanyDeleteSql
 }
+
+// language=mysql
+var moviesCompanyAllFieldsWhere = `
+WHERE (CAST(:movie_id AS BIGINT) IS NULL or movie_id = :movie_id)
+  AND (CAST(:company_id AS BIGINT) IS NULL or company_id = :company_id)
+`
+
+// language=mysql
+var moviesCompanyPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND company_id = :company_id
+`
 
 // language=mysql
 var moviesCompanyInsertSql = `
@@ -69,30 +97,34 @@ RETURNING
 `
 
 // language=mysql
-var moviesCompanyUpdateSql = `
+var moviesCompanyUpdateByPkSql = `
 UPDATE app.movies_companies
 SET
   movie_id = :movie_id,
   company_id = :company_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND company_id = :company_id
+` + moviesCompanyPkFieldsWhere + `
 RETURNING
   movie_id,
   company_id;
 `
 
 // language=mysql
-var moviesCompanyFindSql = `
-SELECT
+var moviesCompanyUpdateSql = `
+UPDATE app.movies_companies
+SET
+  movie_id = :movie_id,
+  company_id = :company_id
+` + moviesCompanyAllFieldsWhere + `
+RETURNING
   movie_id,
-  company_id
-FROM app.movies_companies
-WHERE TRUE
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:company_id IS NULL or company_id = :company_id)
-LIMIT 1;
+  company_id;
 `
+
+// language=mysql
+var moviesCompanyCountSql = `
+SELECT count(*) as count
+FROM app.movies_companies
+` + moviesCompanyAllFieldsWhere + ";"
 
 // language=mysql
 var moviesCompanyFindAllSql = `
@@ -100,16 +132,32 @@ SELECT
   movie_id,
   company_id
 FROM app.movies_companies
-WHERE TRUE
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:company_id IS NULL or company_id = :company_id);
+` + moviesCompanyAllFieldsWhere + ";"
+
+// language=mysql
+var moviesCompanyFindFirstSql = strings.TrimRight(moviesCompanyFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var moviesCompanyFindByPkSql = `
+SELECT
+  movie_id,
+  company_id
+FROM app.movies_companies
+` + moviesCompanyPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var moviesCompanyDeleteByPkSql = `
+DELETE FROM app.movies_companies
+WHERE movie_id = :movie_id
+  AND company_id = :company_id;
 `
 
 // language=mysql
 var moviesCompanyDeleteSql = `
 DELETE FROM app.movies_companies
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND company_id = :company_id;
 `
 

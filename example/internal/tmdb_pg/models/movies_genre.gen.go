@@ -71,8 +71,9 @@ func (m *MoviesGenre) DeleteQuery() string {
 
 // language=postgresql
 var moviesGenreAllFieldsWhere = `
-WHERE (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
-  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
+WHERE TRUE
+    AND (CAST(:movie_id AS INT8) IS NULL or movie_id = :movie_id)
+    AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
 `
 
 // language=postgresql

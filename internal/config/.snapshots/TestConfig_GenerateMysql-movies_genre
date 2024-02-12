@@ -41,17 +41,45 @@ func (m *MoviesGenre) UpdateQuery() string {
 	return moviesGenreUpdateSql
 }
 
-func (m *MoviesGenre) FindQuery() string {
-	return moviesGenreFindSql
+func (m *MoviesGenre) UpdateByPkQuery() string {
+	return moviesGenreUpdateByPkSql
+}
+
+func (m *MoviesGenre) CountQuery() string {
+	return moviesGenreCountSql
 }
 
 func (m *MoviesGenre) FindAllQuery() string {
 	return moviesGenreFindAllSql
 }
 
+func (m *MoviesGenre) FindFirstQuery() string {
+	return moviesGenreFindFirstSql
+}
+
+func (m *MoviesGenre) FindByPkQuery() string {
+	return moviesGenreFindByPkSql
+}
+
+func (m *MoviesGenre) DeleteByPkQuery() string {
+	return moviesGenreDeleteByPkSql
+}
+
 func (m *MoviesGenre) DeleteQuery() string {
 	return moviesGenreDeleteSql
 }
+
+// language=mysql
+var moviesGenreAllFieldsWhere = `
+WHERE (CAST(:movie_id AS BIGINT) IS NULL or movie_id = :movie_id)
+  AND (CAST(:genre_id AS TEXT) IS NULL or genre_id = :genre_id)
+`
+
+// language=mysql
+var moviesGenrePkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND genre_id = :genre_id
+`
 
 // language=mysql
 var moviesGenreInsertSql = `
@@ -69,30 +97,34 @@ RETURNING
 `
 
 // language=mysql
-var moviesGenreUpdateSql = `
+var moviesGenreUpdateByPkSql = `
 UPDATE app.movies_genres
 SET
   movie_id = :movie_id,
   genre_id = :genre_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND genre_id = :genre_id
+` + moviesGenrePkFieldsWhere + `
 RETURNING
   movie_id,
   genre_id;
 `
 
 // language=mysql
-var moviesGenreFindSql = `
-SELECT
+var moviesGenreUpdateSql = `
+UPDATE app.movies_genres
+SET
+  movie_id = :movie_id,
+  genre_id = :genre_id
+` + moviesGenreAllFieldsWhere + `
+RETURNING
   movie_id,
-  genre_id
-FROM app.movies_genres
-WHERE TRUE
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:genre_id IS NULL or genre_id = :genre_id)
-LIMIT 1;
+  genre_id;
 `
+
+// language=mysql
+var moviesGenreCountSql = `
+SELECT count(*) as count
+FROM app.movies_genres
+` + moviesGenreAllFieldsWhere + ";"
 
 // language=mysql
 var moviesGenreFindAllSql = `
@@ -100,16 +132,32 @@ SELECT
   movie_id,
   genre_id
 FROM app.movies_genres
-WHERE TRUE
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:genre_id IS NULL or genre_id = :genre_id);
+` + moviesGenreAllFieldsWhere + ";"
+
+// language=mysql
+var moviesGenreFindFirstSql = strings.TrimRight(moviesGenreFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var moviesGenreFindByPkSql = `
+SELECT
+  movie_id,
+  genre_id
+FROM app.movies_genres
+` + moviesGenrePkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var moviesGenreDeleteByPkSql = `
+DELETE FROM app.movies_genres
+WHERE movie_id = :movie_id
+  AND genre_id = :genre_id;
 `
 
 // language=mysql
 var moviesGenreDeleteSql = `
 DELETE FROM app.movies_genres
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND genre_id = :genre_id;
 `
 

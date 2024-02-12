@@ -72,9 +72,10 @@ func (c *Company) DeleteQuery() string {
 
 // language=postgresql
 var companyAllFieldsWhere = `
-WHERE (CAST(:id AS INT8) IS NULL or id = :id)
-  AND (CAST(:name AS TEXT) IS NULL or name = :name)
-  AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
+WHERE TRUE
+    AND (CAST(:id AS INT8) IS NULL or id = :id)
+    AND (CAST(:name AS TEXT) IS NULL or name = :name)
+    AND (CAST(:name_search AS TSVECTOR) IS NULL or name_search = :name_search)
 `
 
 // language=postgresql

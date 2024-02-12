@@ -41,17 +41,45 @@ func (m *MoviesCountry) UpdateQuery() string {
 	return moviesCountryUpdateSql
 }
 
-func (m *MoviesCountry) FindQuery() string {
-	return moviesCountryFindSql
+func (m *MoviesCountry) UpdateByPkQuery() string {
+	return moviesCountryUpdateByPkSql
+}
+
+func (m *MoviesCountry) CountQuery() string {
+	return moviesCountryCountSql
 }
 
 func (m *MoviesCountry) FindAllQuery() string {
 	return moviesCountryFindAllSql
 }
 
+func (m *MoviesCountry) FindFirstQuery() string {
+	return moviesCountryFindFirstSql
+}
+
+func (m *MoviesCountry) FindByPkQuery() string {
+	return moviesCountryFindByPkSql
+}
+
+func (m *MoviesCountry) DeleteByPkQuery() string {
+	return moviesCountryDeleteByPkSql
+}
+
 func (m *MoviesCountry) DeleteQuery() string {
 	return moviesCountryDeleteSql
 }
+
+// language=mysql
+var moviesCountryAllFieldsWhere = `
+WHERE (CAST(:movie_id AS BIGINT) IS NULL or movie_id = :movie_id)
+  AND (CAST(:country_id AS TEXT) IS NULL or country_id = :country_id)
+`
+
+// language=mysql
+var moviesCountryPkFieldsWhere = `
+WHERE movie_id = :movie_id
+  AND country_id = :country_id
+`
 
 // language=mysql
 var moviesCountryInsertSql = `
@@ -69,30 +97,34 @@ RETURNING
 `
 
 // language=mysql
-var moviesCountryUpdateSql = `
+var moviesCountryUpdateByPkSql = `
 UPDATE app.movies_countries
 SET
   movie_id = :movie_id,
   country_id = :country_id
-WHERE TRUE
-  AND movie_id = :movie_id
-  AND country_id = :country_id
+` + moviesCountryPkFieldsWhere + `
 RETURNING
   movie_id,
   country_id;
 `
 
 // language=mysql
-var moviesCountryFindSql = `
-SELECT
+var moviesCountryUpdateSql = `
+UPDATE app.movies_countries
+SET
+  movie_id = :movie_id,
+  country_id = :country_id
+` + moviesCountryAllFieldsWhere + `
+RETURNING
   movie_id,
-  country_id
-FROM app.movies_countries
-WHERE TRUE
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:country_id IS NULL or country_id = :country_id)
-LIMIT 1;
+  country_id;
 `
+
+// language=mysql
+var moviesCountryCountSql = `
+SELECT count(*) as count
+FROM app.movies_countries
+` + moviesCountryAllFieldsWhere + ";"
 
 // language=mysql
 var moviesCountryFindAllSql = `
@@ -100,16 +132,32 @@ SELECT
   movie_id,
   country_id
 FROM app.movies_countries
-WHERE TRUE
-  AND (:movie_id IS NULL or movie_id = :movie_id)
-  AND (:country_id IS NULL or country_id = :country_id);
+` + moviesCountryAllFieldsWhere + ";"
+
+// language=mysql
+var moviesCountryFindFirstSql = strings.TrimRight(moviesCountryFindAllSql, ";") + `
+LIMIT 1;`
+
+// language=mysql
+var moviesCountryFindByPkSql = `
+SELECT
+  movie_id,
+  country_id
+FROM app.movies_countries
+` + moviesCountryPkFieldsWhere + `
+LIMIT 1;`
+
+// language=mysql
+var moviesCountryDeleteByPkSql = `
+DELETE FROM app.movies_countries
+WHERE movie_id = :movie_id
+  AND country_id = :country_id;
 `
 
 // language=mysql
 var moviesCountryDeleteSql = `
 DELETE FROM app.movies_countries
-WHERE TRUE
-  AND movie_id = :movie_id
+WHERE movie_id = :movie_id
   AND country_id = :country_id;
 `
 

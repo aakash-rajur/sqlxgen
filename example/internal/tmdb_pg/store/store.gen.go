@@ -128,15 +128,34 @@ func Update[T model[P], P any](db Database, instances ...T) ([]T, error) {
 }
 
 func Count[T model[P], P any](db Database, instance T) (*int64, error) {
-	var count int64
+	type CountResult struct {
+		Count int64 `db:"count"`
+	}
+	countResult := new(CountResult)
 
-	err := db.QueryRow(instance.CountQuery()).Scan(&count)
-
+	countSql := instance.CountQuery()
+	rows, err := db.NamedQuery(countSql, instance)
 	if err != nil {
 		return nil, err
 	}
 
-	return &count, nil
+	defer func(rows *sqlx.Rows) {
+		_ = rows.Close()
+	}(rows)
+
+	hasNext := rows.Next()
+	if !hasNext {
+		msg := fmt.Sprintf("count '%s' failed", GetTypeName(instance))
+
+		return nil, fmt.Errorf(msg, ErrNotFound)
+	}
+
+	err = rows.StructScan(countResult)
+	if err != nil {
+		return nil, err
+	}
+
+	return &countResult.Count, nil
 }
 
 func findSingle[T model[P], P any](db Database, instance T, sqlQuery string) (T, error) {

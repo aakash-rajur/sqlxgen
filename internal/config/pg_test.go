@@ -6,6 +6,8 @@ import (
 	"github.com/aakash-rajur/sqlxgen/internal/config/types"
 	"github.com/aakash-rajur/sqlxgen/internal/utils"
 	"github.com/stretchr/testify/assert"
+
+	_ "github.com/lib/pq"
 )
 
 func TestDefaultPgConfig(t *testing.T) {
