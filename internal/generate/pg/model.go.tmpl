@@ -92,7 +92,7 @@ var {{ .CamelName }}AllFieldsWhere = `
 WHERE TRUE
 {{- range $i, $f := $selectFields }}
   {{- if eq .Column.Type "interface{}" "point"  "array" "geography" "hstore" }}
-    -- {{ .Column.ColumnName }} / {{ .Column.Type | ToUpper }} is not supported
+    -- {{ .Column.ColumnName }} / {{ .Column.Type | ToUpper }} is not supported here
   {{- else }}
     AND (CAST(:{{ .Column.ColumnName }} AS {{ .Column.Type | ToUpper }}) IS NULL or {{ .Column.ColumnName }} = :{{ .Column.ColumnName }})
   {{- end }}
