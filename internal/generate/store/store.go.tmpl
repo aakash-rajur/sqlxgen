@@ -26,8 +26,8 @@ func GetTypeName[T any](instance T) string {
 }
 
 func InsertOne[T model[P], P any](db Database, instance T) (T, error) {
-	inserted, err := Insert[T](db, instance)
 
+	inserted, err := Insert[T](db, instance)
 	if err != nil {
 		return nil, err
 	}
@@ -55,16 +55,11 @@ func Insert[T model[P], P any](db Database, instances ...T) ([]T, error) {
 		inserted := new(P)
 
 		err = rows.StructScan(inserted)
-
 		if err != nil {
 			return nil, err
 		}
 
-		err = rows.Close()
-
-		if err != nil {
-			return nil, err
-		}
+		rows.Close()
 
 		inserts = append(inserts, inserted)
 	}
@@ -76,10 +71,10 @@ func UpdateByPk[T model[P], P any](db Database, instance T) (T, error) {
 
 	updateSql := instance.UpdateByPkQuery()
 	rows, err := db.NamedQuery(updateSql, instance)
-
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	hasNext := rows.Next()
 	if !hasNext {
@@ -88,11 +83,6 @@ func UpdateByPk[T model[P], P any](db Database, instance T) (T, error) {
 
 	updated := new(P)
 	err = rows.StructScan(updated)
-	if err != nil {
-		return nil, err
-	}
-
-	err = rows.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -138,16 +128,11 @@ func UpdateMany[T model[P], P any](db Database, instances ...T) ([]T, error) {
 		updated := new(P)
 
 		err = rows.StructScan(updated)
-
 		if err != nil {
 			return nil, err
 		}
 
-		err = rows.Close()
-
-		if err != nil {
-			return nil, err
-		}
+		rows.Close()
 
 		updates = append(updates, updated)
 	}
@@ -187,9 +172,7 @@ func count(db Database, countSql string, instance interface{}) (*int64, error) {
 		return nil, err
 	}
 
-	defer func(rows *sqlx.Rows) {
-		_ = rows.Close()
-	}(rows)
+	defer rows.Close()
 
 	hasNext := rows.Next()
 	if !hasNext {
@@ -255,15 +238,16 @@ func FindManySql[T model[P], P any](db Database, querySQL string, args interface
 }
 
 func findMany[T model[P], P any](db Database, instance interface{}, sqlQuery string, failOnMulti bool) ([]T, error) {
+	if instance == nil {
+		instance = struct{}{}
+	}
 	rows, err := db.NamedQuery(sqlQuery, instance)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer func() {
-		_ = rows.Close()
-	}()
+	defer rows.Close()
 
 	idx := 0
 	result := make([]T, 0)
@@ -272,16 +256,16 @@ func findMany[T model[P], P any](db Database, instance interface{}, sqlQuery str
 		if failOnMulti && idx > 0 {
 			return nil, ErrFoundMultiple
 		}
-		instance := new(P)
+		rowInstance := new(P)
 
-		err = rows.StructScan(instance)
+		err = rows.StructScan(rowInstance)
 
 		if err != nil {
 			return nil, err
 		}
 
 		idx++
-		result = append(result, instance)
+		result = append(result, rowInstance)
 	}
 
 	return result, nil
@@ -326,17 +310,18 @@ func FindFirstSql[T model[P], P any](db Database, querySQL string, args interfac
 }
 
 func findSingle[T model[P], P any](db Database, instance interface{}, sqlQuery string) (T, error) {
+	if instance == nil {
+		instance = struct{}{}
+	}
+
 	result := new(P)
 
 	rows, err := db.NamedQuery(sqlQuery, instance)
-
 	if err != nil {
 		return result, err
 	}
 
-	defer func(rows *sqlx.Rows) {
-		_ = rows.Close()
-	}(rows)
+	defer rows.Close()
 
 	hasNext := rows.Next()
 
@@ -439,9 +424,7 @@ func Query[R result[pR], Q queryable[pQ], pR, pQ any](db Database, args Q) ([]R,
 		return nil, err
 	}
 
-	defer func(rows *sqlx.Rows) {
-		_ = rows.Close()
-	}(rows)
+	defer rows.Close()
 
 	result := make([]R, 0)
 
@@ -455,12 +438,6 @@ func Query[R result[pR], Q queryable[pQ], pR, pQ any](db Database, args Q) ([]R,
 		}
 
 		result = append(result, instance)
-	}
-
-	err = rows.Close()
-
-	if err != nil {
-		return nil, err
 	}
 
 	return result, nil
